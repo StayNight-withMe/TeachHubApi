@@ -4,23 +4,18 @@ using Core.Model.TargetDTO.Chapter.input;
 using Core.Model.TargetDTO.Chapter.output;
 using Core.Model.TargetDTO.Common.input;
 using Core.Model.TargetDTO.Common.output;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Core.Model.TargetDTO.Lesson.input;
+using Core.Model.TargetDTO.Lesson.output;
 
 namespace Core.Interfaces.Service
 {
     public interface ILessonService
     {
-        Task<TResult> Create(CreateChapterDTO chapter, int userid);
-        Task<TResult<BaseLesson>> UpdateChapter(ChapterUpdateDTO newchapter, int userid);
-        Task<TResult<PagedResponseDTO<ChapterOutDTO>>> GetChaptersByCourseId(int courseid, UserSortingRequest userSortingRequest);
-        Task<TResult<PagedResponseDTO<ChapterOutDTO>>> GetChaptersByCourseIdAndUserId(int courseid, int userid, UserSortingRequest userSortingRequest);
-        Task<TResult> DeleteChapter(int chapterid, int userid);
-
-
+        Task<TResult> Create(createLessonDTO lesson, int userid);
+        Task<TResult<lessonOutputDTO>> UpdateLesson(LessonUpdateDTO newlesson, int userid);
+        Task<TResult<PagedResponseDTO<lessonOutputDTO>>> GetLessonByChapterid(int chapterid, UserSortingRequest userSortingRequest);
+        Task<TResult> DeleteLesson(int lessonid, int userid);
+        Task<TResult> SwitchVisible(int lessonid, int userid);
     }
 }
 

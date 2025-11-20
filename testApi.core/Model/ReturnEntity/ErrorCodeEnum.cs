@@ -13,6 +13,7 @@
         CoursesNotFoud = 6,
         ChapterNotFound = 7,
         IpNotFound = 8,
+        lessonNotFound = 9,
 
         // Бизнес-конфликты (409 Conflict)
         UserAlreadyExists = 101, 

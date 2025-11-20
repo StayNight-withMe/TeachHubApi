@@ -13,6 +13,7 @@ namespace infrastructure.Context
         public DbSet<LessonEntities> lessons { get; set; }
         public DbSet<CourseEntities> courses { get; set; } 
         public DbSet<ChapterEntity> chapter { get; set; }
+        public DbSet<LessonfilesEntitits> lessonfiles { get; set; }
 
         public CourceDbContext(DbContextOptions<CourceDbContext> options)
         : base(options){ }
