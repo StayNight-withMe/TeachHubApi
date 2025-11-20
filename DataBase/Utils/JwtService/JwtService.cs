@@ -1,0 +1,147 @@
+﻿using Core.Interfaces.Service;
+using Core.Model.TargetDTO.Users.input;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.IdentityModel.Tokens.Experimental;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Query.ExpressionTranslators.Internal;
+using System.Data;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+
+
+namespace infrastructure.Utils.JwtService
+{
+    public class JwtService : IJwtService
+    {
+        private readonly IConfiguration _conf;
+        private readonly SymmetricSecurityKey _key;
+        private readonly ILogger<IJwtService> _logger;
+        public JwtService(IConfiguration conf, ILogger<IJwtService> logger)
+        {
+            _conf = conf;
+            _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(conf["Jwt:Key"]));
+            _logger = logger;
+        }
+
+
+
+        public string GenerateJwt(UserAuthDto user)
+        {
+            List<Claim> claims = new()
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.id.ToString()),
+                new Claim(ClaimTypes.Email, user.email),
+                new Claim(ClaimTypes.Role, user.role.ToString()),
+                new Claim(ClaimTypes.Name, user.name.ToString()),
+                new Claim("ip", user.ip),
+                new Claim("user-agent", user.useragent),
+            };
+
+            var token = new JwtSecurityToken(
+
+                claims: claims,
+                signingCredentials: new SigningCredentials(_key, SecurityAlgorithms.HmacSha256),
+                expires: DateTime.UtcNow.AddMinutes(int.Parse(_conf["Jwt:Time"])),
+                audience: _conf["Jwt:Audience"],
+                issuer: _conf["Jwt:Issuer"]
+                );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        private DateTime? GetExpFromPrincipal(ClaimsPrincipal principal)
+        {
+            var token = principal.Identity as JwtSecurityToken;  // Каст к JWT
+            if (token == null) return null;
+
+            var expClaim = token.Claims.FirstOrDefault(c => c.Type == "exp");  // Найди claim "exp"
+            if (expClaim == null || !long.TryParse(expClaim.Value, out long expUnix)) return null;
+
+            return DateTimeOffset.FromUnixTimeSeconds(expUnix).UtcDateTime;  // Конверт в DateTime
+        }
+
+        public string? RefreshToken(string jwttoken)
+        {
+            try 
+            {
+
+                if (jwttoken == null)
+                {
+                    return null;
+                }
+
+                ClaimsPrincipal ClaimsPprincipal = ValidateToken(jwttoken);
+
+                if (ClaimsPprincipal == null)
+                {
+                    return null;
+                }
+
+
+                DateTime tokenTime = (DateTime)GetExpFromPrincipal(ClaimsPprincipal);
+
+                if (tokenTime < DateTime.UtcNow.AddMinutes(-15))
+                {
+                    return null;
+
+                }
+
+
+                var token = new JwtSecurityToken(
+
+                    claims: ClaimsPprincipal.Claims,
+                    signingCredentials: new SigningCredentials(_key, SecurityAlgorithms.HmacSha256),
+                    expires: tokenTime.AddMinutes(30),
+                    audience: _conf["Jwt:Audience"],
+                    issuer: _conf["Jwt:Issuer"]
+                    );
+
+                return new JwtSecurityTokenHandler().WriteToken(token);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+
+        }
+
+
+        public ClaimsPrincipal ValidateToken(string token)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            var validateParametr = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = _key,
+                ValidateIssuer = true,
+                ValidIssuer = _conf["Jwt:Issuer"],
+                ValidateAudience = true,
+                ValidAudience = _conf["Jwt:Audience"],
+                ValidateLifetime = false,
+                RoleClaimType = "role"
+            };
+
+            try
+            {
+                var principical = tokenHandler.ValidateToken(token, validateParametr, out _);
+                return principical;
+            }
+            catch
+            {
+                _logger.LogInformation($"токен {token} не прошел валидацию");
+                return null;
+                
+            }
+
+                
+
+        }
+
+
+
+    }
+}

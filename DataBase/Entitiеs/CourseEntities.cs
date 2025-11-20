@@ -1,0 +1,17 @@
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace infrastructure.Entitiеs
+{
+    public class CourseEntities
+    {
+        public int id { get; set; }
+        public string name { get; set; } 
+        public string description { get; set; } 
+        public DateTime createdat {  get; set; } = DateTime.UtcNow;
+        public int? creatorid { get; set; }
+        public string field {  get; set; }
+
+        [ForeignKey(nameof(creatorid))]
+        public UserEntities user { get; set; }
+    }
+}

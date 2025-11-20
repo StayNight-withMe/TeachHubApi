@@ -1,0 +1,18 @@
+﻿using Core.Common;
+using Core.Model.BaseModel.Auth;
+using Core.Model.BaseModel.User;
+using Core.Model.ReturnEntity;
+using Core.Model.TargetDTO.Auth.input;
+using Core.Model.TargetDTO.Users.input;
+using Core.Model.TargetDTO.Users.output;
+
+namespace Core.Interfaces.Service
+{
+    public interface IUsersService
+    {
+        public Task<TResult<UserAuthDto>> RegistrationUser(RegistrationUserDto registrationUserDto, PublicRole role, string ip, string userAgent);
+        public Task<TResult<checkEmailDTO>> CheckEmail(string email);
+        public Task<TResult> SoftDelete(int id);
+        public Task<TResult> AgressiveRemoveUser(int id);
+    }
+}
