@@ -22,6 +22,8 @@ _UpgradeReport_Files/
 bin/
 obj/
 .vs/
+*.json
+*.csproj
 TestResults/
 ###################
 # Web publish log #
