@@ -2,6 +2,7 @@ using Applcation.Service.AuthService;
 using Applcation.Service.chapterService;
 using Applcation.Service.CourceService;
 using Applcation.Service.UserService;
+using Applcation.Service.LessonService;
 using Core.Interfaces.Repository;
 using Core.Interfaces.Service;
 using Core.Interfaces.UoW;
@@ -34,6 +35,8 @@ builder.Services.AddScoped<IBaseRepository<UserRoleEntities>, BaseRepository<Use
 builder.Services.AddScoped<IBaseRepository<RoleEntities>, BaseRepository<RoleEntities>>();
 builder.Services.AddScoped<IBaseRepository<CourseEntities>, BaseRepository<CourseEntities>>();
 builder.Services.AddScoped<IBaseRepository<ChapterEntity>, BaseRepository<ChapterEntity>>();
+builder.Services.AddScoped<IBaseRepository<LessonEntities>, BaseRepository<LessonEntities>>();
+
 //сервисы
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IUsersService ,UserService>();
@@ -41,6 +44,7 @@ builder.Services.AddSingleton<IJwtService , JwtService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICourseService, CourcesService>();
 builder.Services.AddScoped<IChapterService, ChapterService>();
+builder.Services.AddScoped<ILessonService, LessonService>();
 //залупа2
 
 builder.Services.AddEndpointsApiExplorer(); //свагеру что бы найти

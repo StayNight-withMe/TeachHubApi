@@ -11,20 +11,9 @@ using infrastructure.Entitiеs;
 using infrastructure.Extensions;
 using infrastructure.Utils.Mapping.MapperDTO;
 using infrastructure.Utils.PageService;
-using infrastructure.Utils.SortBuilder;
 using Logger;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Query.ExpressionTranslators.Internal;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 
 
 namespace Applcation.Service.chapterService
@@ -159,8 +148,7 @@ namespace Applcation.Service.chapterService
             UserSortingRequest userSortingRequest
             )
         {
-            var chapter = await _chapterRepository.GetAllWithoutTracking()
-                .GetWithPagination(userSortingRequest)
+            var chapter = await _chapterRepository.GetAllWithoutTracking().GetWithPaginationAndSorting(userSortingRequest, "id", "courseid")
                 .Include(c => c.course)
                 .Where(c => c.course.creatorid == userid && c.course.id == courseid)
                 .ToListAsync();
@@ -184,9 +172,9 @@ namespace Applcation.Service.chapterService
                 order = c.order,
             }).ToList();
 
-            SortBuilder<ChapterOutDTO> sortBuilder = new SortBuilder<ChapterOutDTO>(chapters);
+            
 
-            return PageService.CreatePage(sortBuilder, userSortingRequest, chapters.Count());
+            return PageService.CreatePage(chapters, userSortingRequest, chapters.Count());
         }
 
 
@@ -194,7 +182,7 @@ namespace Applcation.Service.chapterService
             int courseid, 
             UserSortingRequest userSortingRequest)
         {
-            var chapter = await _chapterRepository.GetAllWithoutTracking().GetWithPagination(userSortingRequest).Include(c => c.course).Where(c => c.course.id == courseid).ToListAsync();
+            var chapter = await _chapterRepository.GetAllWithoutTracking().GetWithPaginationAndSorting(userSortingRequest, "id", "courseid").Include(c => c.course).Where(c => c.course.id == courseid).ToListAsync();
 
             return await GetChapter(chapter, userSortingRequest);
 

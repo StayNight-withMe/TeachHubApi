@@ -54,13 +54,12 @@ namespace infrastructure.Utils.JwtService
 
         private DateTime? GetExpFromPrincipal(ClaimsPrincipal principal)
         {
-            var token = principal.Identity as JwtSecurityToken;  // Каст к JWT
-            if (token == null) return null;
-
-            var expClaim = token.Claims.FirstOrDefault(c => c.Type == "exp");  // Найди claim "exp"
-            if (expClaim == null || !long.TryParse(expClaim.Value, out long expUnix)) return null;
-
-            return DateTimeOffset.FromUnixTimeSeconds(expUnix).UtcDateTime;  // Конверт в DateTime
+            var expClaim = principal.FindFirst("exp");
+            if (expClaim?.Value != null && long.TryParse(expClaim.Value, out long expUnix))
+            {
+                return DateTimeOffset.FromUnixTimeSeconds(expUnix).UtcDateTime;
+            }
+            return null; 
         }
 
         public string? RefreshToken(string jwttoken)
@@ -70,6 +69,7 @@ namespace infrastructure.Utils.JwtService
 
                 if (jwttoken == null)
                 {
+                    Console.WriteLine("");
                     return null;
                 }
 
@@ -77,16 +77,17 @@ namespace infrastructure.Utils.JwtService
 
                 if (ClaimsPprincipal == null)
                 {
+                    Console.WriteLine("косяк по валидации");
                     return null;
                 }
 
 
                 DateTime tokenTime = (DateTime)GetExpFromPrincipal(ClaimsPprincipal);
 
-                if (tokenTime < DateTime.UtcNow.AddMinutes(-15))
+                if (tokenTime < DateTime.UtcNow.AddMinutes(-15) || tokenTime > DateTime.UtcNow)
                 {
+                    Console.WriteLine("косяк по времени");
                     return null;
-
                 }
 
 
@@ -109,7 +110,7 @@ namespace infrastructure.Utils.JwtService
         }
 
 
-        public ClaimsPrincipal ValidateToken(string token)
+        public ClaimsPrincipal? ValidateToken(string token)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
 
@@ -122,7 +123,7 @@ namespace infrastructure.Utils.JwtService
                 ValidateAudience = true,
                 ValidAudience = _conf["Jwt:Audience"],
                 ValidateLifetime = false,
-                RoleClaimType = "role"
+                //RoleClaimType = ClaimTypes.Role
             };
 
             try
@@ -130,9 +131,9 @@ namespace infrastructure.Utils.JwtService
                 var principical = tokenHandler.ValidateToken(token, validateParametr, out _);
                 return principical;
             }
-            catch
+            catch(Exception ex)
             {
-                _logger.LogInformation($"токен {token} не прошел валидацию");
+                _logger.LogInformation($"токен {token} не прошел валидацию{ex.Message}");
                 return null;
                 
             }

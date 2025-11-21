@@ -2,7 +2,9 @@
 using Core.Interfaces.Utils;
 using Core.Model.TargetDTO.Auth.input;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 
 namespace testApi.EndPoints
@@ -41,7 +43,7 @@ namespace testApi.EndPoints
             
         }
 
-        [HttpGet("refrash")]
+        [HttpPost("refrash")]
         public async Task<IActionResult> RefrashToken()
         {
             string? oldJwt = Request.Headers.Authorization;
@@ -49,12 +51,27 @@ namespace testApi.EndPoints
             {
                 return Unauthorized(new { message = "Токен отсутствует" });
             }
-             var newToken = _jwtService.RefreshToken(oldJwt);
+             var newToken = _jwtService.RefreshToken(GetToken(oldJwt));
             if(newToken != null)
             {
                 return Ok(new { token = newToken } );
             }
             return Unauthorized(new { message = "Токен недействителен" });
+        }
+
+
+        private string GetToken(string token)
+        {
+            if (token.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
+            {
+                Console.WriteLine($"Длина токена: {token.Length}");
+                Console.WriteLine($"Токен: {token["Bearer ".Length..].Trim()}");
+                return token["Bearer ".Length..].Trim();
+
+            }
+            else
+                Console.WriteLine("косяк передачи");
+                return null;
         }
 
 

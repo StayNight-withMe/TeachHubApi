@@ -13,13 +13,10 @@ using infrastructure.Entitiеs;
 using infrastructure.Extensions;
 using infrastructure.Utils.Mapping.MapperDTO;
 using infrastructure.Utils.PageService;
-using infrastructure.Utils.SortBuilder;
 using Logger;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Globalization;
 using System.Security.Claims;
-using System.Text;
 
 
 namespace Applcation.Service.CourceService
@@ -92,7 +89,7 @@ namespace Applcation.Service.CourceService
         public async Task<TResult<PagedResponseDTO<CourseOutputDTO>>> GetAllCourse(UserSortingRequest userSortingRequest)
         {
 
-            var courses = await _courceRepository.GetAllWithoutTracking().GetWithPagination(userSortingRequest)
+            var courses = await _courceRepository.GetAllWithoutTracking().GetWithPaginationAndSorting(userSortingRequest, "id", "creatorid", "description")
                 .ToListAsync();
 
            var creatorsid = courses
@@ -111,10 +108,10 @@ namespace Applcation.Service.CourceService
                 } ).ToList();
 
 
-            SortBuilder<CourseOutputDTO> sortBuilder = new(courseDTOs);
+           
 
             return PageService.CreatePage(
-                sortBuilder, 
+                courseDTOs, 
                 userSortingRequest, 
                 await _courceRepository.GetAll()
                     .CountAsync());
@@ -154,7 +151,7 @@ namespace Applcation.Service.CourceService
 
           
             List<CourseEntities> courseEntites = await _courceRepository.GetAllWithoutTracking()
-                .GetWithPagination(userSortingRequest)
+                .GetWithPaginationAndSorting(userSortingRequest, "id", "creatorid", "description")
                 .Where(c => c.creatorid == userid)
                 .ToListAsync();
 
@@ -179,10 +176,10 @@ namespace Applcation.Service.CourceService
                 field = c.field
             }).ToList();
 
-            SortBuilder<CourseOutputDTO> sortBuilder = new(courseDTOs);
+           
            
             return PageService
-                .CreatePage(sortBuilder, 
+                .CreatePage(courseDTOs, 
                 userSortingRequest, 
                 await _courceRepository.GetAll()
                     .Where(c => c.creatorid == userid)

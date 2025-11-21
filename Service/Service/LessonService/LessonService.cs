@@ -9,18 +9,11 @@ using Core.Model.TargetDTO.Lesson.input;
 using Core.Model.TargetDTO.Lesson.output;
 using infrastructure.Entitiеs;
 using infrastructure.Extensions;
-using infrastructure.Repository.Base;
 using infrastructure.Utils.PageService;
-using infrastructure.Utils.SortBuilder;
 using Logger;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Applcation.Service.LessonService
 {
@@ -38,7 +31,7 @@ namespace Applcation.Service.LessonService
 
         private readonly ILogger _logger;
 
-        public LessonService(ILogger logger, 
+        public LessonService(ILogger<LessonService> logger, 
             IUnitOfWork unitOfWork, 
             IBaseRepository<ChapterEntity> chapterRepository, 
             IBaseRepository<LessonEntities> lessonRepository,
@@ -80,7 +73,23 @@ namespace Applcation.Service.LessonService
 
         }
 
-        public async Task<TResult> DeleteLesson(int lessonid, int userid)
+        public async Task<TResult> DeleteLessonForAdmin(int lessonid)
+        {
+            await _lessonRepository.DeleteById(lessonid);
+            try
+            {
+                await _unitOfWork.CommitAsync();
+                return TResult.CompletedOperation();
+            }
+            catch(DbUpdateException ex)
+            {
+                _logger.LogDBError(ex);
+                return TResult.FailedOperation(errorCode.DatabaseError);
+            }
+
+        }
+
+        public async Task<TResult> DeleteLessonForUser(int lessonid, int userid)
         {
             var course = await _lessonRepository
                .GetAllWithoutTracking()
@@ -110,12 +119,7 @@ namespace Applcation.Service.LessonService
         public async Task<TResult<PagedResponseDTO<lessonOutputDTO>>> GetLessonByChapterid(int chapterid, UserSortingRequest userSortingRequest)
         {
              var qwery =  _lessonRepository.GetAllWithoutTracking().Where(c => c.chapterid == chapterid  && c.isVisible == true);
-            var lessons = await qwery.GetWithPagination(userSortingRequest).ToListAsync();
-
-            //if ( lessons.Count == 0)
-            //{
-            //    return TResult<PagedResponseDTO<lessonOutputDTO>>.FailedOperation(errorCode.CoursesNotFoud);
-            //}
+            var lessons = await qwery.GetWithPaginationAndSorting(userSortingRequest, "isvisible", "chapterid", "id").ToListAsync();
 
             List<lessonOutputDTO> Outlist = lessons.Select(c => new lessonOutputDTO
             {
@@ -125,10 +129,8 @@ namespace Applcation.Service.LessonService
             }
             ).ToList();
 
-
-            SortBuilder<lessonOutputDTO> sortBuilder = new(Outlist);
              
-            return PageService.CreatePage(sortBuilder, userSortingRequest,  await qwery.CountAsync());
+            return PageService.CreatePage(Outlist, userSortingRequest,  await qwery.CountAsync());
 
         }
 
@@ -138,12 +140,7 @@ namespace Applcation.Service.LessonService
             var qwery = _lessonRepository.GetAllWithoutTracking()
                 .Include(c => c.course)
                 .Where(c => c.chapterid == chapterid && c.isVisible == false && c.course.creatorid == userid);
-            var lessons = await qwery.GetWithPagination(userSortingRequest).ToListAsync();
-
-            //if (lessons.Count == 0)
-            //{
-            //    return TResult<PagedResponseDTO<lessonOutputDTO>>.FailedOperation(errorCode.lessonNotFound);
-            //}
+            var lessons = await qwery.GetWithPaginationAndSorting(userSortingRequest, "isvisible", "chapterid", "id").ToListAsync();
 
             List<lessonOutputDTO> Outlist = lessons.Select(c => new lessonOutputDTO
             {
@@ -153,11 +150,7 @@ namespace Applcation.Service.LessonService
             }
             ).ToList();
 
-
-            SortBuilder<lessonOutputDTO> sortBuilder = new(Outlist, "id");
-
-            return PageService.CreatePage(sortBuilder, userSortingRequest, await qwery.CountAsync());
-
+            return PageService.CreatePage(Outlist, userSortingRequest, await qwery.CountAsync());
         }
 
 
@@ -188,7 +181,6 @@ namespace Applcation.Service.LessonService
                 _logger.LogDBError(ex);
                 return TResult.FailedOperation(errorCode.DatabaseError);
             }
-            
         }
 
         public async Task<TResult<lessonOutputDTO>> UpdateLesson(LessonUpdateDTO newlesson, int userid)

@@ -1,7 +1,7 @@
 ﻿using Core.Model.ReturnEntity;
 using Core.Model.TargetDTO.Common.input;
 using Core.Model.TargetDTO.Common.output;
-using infrastructure.Utils.SortBuilder;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,15 +25,8 @@ namespace infrastructure.Utils.PageService
         }
 
 
-        public static TResult<PagedResponseDTO<T>> CreatePage<T>(SortBuilder<T> sortBuilder, UserSortingRequest userSortingRequest, int totalCount)
+        public static TResult<PagedResponseDTO<T>> CreatePage<T>(List<T> list,UserSortingRequest userSortingRequest, int totalCount)
         {
-
-            sortBuilder
-                .OrderBy(userSortingRequest.OrderBy)
-                .ThenBY(userSortingRequest.ThenBy)
-                .Descending(userSortingRequest.desc);
-
-
 
              bool validate = PageValidate(userSortingRequest.PageSize, userSortingRequest.PageNumber);
 
@@ -41,9 +34,7 @@ namespace infrastructure.Utils.PageService
             {
                 return TResult<PagedResponseDTO<T>>.FailedOperation(errorCode.InvalidDataFormat, "ошибка загрузки страницы");
             }
-
-
-            var list = sortBuilder.Build();
+            
 
             if (list == null)
             {
