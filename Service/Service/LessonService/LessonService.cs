@@ -118,14 +118,14 @@ namespace Applcation.Service.LessonService
 
         public async Task<TResult<PagedResponseDTO<lessonOutputDTO>>> GetLessonByChapterid(int chapterid, UserSortingRequest userSortingRequest)
         {
-             var qwery =  _lessonRepository.GetAllWithoutTracking().Where(c => c.chapterid == chapterid  && c.isVisible == true);
+             var qwery =  _lessonRepository.GetAllWithoutTracking().Where(c => c.chapterid == chapterid  && c.isvisible == true);
             var lessons = await qwery.GetWithPaginationAndSorting(userSortingRequest, "isvisible", "chapterid", "id").ToListAsync();
 
             List<lessonOutputDTO> Outlist = lessons.Select(c => new lessonOutputDTO
             {
                 name = c.name,
                 id = c.id,
-                order = c.order
+                order = (int)c.order
             }
             ).ToList();
 
@@ -139,14 +139,14 @@ namespace Applcation.Service.LessonService
         {
             var qwery = _lessonRepository.GetAllWithoutTracking()
                 .Include(c => c.course)
-                .Where(c => c.chapterid == chapterid && c.isVisible == false && c.course.creatorid == userid);
+                .Where(c => c.chapterid == chapterid && c.isvisible == false && c.course.creatorid == userid);
             var lessons = await qwery.GetWithPaginationAndSorting(userSortingRequest, "isvisible", "chapterid", "id").ToListAsync();
 
             List<lessonOutputDTO> Outlist = lessons.Select(c => new lessonOutputDTO
             {
                 name = c.name,
                 id = c.id,
-                order = c.order
+                order = (int)c.order
             }
             ).ToList();
 
@@ -157,7 +157,7 @@ namespace Applcation.Service.LessonService
 
         public async Task<TResult> SwitchVisible(int lessonid, int userid)
         {
-            var lesson = await _lessonRepository.GetAllWithoutTracking()
+            var lesson = await _lessonRepository.GetAll()
                 .Include(c => c.course)
                 .Where(c => c.course.creatorid == userid && c.id == lessonid)
                 .FirstOrDefaultAsync();
@@ -167,9 +167,7 @@ namespace Applcation.Service.LessonService
                 return TResult.FailedOperation(errorCode.lessonNotFound);
             }
 
-            lesson.isVisible = !lesson.isVisible;
-
-            await _lessonRepository.Update(lesson);
+            lesson.isvisible = !lesson.isvisible;
 
             try
             {

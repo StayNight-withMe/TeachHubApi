@@ -58,6 +58,7 @@ builder.Services.AddAutoMapper(cfg => cfg.AddProfile<RoleMapperProfile>());
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<AuthMapperProfile>());
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<CoursesMapperProfile>());
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<ChaptermMapperProfile>());
+builder.Services.AddAutoMapper(cfg => cfg.AddProfile<LessonMapperProfile>());
 builder.Services.AddScoped<IHeaderService, HeaderService>();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();

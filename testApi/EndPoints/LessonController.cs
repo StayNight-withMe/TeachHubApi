@@ -1,9 +1,11 @@
 ﻿using Core.Interfaces.Service;
+using Core.Model.TargetDTO.Common.input;
 using Core.Model.TargetDTO.Lesson.input;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace testApi.EndPoints
 {
@@ -16,6 +18,20 @@ namespace testApi.EndPoints
         {
             _lessonService = lessonService;
         }
+
+        [HttpGet("{chapterid}")]
+        public async Task<IActionResult> GetLesson(int chapterid,
+            [FromQuery] UserSortingRequest userSortingRequest)
+        {
+            var result = await _lessonService.GetLessonByChapterid(chapterid, userSortingRequest);
+            if(result.IsCompleted)
+            {
+                return Ok(result.Value);
+            }
+            return EntityResultExtensions.ToActionResult(result, this);
+        }
+
+
 
         [HttpPost]
         [Authorize]

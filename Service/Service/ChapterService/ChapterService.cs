@@ -51,9 +51,13 @@ namespace Applcation.Service.chapterService
             int userid)
         {
             CourseEntities? course = await _coursesRepository.GetAll().AsNoTracking().
-            
                 Where(c => c.creatorid == userid && c.id == chapter.courseid).
                 FirstOrDefaultAsync();
+
+            if(course == null)
+            {
+                return TResult.FailedOperation(errorCode.CoursesNotFoud);
+            }
 
             if (course.creatorid != userid)
             {
@@ -109,6 +113,7 @@ namespace Applcation.Service.chapterService
                }
                );
 
+            Console.WriteLine($"order : {newchapter.order}");
 
             var chapterInfo = await joined.FirstOrDefaultAsync();
 
@@ -158,23 +163,23 @@ namespace Applcation.Service.chapterService
                 return TResult<PagedResponseDTO<ChapterOutDTO>>.FailedOperation(errorCode.CoursesNotFoud, "у вас отсутствует данный курс");
             }
 
-                return await GetChapter(chapter, userSortingRequest);
+                return await GetChapter(chapter, userSortingRequest, await _chapterRepository.GetAllWithoutTracking().Include(c => c.course).Where(c => c.course.id == courseid).CountAsync());
         }
 
 
-        private async Task<TResult<PagedResponseDTO<ChapterOutDTO>>> GetChapter(List<ChapterEntity> chapterEntities, UserSortingRequest userSortingRequest)
+        private async Task<TResult<PagedResponseDTO<ChapterOutDTO>>> GetChapter(List<ChapterEntity> chapterEntities, UserSortingRequest userSortingRequest, int count)
         {
 
             List<ChapterOutDTO> chapters = chapterEntities.Select(c => new ChapterOutDTO
             {
                 id = c.id,
                 name = c.name,
-                order = c.order,
+                order = (int)c.order,
             }).ToList();
 
             
 
-            return PageService.CreatePage(chapters, userSortingRequest, chapters.Count());
+            return PageService.CreatePage(chapters, userSortingRequest, count);
         }
 
 
@@ -184,7 +189,7 @@ namespace Applcation.Service.chapterService
         {
             var chapter = await _chapterRepository.GetAllWithoutTracking().GetWithPaginationAndSorting(userSortingRequest, "id", "courseid").Include(c => c.course).Where(c => c.course.id == courseid).ToListAsync();
 
-            return await GetChapter(chapter, userSortingRequest);
+            return await GetChapter(chapter, userSortingRequest, await _chapterRepository.GetAllWithoutTracking().Include(c => c.course).Where(c => c.course.id == courseid).CountAsync());
 
         }
 

@@ -87,6 +87,8 @@ namespace infrastructure.Repository.Base
                 if (value != null || prop.PropertyType == typeof(string))
                 {
                     var entityProperty = entry.Property(prop.Name);
+                         Console.WriteLine($"Setting EF property '{prop.Name}' to {value ?? "NULL"}");
+                    entityProperty.CurrentValue = value;
                     if (entityProperty.Metadata.PropertyInfo != null) // только реальные свойства
                     {
                         entityProperty.CurrentValue = value ?? ""; // или value, если не хочешь затирать null'ами

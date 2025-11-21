@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Core.Model.TargetDTO.Lesson.input
 {
-    public class LessonUpdateDTO : BaseLesson
+    public class LessonUpdateDTO
     {
         public int id { get; set; }
         public string? name { get; set; }

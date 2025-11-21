@@ -7,9 +7,9 @@ namespace infrastructure.Entitiеs
         public int id { get; set; }
         public string name { get; set; } 
         public int chapterid { get; set; }
-        public int order {  get; set; }
+        public int? order {  get; set; }
         public int courseid { get; set; }
-        public bool isVisible { get; set; }
+        public bool isvisible { get; set; }
 
         [ForeignKey(nameof(chapterid))]
         public ChapterEntity chapter { get; set; }

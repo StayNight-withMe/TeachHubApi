@@ -87,13 +87,14 @@ namespace Applcation.Service.UserService
             };
 
 
-            var userAuth = _mapper.Map<UserAuthDto>(authSource);
+            
 
 
             try
             {
                 
                 int count = await _unitOfWork.CommitAsync();
+                var userAuth = _mapper.Map<UserAuthDto>(authSource);
                 _logger.LogAffectedRows(count);
                 return TResult<UserAuthDto>.CompletedOperation(userAuth);
             }

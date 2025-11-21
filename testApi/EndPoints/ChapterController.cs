@@ -22,10 +22,10 @@ namespace testApi.EndPoints
         }
 
 
-        [HttpGet]
+        [HttpGet("{courseId}")]
         public async Task<IActionResult> GetChapter(
-        [FromBody] UserSortingRequest request,
-        [FromQuery] int courseId
+        [FromQuery] UserSortingRequest request,
+        int courseId
         )
         {
             var result = await _chapterService.GetChaptersByCourseId(courseId, request);
@@ -66,23 +66,23 @@ namespace testApi.EndPoints
 
         }
 
-        [Authorize]
-        [HttpGet("my")]
-        public async Task<IActionResult> GetUserCourseChapter(
-        [FromBody] UserSortingRequest request,
-        [FromQuery] int courseId
-        )
-        {
-            var result = await _chapterService.GetChaptersByCourseIdAndUserId(courseId, Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), request);
+        //[Authorize]
+        //[HttpGet("my/{courseId}")]
+        //public async Task<IActionResult> GetUserCourseChapter(
+        //[FromQuery] UserSortingRequest request,
+        //int courseId
+        //)
+        //{
+        //    var result = await _chapterService.GetChaptersByCourseIdAndUserId(courseId, Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), request);
 
-            if (result.IsCompleted)
-            {
-                return Ok(result.Value);
-            }
+        //    if (result.IsCompleted)
+        //    {
+        //        return Ok(result.Value);
+        //    }
 
-            return EntityResultExtensions.ToActionResult(result, this);
+        //    return EntityResultExtensions.ToActionResult(result, this);
 
-        }
+        //}
 
         [Authorize]
         [HttpDelete("{chapterid}")]
