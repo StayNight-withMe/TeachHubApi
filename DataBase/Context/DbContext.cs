@@ -7,7 +7,7 @@ namespace infrastructure.Context
     {
         public DbSet<UserRoleEntities> usersroles { get; set; }
         public DbSet<UserEntities> users { get; set; }
-        public DbSet<SubscriptionEntities> subscriptions { get; set; }
+        public DbSet<FavoritEntities> favorit { get; set; }
         public DbSet<RoleEntities> roles { get; set; }
         public DbSet<ReviewEntities> reviews { get; set; }
         public DbSet<LessonEntities> lesson { get; set; }
@@ -25,8 +25,8 @@ namespace infrastructure.Context
                 .HasKey(ur => new { ur.userid, ur.roleid });
 
 
-            modelBuilder.Entity<SubscriptionEntities>()
-                .HasKey(s => new { s.userid, s.courseid });
+            modelBuilder.Entity<SubscriptionEntites>()
+                .HasKey(s => new { s.followingid, s.followerid });
 
             base.OnModelCreating(modelBuilder);
         }

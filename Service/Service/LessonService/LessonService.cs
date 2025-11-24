@@ -114,6 +114,11 @@ namespace Applcation.Service.LessonService
                 _logger.LogDBError(ex);
                 return TResult.FailedOperation(errorCode.DatabaseError);
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex);
+                return TResult.FailedOperation(errorCode.UnknownError);
+            }
         }
 
         public async Task<TResult<PagedResponseDTO<lessonOutputDTO>>> GetLessonByChapterid(int chapterid, UserSortingRequest userSortingRequest)
@@ -179,6 +184,11 @@ namespace Applcation.Service.LessonService
                 _logger.LogDBError(ex);
                 return TResult.FailedOperation(errorCode.DatabaseError);
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex);
+                return TResult.FailedOperation(errorCode.UnknownError);
+            }
         }
 
         public async Task<TResult<lessonOutputDTO>> UpdateLesson(LessonUpdateDTO newlesson, int userid)
@@ -200,6 +210,11 @@ namespace Applcation.Service.LessonService
             {
                 _logger.LogDBError(ex);
                 return TResult<lessonOutputDTO>.FailedOperation(errorCode.DatabaseError);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex);
+                return TResult<lessonOutputDTO>.FailedOperation(errorCode.UnknownError);
             }
 
         }
