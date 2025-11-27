@@ -22,10 +22,10 @@ namespace testApi.Middleware.RateLimit
 
         private readonly int _limit = 10;
 
-        
 
-        public RateLimitMiddleware(RequestDelegate requestDelegate, ILogger<RateLimitMiddleware> logger, int secund, int requsestsCount) 
-        { 
+
+        public RateLimitMiddleware(RequestDelegate requestDelegate, ILogger<RateLimitMiddleware> logger, int secund, int requsestsCount)
+        {
             _next = requestDelegate;
             _logger = logger;
             _limit = requsestsCount;
@@ -63,7 +63,7 @@ namespace testApi.Middleware.RateLimit
 
             if (qw.Count >= _limit)
             {
-                
+
                 Console.WriteLine("Лимит запросов превышен");
                 await RateLimitDropError(context, qw);
                 return;
@@ -88,7 +88,7 @@ namespace testApi.Middleware.RateLimit
         // 11.12
         // 11.11
 
-       
+
 
         public async Task RateLimitDropError(HttpContext context, ConcurrentQueue<DateTime> times)
         {
@@ -97,16 +97,16 @@ namespace testApi.Middleware.RateLimit
             context.Response.ContentType = "application/json";
 
 
-            DateTime TimeLimit; 
+            DateTime TimeLimit;
             if (times.TryPeek(out DateTime gg))
             {
-                TimeLimit =  gg + _limitTimeSpan;
+                TimeLimit = gg + _limitTimeSpan;
             }
             else
             {
                 TimeLimit = DateTime.UtcNow;
             }
-          
+
 
 
             var response = new
@@ -123,7 +123,7 @@ namespace testApi.Middleware.RateLimit
 
 
 
-      
+
 
     }
 

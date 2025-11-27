@@ -138,7 +138,7 @@ namespace Applcation.Service.UserService
 
         public async Task<TResult> AgressiveRemoveUser(int id)
         {
-            var user = await _userRepository.GetById(id);
+            var user = await _userRepository.GetByIdAsync(id);
             if (user == null)
             {
                 _logger.LogRemoveUserNotFound(id);
@@ -152,7 +152,7 @@ namespace Applcation.Service.UserService
 
         public async Task<TResult> SoftDelete(int id)
         {
-            UserEntities? user = await _userRepository.GetById(id);
+            UserEntities? user = await _userRepository.GetByIdAsync(id);
             if (user == null)
             {
                 _logger.LogRemoveUserNotFound(id);

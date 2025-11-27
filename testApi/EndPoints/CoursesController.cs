@@ -41,6 +41,17 @@ namespace testApi.EndPoints
             return EntityResultExtensions.ToActionResult(result, this);    
         }
 
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchCourse(
+            [FromQuery] UserSortingRequest userSortingRequest,
+            [FromQuery] string searchText
+            )
+        {
+            var result = await _courseService.SearchCourse(searchText, userSortingRequest);
+            return EntityResultExtensions.ToActionResult(result, this);
+        }
+
+
         [HttpDelete("{id}")]
         [Authorize]
         public async Task<IActionResult> Remove(int id)
@@ -54,30 +65,16 @@ namespace testApi.EndPoints
         public async Task<IActionResult> GetAllCources([FromQuery] UserSortingRequest userSortingRequest)
         {
             var result = await _courseService.GetAllCourse(userSortingRequest);
-            if(result.IsCompleted)
-            {
-                return Ok(result.Value);
-            }
-            else
-            {
-                return EntityResultExtensions.ToActionResult(result, this);
-            }
+            return EntityResultExtensions.ToActionResult(result, this);
+            
         }
 
         [Authorize]
         [HttpGet("my")]
         public async Task<IActionResult> GetUserCourses([FromQuery] UserSortingRequest userSortingRequest)
         {
-            
             var result = await _courseService.GetUserCourses(Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), User.FindFirstValue(ClaimTypes.Name), userSortingRequest);
-            if (result.IsCompleted)
-            {
-                return Ok(result.Value);
-            }
-            else
-            {
-                return EntityResultExtensions.ToActionResult(result, this);
-            }
+            return EntityResultExtensions.ToActionResult(result, this);   
         }
 
 

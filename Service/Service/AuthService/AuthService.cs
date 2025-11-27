@@ -63,7 +63,7 @@ namespace Applcation.Service.AuthService
                 }
 
 
-                UserRoleEntities? userRole = await _userRolesRepository.GetById(user.id, (int)loginUserDTO.role);
+                UserRoleEntities? userRole = await _userRolesRepository.GetByIdAsync(user.id, (int)loginUserDTO.role);
                 if (userRole != null)
                 {
                    // Console.WriteLine($" IDROLE {userRole.roleid}, USERID {userRole.user.id}");

@@ -15,11 +15,11 @@
         public T Value { get; set; }
         public static TResult<T> CompletedOperation(T value)
             => new TResult<T> { Value = value, IsCompleted = true, ErrorCode = errorCode.None};
-        public static TResult<T> FailedOperation(errorCode errorCode, string MessageForUser)
+        public static TResult<T> FailedOperation(errorCode errorCode, string MessageForUser = null)
             => new TResult<T> {IsCompleted = false, ErrorCode = errorCode, MessageForUser = MessageForUser };
 
-        public static TResult<T> FailedOperation(errorCode errorCode)
-            => new TResult<T> { IsCompleted = false, ErrorCode = errorCode};
+        //public static TResult<T> FailedOperation(errorCode errorCode)
+        //    => new TResult<T> { IsCompleted = false, ErrorCode = errorCode};
 
 
         public static implicit operator TResult(TResult<T> value)
@@ -33,10 +33,10 @@
     public class TResult : EntityOfTResult
     {
         public static TResult CompletedOperation() => new TResult {IsCompleted = true, ErrorCode = errorCode.None };
-        public static TResult FailedOperation(errorCode errorCode, string message)
+        public static TResult FailedOperation(errorCode errorCode, string message = null)
             => new TResult{ IsCompleted = false, ErrorCode = errorCode, MessageForUser = message};
-        public static TResult FailedOperation(errorCode errorCode)
-            => new TResult { IsCompleted = false, ErrorCode = errorCode };
+        //public static TResult FailedOperation(errorCode errorCode)
+        //    => new TResult { IsCompleted = false, ErrorCode = errorCode };
 
     }
 

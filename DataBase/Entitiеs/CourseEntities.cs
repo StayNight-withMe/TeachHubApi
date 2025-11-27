@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using NpgsqlTypes;
 
 namespace infrastructure.Entitiеs
 {
@@ -10,6 +11,7 @@ namespace infrastructure.Entitiеs
         public DateTime createdat {  get; set; } = DateTime.UtcNow;
         public int? creatorid { get; set; }
         public string field {  get; set; }
+        public NpgsqlTsVector searchvector { get; set; }
 
         [ForeignKey(nameof(creatorid))]
         public UserEntities user { get; set; }

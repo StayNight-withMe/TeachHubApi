@@ -26,8 +26,6 @@ namespace Applcation.Service.CourceService
 
         private readonly IBaseRepository<CourseEntities> _courceRepository;
 
-        private readonly IBaseRepository<UserEntities> _userRepository;
-
         private readonly ILogger<CourcesService> _logger;
 
         private readonly IMapper _mapper;
@@ -46,14 +44,13 @@ namespace Applcation.Service.CourceService
             _logger = logger;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
-            _userRepository = userRepository;
         }
 
 
 
         public async Task<TResult> CreateCourse(CreateCourseDTO courceDTO, int id)
         {
-            Console.WriteLine($"id : {id}");
+            Console.WriteLine($"courseid : {id}");
          
 
             bool cource = await _courceRepository.GetAllWithoutTracking().Where(c => c.creatorid == id && c.name == courceDTO.name).AnyAsync();
@@ -81,37 +78,50 @@ namespace Applcation.Service.CourceService
             catch(DbUpdateException ex)
             {
                 _logger.LogError(ex);                                                           
-                return TResult.FailedOperation(errorCode.DatabaseError, "ошибка на стороне сервера, \n не удалось сохранить курс");
+                return TResult.FailedOperation(errorCode.DatabaseError, "ошибка на стороне сервера, не удалось сохранить курс");
             }
 
         }
 
-        public async Task<TResult<PagedResponseDTO<CourseOutputDTO>>> GetAllCourse(UserSortingRequest userSortingRequest)
-        {
 
-            var courses = await _courceRepository.GetAllWithoutTracking().GetWithPaginationAndSorting(userSortingRequest, "id", "creatorid", "description")
+        public async Task<TResult<PagedResponseDTO<CourseOutputDTO>>> SearchCourse(string search, UserSortingRequest userSortingRequest)
+        {
+            var listqw = _courceRepository.GetAllWithoutTracking()
+                .Where(c => c.searchvector
+                .Matches(search) );
+
+            var list = await listqw
+                .GetWithPaginationAndSorting(userSortingRequest)
+                .Include(c => c.user)
                 .ToListAsync();
 
-           var creatorsid = courses
-                .Select(c => c.creatorid).Distinct().ToList();
-            var creatorsName = await _userRepository.GetAll()
-                .Where(c => creatorsid.Contains(c.id)).ToDictionaryAsync(c => c.id, c => c.name);
-                
-
-            List<CourseOutputDTO> courseDTOs =  courses
-                .Select( c => new CourseOutputDTO
-                { description =  c.description, 
-                    id = c.id.ToString(), 
-                    name = c.name, 
-                    creatorname = creatorsName.GetValueOrDefault(Convert.ToInt32(c.creatorid), "удаленный аккаунт"),
-                      createdat = c.createdat,
-                } ).ToList();
+            return PageService.CreatePage(MapList(list), userSortingRequest, await listqw.CountAsync());
+        }
 
 
-           
+        private List<CourseOutputDTO> MapList(List<CourseEntities> courseEntities)
+        {
+            return courseEntities
+               .Select(c => new CourseOutputDTO
+               {
+                   description = c.description,
+                   id = c.id.ToString(),
+                   name = c.name,
+                   creatorname = c.user.name ?? "удаленный аккаунт",
+                   createdat = c.createdat,
+               }).ToList();
+        }
 
+
+        public async Task<TResult<PagedResponseDTO<CourseOutputDTO>>> GetAllCourse(UserSortingRequest userSortingRequest)
+        {
+            var courses = await _courceRepository.GetAllWithoutTracking()
+                .Include(c => c.user)
+                .GetWithPaginationAndSorting(userSortingRequest, "courseid", "creatorid", "description")
+                .ToListAsync();
+       
             return PageService.CreatePage(
-                courseDTOs, 
+                MapList(courses), 
                 userSortingRequest, 
                 await _courceRepository.GetAll()
                     .CountAsync());
@@ -122,7 +132,9 @@ namespace Applcation.Service.CourceService
      
         public async Task<TResult<CourseOutputDTO>> UpdateCourse(UpdateCourseDTO updateCourseDTO, int userid)
         {
-            var cousrse = await _courceRepository.GetAllWithoutTracking().Where(c => c.id == updateCourseDTO.id && c.creatorid == userid).FirstOrDefaultAsync();
+            var cousrse = await _courceRepository.GetAllWithoutTracking()
+                .Where(c => c.id == updateCourseDTO.id && c.creatorid == userid)
+                .FirstOrDefaultAsync();
 
             if(cousrse == null)
             {
@@ -151,7 +163,7 @@ namespace Applcation.Service.CourceService
 
           
             List<CourseEntities> courseEntites = await _courceRepository.GetAllWithoutTracking()
-                .GetWithPaginationAndSorting(userSortingRequest, "id", "creatorid", "description")
+                .GetWithPaginationAndSorting(userSortingRequest, "courseid", "creatorid", "description")
                 .Where(c => c.creatorid == userid)
                 .ToListAsync();
 
@@ -188,23 +200,22 @@ namespace Applcation.Service.CourceService
         }
 
 
-        public async Task<TResult> RemoveCourse(int id, ClaimsPrincipal userClaim)
+        public async Task<TResult> RemoveCourse(int courseid, ClaimsPrincipal userClaim)
         {
             if(userClaim.IsInRole(Enum.GetName(AllRole.user)))
             {
-                UserEntities? user = await _userRepository.GetAll()
-                    .Where(c => c.email == userClaim.FindFirst(ClaimTypes.Email).Value.ToString())
-                    .FirstOrDefaultAsync();
 
-                if(user == null)
-                {
-                    return TResult.FailedOperation(errorCode.EmailInvalid, "ошибка поиска пользователя");
-                }
+                var cource = await _courceRepository.GetAllWithoutTracking()
+                             .Include(c => c.user)
+                             .Where(
+                             c => c.id == courseid &&  
+                             c.user.email == userClaim.FindFirst(ClaimTypes.Email).Value.ToString())
+                             .FirstOrDefaultAsync();
 
-                var cource = await _courceRepository.GetAll()
-                                .Where(c => c.id == id && c.creatorid == user.id)
-                                .FirstOrDefaultAsync();
-                
+                //UserEntities? user = await _userRepository.GetAll()
+                //    .Where(c => c.email == )
+                //    .FirstOrDefaultAsync();
+             
                 if(cource == null)
                 {
                     return TResult.FailedOperation(errorCode.CoursesNotFoud, "курс для удаление не найден");
@@ -216,10 +227,10 @@ namespace Applcation.Service.CourceService
             else if (userClaim.IsInRole(Enum.GetName(AllRole.admin)))
             {
 
-                var course =  await _courceRepository.GetById(id);
+                var course =  await _courceRepository.GetByIdAsync(courseid);
 
                 if(course != null)
-                await _courceRepository.DeleteById(id);
+                await _courceRepository.DeleteById(courseid);
             }
 
 

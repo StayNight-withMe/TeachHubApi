@@ -1,0 +1,79 @@
+﻿using Core.Interfaces.Service;
+using Core.Interfaces.Utils;
+using Core.Model.TargetDTO.Common.input;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+
+namespace testApi.EndPoints
+{
+    [ApiController]
+    [Route("api/user/follow")]
+    public class FollowController : ControllerBase
+    {
+        private readonly ISubscriptionService _followService;
+        public FollowController(
+            ISubscriptionService subscriptionService
+            )
+        {
+            _followService = subscriptionService;
+        }
+
+        [Authorize]
+        [HttpPost("{userid}")]
+        public async Task<IActionResult> Addfollowing(int userid)
+        {
+            var result = await _followService.CreateSubscription(Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), userid);
+            return EntityResultExtensions.ToActionResult(result, this);
+        }
+
+
+        [HttpGet("{userid}")]
+        public async Task<IActionResult> GetUserFollowing(
+          int userid, 
+          [FromQuery] UserSortingRequest userSortingRequest)
+        {
+            var result = await _followService.GetUserFollowing(userid, userSortingRequest);
+            return EntityResultExtensions.ToActionResult(result, this);
+        }
+
+        [HttpGet("{userid}/followers")]
+        public async Task<IActionResult> GetUserFollowers(
+        int userid,
+        [FromQuery] UserSortingRequest userSortingRequest)
+        {
+            var result = await _followService.GetUserFollowers(userid, userSortingRequest);
+            return EntityResultExtensions.ToActionResult(result, this);
+        }
+
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetUserollowing(
+        int userid,
+        [FromQuery] UserSortingRequest userSortingRequest)
+        {
+            var result = await _followService.GetUserFollowing(userid, userSortingRequest);
+            return EntityResultExtensions.ToActionResult(result, this);
+        }
+
+
+        [Authorize]
+        [HttpGet("followers")]
+        public async Task<IActionResult> GetMyFollower(
+            [FromQuery] UserSortingRequest userSortingRequest)
+        {
+            var result = await _followService.GetUserFollowers(Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), userSortingRequest);
+            return EntityResultExtensions.ToActionResult(result, this);
+        }
+
+        [Authorize]
+        [HttpDelete("{following}")]
+        public async Task<IActionResult> Deletefollowing(int following)
+        {
+            var result = await _followService.DeleteSubscription(Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), following);
+            return EntityResultExtensions.ToActionResult(result, this);
+        }
+
+    }
+}

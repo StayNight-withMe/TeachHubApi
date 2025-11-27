@@ -6,33 +6,28 @@ namespace testApi
     public static class EntityResultExtensions
     {
 
-        public static IActionResult ToActionResult(EntityOfTResult result, ControllerBase controllerBase)
+
+        public static int ErrorMap(errorCode num)
         {
-
-            Func<errorCode, int> map = (errorCode) =>
+            if ((int)num < 100)
             {
-                if((int)errorCode < 100)
-                {
-                    return 400;
-                }
-                else if((int)errorCode < 200)
-                {
-                    return 409;
-                }
-                else
-                {
-                    return 500;
-                }
-
-
-            };
-
-
-
-            if (result.IsCompleted)
-            {
-                return controllerBase.StatusCode(200, "OK");
+                return 400;
             }
+            else if ((int)num < 200)
+            {
+                return 409;
+            }
+            else
+            {
+                return 500;
+            }
+
+        }
+
+
+
+        private static IActionResult MapToAction(EntityOfTResult result, ControllerBase controllerBase)
+        {
 
             return result.ErrorCode switch
             {
@@ -45,17 +40,39 @@ namespace testApi
                     => controllerBase.Conflict(new { code = result.ErrorCode.ToString(), message = "пользователь уже существует" }),
 
                 // 500 Internal Server Error 
-                _ => controllerBase.StatusCode(map(result.ErrorCode), new { code = result.ErrorCode.ToString(), message = result.MessageForUser })
+                _ => controllerBase.StatusCode(ErrorMap(result.ErrorCode), new { code = result.ErrorCode.ToString(), message = result.MessageForUser })
 
             };
+
+        }
+
+        public static IActionResult ToActionResult<T>(TResult<T> result, ControllerBase controllerBase) 
+        {
+            if (result.IsCompleted)
+            {
+                return controllerBase.StatusCode(200, result.Value);
+            }
+
+            return MapToAction(result, controllerBase);
+
          }
+        public static IActionResult ToActionResult(TResult result, ControllerBase controllerBase)
+        {
+            if (result.IsCompleted)
+            {
+               return controllerBase.StatusCode(200, "Ok");
+            }
 
-
+            return MapToAction(result, controllerBase);
 
         }
 
 
-        } 
+
+    }
+
+
+} 
 
 
   

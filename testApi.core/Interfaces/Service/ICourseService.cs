@@ -13,6 +13,7 @@ namespace Core.Interfaces.Service
         public Task<TResult<PagedResponseDTO<CourseOutputDTO>>> GetAllCourse(UserSortingRequest userSortingRequest);
         public Task<TResult<PagedResponseDTO<CourseOutputDTO>>> GetUserCourses(int id, string name, UserSortingRequest userSortingRequest);
         public Task<TResult<CourseOutputDTO>> UpdateCourse(UpdateCourseDTO updateCourseDTO, int userid);
+        public Task<TResult<PagedResponseDTO<CourseOutputDTO>>> SearchCourse(string search, UserSortingRequest userSortingRequest);
         public Task<TResult> RemoveCourse(int id, ClaimsPrincipal user);
     }
 }

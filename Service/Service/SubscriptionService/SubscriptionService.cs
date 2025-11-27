@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Core.Interfaces.Repository;
+﻿using Core.Interfaces.Repository;
 using Core.Interfaces.Service;
 using Core.Interfaces.UoW;
 using Core.Model.ReturnEntity;
@@ -9,14 +8,10 @@ using Core.Model.TargetDTO.Subscription.output;
 using infrastructure.Entitiеs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using infrastructure.Extensions;
 using infrastructure.Utils.PageService;
 using Logger;
+using System.Threading.Tasks;
 
 namespace Applcation.Service.SubscriptionService
 {
@@ -69,7 +64,7 @@ namespace Applcation.Service.SubscriptionService
         {
             try
             {
-                await _suubscriptionRepository.GetAll().Where(c => c.followingid == followingid && c.followerid == followerid).ExecuteDeleteAsync();
+                await _suubscriptionRepository.DeleteById(followerid, followingid);
                 return TResult.CompletedOperation();
             }
             catch(DbUpdateException ex)
@@ -84,20 +79,53 @@ namespace Applcation.Service.SubscriptionService
             }
         }
 
-        public async Task<TResult<PagedResponseDTO<SubscribeOutput>>> GetSubscriptionOfUser(int userid, UserSortingRequest userSortingRequest)
+
+        private async Task<TResult<PagedResponseDTO<SubscribeOutput>>> CreatePageOfUser(IQueryable<SubscriptionEntites> queryable,UserSortingRequest userSortingRequest)
         {
-            var entityList =  await _suubscriptionRepository.GetAllWithoutTracking().Include(c => c.following).GetWithPaginationAndSorting(userSortingRequest).Where(c => c.followerid == userid).ToListAsync();
+
+            var entityList = await queryable
+                .Include(c => c.following)
+                .Include(c => c.follower)
+                .GetWithPaginationAndSorting(userSortingRequest)
+                .ToListAsync();
+
 
             var dtoList = entityList.Select(c => new SubscribeOutput
             {
                 id = c.followingid,
                 username = c.following.name,
             }
-            ).ToList();
+          ).ToList();
 
-             return PageService.CreatePage(dtoList, userSortingRequest, await _suubscriptionRepository.GetAllWithoutTracking().CountAsync());
+            return PageService.CreatePage(
+                dtoList,
+                userSortingRequest,
+                await _suubscriptionRepository
+                   .GetAllWithoutTracking()
+                   .CountAsync());
+        }
+
+
+        public async Task<TResult<PagedResponseDTO<SubscribeOutput>>> GetUserFollowing(int userid, UserSortingRequest userSortingRequest)
+        {
+            var entityqw = _suubscriptionRepository
+                .GetAllWithoutTracking()
+                .Where(c => c.followerid == userid);
+                
+            return await CreatePageOfUser(entityqw, userSortingRequest);
 
         }
+
+        public async Task<TResult<PagedResponseDTO<SubscribeOutput>>> GetUserFollowers(int userid, UserSortingRequest userSortingRequest)
+        {
+            var entityqw = _suubscriptionRepository
+                .GetAllWithoutTracking()
+                .Where(c => c.followerid == userid);
+
+            return await CreatePageOfUser(entityqw, userSortingRequest);
+
+        }
+
 
 
     }

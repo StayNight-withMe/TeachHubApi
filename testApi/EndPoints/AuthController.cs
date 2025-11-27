@@ -64,10 +64,7 @@ namespace testApi.EndPoints
         {
             if (token.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
             {
-                Console.WriteLine($"Длина токена: {token.Length}");
-                Console.WriteLine($"Токен: {token["Bearer ".Length..].Trim()}");
                 return token["Bearer ".Length..].Trim();
-
             }
             else
                 Console.WriteLine("косяк передачи");

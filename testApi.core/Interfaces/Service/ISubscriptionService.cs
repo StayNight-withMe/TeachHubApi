@@ -13,7 +13,8 @@ namespace Core.Interfaces.Service
     public interface ISubscriptionService
     {
         Task<TResult> CreateSubscription(int followerid, int followingid);
-        Task<TResult<PagedResponseDTO<SubscribeOutput>>> GetSubscriptionOfUser(int userid, UserSortingRequest userSortingRequest);
+        Task<TResult<PagedResponseDTO<SubscribeOutput>>> GetUserFollowing(int userid, UserSortingRequest userSortingRequest);
+        Task<TResult<PagedResponseDTO<SubscribeOutput>>> GetUserFollowers(int userid, UserSortingRequest userSortingRequest);
         Task<TResult> DeleteSubscription(int followerid, int followingid);
     }
 }

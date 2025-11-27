@@ -24,10 +24,6 @@ namespace testApi.EndPoints
             [FromQuery] UserSortingRequest userSortingRequest)
         {
             var result = await _lessonService.GetLessonByChapterid(chapterid, userSortingRequest);
-            if(result.IsCompleted)
-            {
-                return Ok(result.Value);
-            }
             return EntityResultExtensions.ToActionResult(result, this);
         }
 
@@ -46,11 +42,6 @@ namespace testApi.EndPoints
         public async Task<IActionResult> UpdateLesson([FromBody] LessonUpdateDTO lesson)
         {
             var result = await _lessonService.UpdateLesson(lesson, Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)));
-
-            if (result.IsCompleted)
-            {
-                return Ok(result.Value);
-            }
             return EntityResultExtensions.ToActionResult(result, this);
         }
 

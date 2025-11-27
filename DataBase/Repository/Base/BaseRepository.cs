@@ -7,7 +7,7 @@ namespace infrastructure.Repository.Base
 {
     public class BaseRepository<T> : IBaseRepository<T> where T : class
     {
-       protected readonly CourceDbContext _db;
+        protected readonly CourceDbContext _db;
 
         protected readonly DbSet<T> _dbSet;
         public BaseRepository(CourceDbContext courceDbContext) 
@@ -16,6 +16,12 @@ namespace infrastructure.Repository.Base
             _dbSet = _db.Set<T>();
         }
 
+        /// <summary>
+        /// создание сущности, для применения изменений нужен коммит изменений
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
         public virtual async Task Create(T value)
         {
             if(value == null)
@@ -27,14 +33,23 @@ namespace infrastructure.Repository.Base
             
            
         }
-
+        /// <summary>
+        /// обновление сущности целиком, для применения изменений нужен коммит изменений
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public virtual async Task Update(T value)
         {
             _dbSet.Update(value);
             await Task.CompletedTask;
         }
 
-        public async virtual Task DeleteById(int id)
+        /// <summary>
+        /// удаление по id, поддерживается использование составных первичных ключей
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async virtual Task DeleteById(params int[] id)
         {
             var value = await _dbSet.FindAsync(id);
             if(value != null)
@@ -43,23 +58,58 @@ namespace infrastructure.Repository.Base
             }
         }
 
-
-        public  IQueryable<T> GetAll()
+        /// <summary>
+        /// получение целого set используя IQueryable, сущности по умолчанию остаются прикреплены к EF
+        /// </summary>
+        /// <returns></returns>
+        public IQueryable<T> GetAll()
         {
             return _dbSet.AsQueryable();
         }
 
-
+        /// <summary>
+        /// получения целого set используя IQueryable, сущности по умолчанию НЕ остаются прикреплены к EF 
+        /// </summary>
+        /// <returns></returns>
         public IQueryable<T> GetAllWithoutTracking()
         {
             return _dbSet.AsQueryable().AsNoTracking();
         }
 
-        public virtual async Task<T?> GetById(params object[] id)
+        /// <summary>
+        /// получение объекта(записи) из сущности по id, присутствует поддержка составных первичных ключей
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public virtual async Task<T?> GetByIdAsync(params int[] id)
         {
             return await _dbSet.FindAsync(id);
         }
 
+        //пока что незнаю надо ли мне
+        public virtual Task<T?> GetByIdAsync<TId>(TId key)
+        where TId : notnull
+        {
+           return _dbSet.FindAsync(key).AsTask();
+        }
+    
+
+        public virtual Task<T?> GetByIdAsync<TId1, TId2>((TId1, TId2) key)
+            where TId1 : notnull
+            where TId2 : notnull
+        {
+           return _dbSet.FindAsync(key.Item2!, key.Item2!).AsTask();
+        }
+          
+
+
+        /// <summary>
+        /// частичное обновление, можно передавать не прикрепленные сущности, с primary key
+        /// </summary>
+        /// <param name="entityToUpdate"></param>
+        /// <param name="partialDto"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public async Task PartialUpdateAsync(T entityToUpdate, object partialDto) 
         {
             if (entityToUpdate == null) throw new ArgumentNullException(nameof(entityToUpdate));
@@ -67,7 +117,7 @@ namespace infrastructure.Repository.Base
 
             var entry = _db.Entry(entityToUpdate);
 
-            // Если сущность не отслеживается — прикрепляем
+
             if (entry.State == EntityState.Detached)
                 _db.Set<T>().Attach(entityToUpdate);
 
@@ -78,20 +128,20 @@ namespace infrastructure.Repository.Base
                 if (prop.Name.Equals("id", StringComparison.OrdinalIgnoreCase))
                     continue;
 
-                // Получаем значение из DTO
+
                 var value = prop.GetValue(partialDto);
                 if (value == null)
                     continue;
 
-                // Специально для строкам разрешаем "" (пустую строку)
+        
                 if (value != null || prop.PropertyType == typeof(string))
                 {
                     var entityProperty = entry.Property(prop.Name);
                          Console.WriteLine($"Setting EF property '{prop.Name}' to {value ?? "NULL"}");
                     entityProperty.CurrentValue = value;
-                    if (entityProperty.Metadata.PropertyInfo != null) // только реальные свойства
+                    if (entityProperty.Metadata.PropertyInfo != null) 
                     {
-                        entityProperty.CurrentValue = value ?? ""; // или value, если не хочешь затирать null'ами
+                        entityProperty.CurrentValue = value ?? ""; 
                         entityProperty.IsModified = true;
                     }
                 }

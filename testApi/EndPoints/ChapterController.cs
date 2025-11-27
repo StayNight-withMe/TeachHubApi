@@ -46,7 +46,7 @@ namespace testApi.EndPoints
         public async Task<IActionResult> CreateChapter([FromBody] CreateChapterDTO createChapterDTO)
         {
             var result = await _chapterService.Create(createChapterDTO, Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)));
-            return EntityResultExtensions.ToActionResult(result, this);
+            return EntityResultExtensions.ToActionResult(result);
         }
 
 
