@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Core.Interfaces.Repository;
 
 namespace Applcation.Service.FavoritService
 {
@@ -23,13 +24,13 @@ namespace Applcation.Service.FavoritService
     {
         private readonly ILogger<FavoritService> _logger;
 
-        private readonly BaseRepository<FavoritEntities> _favoritrepo;
+        private readonly IBaseRepository<FavoritEntities> _favoritrepo;
 
         private readonly IUnitOfWork _unitOfWork;
 
         public FavoritService(
             ILogger<FavoritService> logger,
-            BaseRepository<FavoritEntities> favoritrepo,
+            IBaseRepository<FavoritEntities> favoritrepo,
             IUnitOfWork unitOfWork
             ) 
         {
@@ -82,12 +83,11 @@ namespace Applcation.Service.FavoritService
             }
         }
 
-        public async Task<TResult<PagedResponseDTO<FavoritOutputDTO>>> GetFavorite(int userid, int courseid, UserSortingRequest sort)
+        public async Task<TResult<PagedResponseDTO<FavoritOutputDTO>>> GetFavorite(int userid, UserSortingRequest sort)
         {
             var entitiesList = await _favoritrepo.GetAllWithoutTracking().GetWithPaginationAndSorting(sort)
                .Include(c => c.course)
                .Include(c => c.user)
-               .Where(c => c.courseid == courseid)
                .Where(c => c.userid == userid).ToListAsync();
 
             var dtoList = entitiesList

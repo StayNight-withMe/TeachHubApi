@@ -21,6 +21,8 @@ using System.Text;
 using testApi.Middleware.Exeption;
 using testApi.Middleware.RateLimit;
 using testApi.Middleware.Новая_папка;
+using Applcation.Service.SubscriptionService;
+using Applcation.Service.FavoritService;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpContextAccessor();
@@ -36,7 +38,9 @@ builder.Services.AddScoped<IBaseRepository<RoleEntities>, BaseRepository<RoleEnt
 builder.Services.AddScoped<IBaseRepository<CourseEntities>, BaseRepository<CourseEntities>>();
 builder.Services.AddScoped<IBaseRepository<ChapterEntity>, BaseRepository<ChapterEntity>>();
 builder.Services.AddScoped<IBaseRepository<LessonEntities>, BaseRepository<LessonEntities>>();
-
+builder.Services.AddScoped<IBaseRepository<LessonEntities>, BaseRepository<LessonEntities>>();
+builder.Services.AddScoped<IBaseRepository<SubscriptionEntites>, BaseRepository<SubscriptionEntites>>();
+builder.Services.AddScoped<IBaseRepository<FavoritEntities>, BaseRepository<FavoritEntities>>();
 //сервисы
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IUsersService ,UserService>();
@@ -45,6 +49,8 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICourseService, CourcesService>();
 builder.Services.AddScoped<IChapterService, ChapterService>();
 builder.Services.AddScoped<ILessonService, LessonService>();
+builder.Services.AddScoped<ISubscriptionService, SubscriptionService>();
+builder.Services.AddScoped<IFavoritService, FavoritService>();
 //залупа2
 
 builder.Services.AddEndpointsApiExplorer(); //свагеру что бы найти

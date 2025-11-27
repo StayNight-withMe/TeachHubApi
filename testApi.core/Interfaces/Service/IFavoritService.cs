@@ -12,7 +12,7 @@ namespace Core.Interfaces.Service
 {
     public interface IFavoritService
     {
-        Task<TResult<PagedResponseDTO<FavoritOutputDTO>>> GetFavorite(int userid, int courseid, UserSortingRequest sort);
+        Task<TResult<PagedResponseDTO<FavoritOutputDTO>>> GetFavorite(int userid, UserSortingRequest sort);
         Task<TResult> DeleteFavorit(int userid, int courseid);
         Task<TResult> CreateFavorite(int userid, int coureid);
     }
