@@ -36,15 +36,20 @@ namespace testApi
                     => controllerBase.BadRequest(new { code = result.ErrorCode.ToString(), message = "некорректные данные для регистрации" }),
 
                 // 409 Conflict
+                errorCode.FollowingError
+                    => controllerBase.Conflict(ErrorMap(result.ErrorCode)),
+
                 errorCode.UserAlreadyExists
-                    => controllerBase.Conflict(new { code = result.ErrorCode.ToString(), message = "пользователь уже существует" }),
+                     => controllerBase.Conflict(new { code = result.ErrorCode.ToString(), message = "пользователь уже существует" }),
 
                 // 500 Internal Server Error 
                 _ => controllerBase.StatusCode(ErrorMap(result.ErrorCode), new { code = result.ErrorCode.ToString(), message = result.MessageForUser })
 
-            };
 
-        }
+
+            };
+         }
+            
 
         public static IActionResult ToActionResult<T>(TResult<T> result, ControllerBase controllerBase) 
         {

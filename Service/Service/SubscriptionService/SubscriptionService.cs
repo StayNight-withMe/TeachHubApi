@@ -6,11 +6,12 @@ using Core.Model.TargetDTO.Common.input;
 using Core.Model.TargetDTO.Common.output;
 using Core.Model.TargetDTO.Subscription.output;
 using infrastructure.Entitiеs;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using infrastructure.Extensions;
 using infrastructure.Utils.PageService;
 using Logger;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Npgsql;
 using System.Threading.Tasks;
 
 namespace Applcation.Service.SubscriptionService
@@ -32,6 +33,7 @@ namespace Applcation.Service.SubscriptionService
             //IMapper mapper
             ) 
         {
+
          _logger = logger;
          //_mapper = mapper;
          _suubscriptionRepository = subrepo;
@@ -47,9 +49,13 @@ namespace Applcation.Service.SubscriptionService
                 await _unitOfWork.CommitAsync();
                 return TResult.CompletedOperation();
             }
-            catch(DbUpdateException ex)
+   
+            catch(DbUpdateException ex) when (ex.InnerException is PostgresException pgEx)
             {
                 _logger.LogDBError(ex);
+                if (pgEx.SqlState == 23505.ToString() || pgEx.SqlState == 23514.ToString())
+                    return TResult.FailedOperation(errorCode.FollowingError);
+
                 return TResult.FailedOperation(errorCode.DatabaseError);
             }
             catch(Exception ex) 
@@ -64,7 +70,8 @@ namespace Applcation.Service.SubscriptionService
         {
             try
             {
-                await _suubscriptionRepository.DeleteById(followerid, followingid);
+                await _suubscriptionRepository.DeleteById(followingid, followerid);
+                await _unitOfWork.CommitAsync();
                 return TResult.CompletedOperation();
             }
             catch(DbUpdateException ex)

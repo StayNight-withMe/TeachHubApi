@@ -11,13 +11,22 @@ namespace infrastructure.Extensions
             if (string.IsNullOrWhiteSpace(userSortingRequest.OrderBy))
                 return qwery;
 
-            if (userSortingRequest.ThenBy != null && userSortingRequest.ThenBy.Any(c => banvalue.Contains(c))) return qwery;
+            if (userSortingRequest.ThenBy != null && userSortingRequest
+                .ThenBy
+                .Any(c => banvalue.Contains(c)))
+            {
+                return qwery;
+            }
 
-            string der = userSortingRequest.desc ? "descending" : "";
-            var query = qwery.
-               OrderBy($"{userSortingRequest.OrderBy} {der}".Trim());
+            string? der = userSortingRequest.desc ? "descending" : "";
+            
+            
+            
             try
             {
+                var query = qwery.
+            OrderBy($"{userSortingRequest.OrderBy} {der}".Trim());
+
                 if (userSortingRequest.ThenBy != null)
                 {
                     foreach (var item in userSortingRequest.ThenBy)
@@ -25,23 +34,39 @@ namespace infrastructure.Extensions
                         query = ((IOrderedQueryable<T>)query).ThenBy($"{item} {der}".Trim());
                     }
                 }
+                var finnaly = query.Skip(userSortingRequest.PageSize * (userSortingRequest.PageNumber - 1))
+    .Take(userSortingRequest.PageSize);
+
+
+                return finnaly;
+
+
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"ошибка сортировки : {ex.Message}");
-                return query;
+                return qwery.Order();
             }
 
-             var finnaly = query.Skip(userSortingRequest.PageSize * (userSortingRequest.PageNumber - 1))
-      .Take(userSortingRequest.PageSize);
-
-
-            return finnaly;
+           
             }
+
+        
+    
+
+         public static IQueryable<T> GetWithPagination<T>(this IQueryable<T> qwery, UserSortingRequest userSortingRequest, params string[] banvalue)
+        {
+
+                var finnaly = qwery.Skip(userSortingRequest.PageSize * (userSortingRequest.PageNumber - 1))
+    .Take(userSortingRequest.PageSize);
+
+                return finnaly;
 
         }
 
-
-
     }
+
+
+
+}
 

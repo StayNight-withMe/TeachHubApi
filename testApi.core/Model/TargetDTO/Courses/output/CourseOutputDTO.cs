@@ -9,8 +9,9 @@ namespace Core.Model.TargetDTO.Courses.output
 {
     public class CourseOutputDTO : BaseCourse
     {
-        public string id { get; set; }
+        public int id { get; set; }
         public string creatorname {  get; set; }
+        public int creatorid { get; set; }
         public DateTime createdat {  get; set; }
     }
 }

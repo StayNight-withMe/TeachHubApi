@@ -49,13 +49,16 @@ namespace infrastructure.Repository.Base
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async virtual Task DeleteById(params int[] id)
+        public async virtual Task DeleteById(params object[] id)
         {
             var value = await _dbSet.FindAsync(id);
             if(value != null)
             {
                 _dbSet.Remove(value);
+                return;
             }
+            throw new DbUpdateException();
+            
         }
 
         /// <summary>
@@ -81,10 +84,11 @@ namespace infrastructure.Repository.Base
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public virtual async Task<T?> GetByIdAsync(params int[] id)
+        public virtual async Task<T?> GetByIdAsync(params object[] id)
         {
             return await _dbSet.FindAsync(id);
         }
+
 
         //пока что незнаю надо ли мне
         public virtual Task<T?> GetByIdAsync<TId>(TId key)

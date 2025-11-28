@@ -6,7 +6,7 @@ namespace infrastructure.Entitiеs
     {
         public int userid { get; set; }
         public int courseid { get; set; }
-        public DateTime favoritdate { get; set; } = DateTime.Now;
+        public DateTime favoritdate { get; set; } = DateTime.Now.ToUniversalTime();
 
         [ForeignKey(nameof(courseid))]
         public CourseEntities course { get; set; }

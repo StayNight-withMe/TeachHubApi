@@ -105,7 +105,8 @@ namespace Applcation.Service.CourceService
                .Select(c => new CourseOutputDTO
                {
                    description = c.description,
-                   id = c.id.ToString(),
+                   creatorid = c.user.id,
+                   id = c.id,
                    name = c.name,
                    creatorname = c.user.name ?? "удаленный аккаунт",
                    createdat = c.createdat,
@@ -163,6 +164,7 @@ namespace Applcation.Service.CourceService
 
           
             List<CourseEntities> courseEntites = await _courceRepository.GetAllWithoutTracking()
+                .Include(c => c.user)
                 .GetWithPaginationAndSorting(userSortingRequest, "courseid", "creatorid", "description")
                 .Where(c => c.creatorid == userid)
                 .ToListAsync();
@@ -172,24 +174,8 @@ namespace Applcation.Service.CourceService
                 return TResult<PagedResponseDTO <CourseOutputDTO>>.FailedOperation(errorCode.CoursesNotFoud, "у вас нету своих курсов");
             }
 
-            List<CourseOutputDTO> courseDTOs = courseEntites
-                .Select(c => new CourseOutputDTO
-            {
-                id = c.id.ToString(),
+            List<CourseOutputDTO> courseDTOs = MapList(courseEntites);
 
-                name = c.name,
-
-                description = c.description,
-
-                creatorname = name,
-
-                createdat = c.createdat,
-
-                field = c.field
-            }).ToList();
-
-           
-           
             return PageService
                 .CreatePage(courseDTOs, 
                 userSortingRequest, 

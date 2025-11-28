@@ -10,7 +10,7 @@ namespace testApi.EndPoints
 
     [Authorize]
     [ApiController]
-    [Route("course/favorite")]
+    [Route("api/course/favorite")]
     public class FavoritController : ControllerBase
     {
         private readonly IFavoritService _favoritService;
@@ -20,10 +20,9 @@ namespace testApi.EndPoints
         }
 
 
-        [HttpGet("{courseid}")]
+        [HttpGet]
         public async Task<IActionResult> Get(
-            [FromQuery] UserSortingRequest userSortingRequest,
-            int courseid)
+            [FromQuery] UserSortingRequest userSortingRequest )
         {
             var result = await _favoritService.GetFavorite(Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), userSortingRequest);
             return EntityResultExtensions.ToActionResult(result, this);
@@ -33,6 +32,13 @@ namespace testApi.EndPoints
         public async Task<IActionResult> Create(int courseid)
         {
             var result = await _favoritService.CreateFavorite(Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), courseid);
+            return EntityResultExtensions.ToActionResult(result, this); 
+        }
+
+        [HttpDelete("{courseid}")]
+        public async Task<IActionResult> Delete(int courseid)
+        {
+            var result = await _favoritService.DeleteFavorit(Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), courseid);
             return EntityResultExtensions.ToActionResult(result, this);
         }
 

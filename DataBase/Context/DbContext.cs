@@ -32,6 +32,9 @@ namespace infrastructure.Context
             modelBuilder.Entity<SubscriptionEntites>()
                 .HasKey(s => new { s.followingid, s.followerid });
 
+            modelBuilder.Entity<FavoritEntities>()
+               .HasKey(s => new { s.courseid, s.userid });
+
             base.OnModelCreating(modelBuilder);
 
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
