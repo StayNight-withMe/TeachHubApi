@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Core.Interfaces.Service;
-using Core.Model.TargetDTO.Common.input;
-using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
+﻿using Core.Interfaces.Service;
 using Core.Model.ReturnEntity;
 using Core.Model.TargetDTO.Chapter.input;
+using Core.Model.TargetDTO.Common.input;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
+using System.Security.Claims;
 
 
 namespace testApi.EndPoints
@@ -21,7 +22,7 @@ namespace testApi.EndPoints
          _chapterService = chapterService;
         }
 
-
+        [OutputCache(PolicyName = "10min")]
         [HttpGet("{courseId}")]
         public async Task<IActionResult> GetChapter(
         [FromQuery] UserSortingRequest request,
@@ -29,12 +30,6 @@ namespace testApi.EndPoints
         )
         {
             var result = await _chapterService.GetChaptersByCourseId(courseId, request);
-
-            if(result.IsCompleted)
-            {
-                return Ok(result.Value);
-            }
-
             return EntityResultExtensions.ToActionResult(result, this);
             
         }

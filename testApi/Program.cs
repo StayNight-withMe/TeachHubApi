@@ -99,6 +99,19 @@ builder.Services.AddAuthentication(options =>
         
      });
 
+
+builder.Services.AddOutputCache(opt =>
+{
+    opt.AddPolicy("1min", poli => poli.Expire(TimeSpan.FromSeconds(60))
+    .SetVaryByQuery("desc", "pagenumber", "orderby", "thenby", "pagesize")
+    .Tag()
+    );
+
+
+
+});
+    
+
 var app = builder.Build();
 app.UseMiddleware<RateLimitMiddleware>(60, 20);
 

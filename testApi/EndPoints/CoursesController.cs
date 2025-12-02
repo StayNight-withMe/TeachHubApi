@@ -6,6 +6,7 @@ using Core.Model.TargetDTO.Common.output;
 using Core.Model.TargetDTO.Courses.input;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -41,7 +42,9 @@ namespace testApi.EndPoints
             return EntityResultExtensions.ToActionResult(result, this);    
         }
 
+
         [HttpGet("search")]
+        [OutputCache(PolicyName = "20min")]
         public async Task<IActionResult> SearchCourse(
             [FromQuery] UserSortingRequest userSortingRequest,
             [FromQuery] string searchText
@@ -62,6 +65,7 @@ namespace testApi.EndPoints
 
         
         [HttpGet]
+        [OutputCache(PolicyName = "120min")]
         public async Task<IActionResult> GetAllCources([FromQuery] UserSortingRequest userSortingRequest)
         {
             var result = await _courseService.GetAllCourse(userSortingRequest);
@@ -71,6 +75,7 @@ namespace testApi.EndPoints
 
         [Authorize]
         [HttpGet("my")]
+        [OutputCache(PolicyName = "10min")]
         public async Task<IActionResult> GetUserCourses([FromQuery] UserSortingRequest userSortingRequest)
         {
             var result = await _courseService.GetUserCourses(Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), User.FindFirstValue(ClaimTypes.Name), userSortingRequest);

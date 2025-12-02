@@ -3,6 +3,7 @@ using Core.Interfaces.Utils;
 using Core.Model.TargetDTO.Common.input;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 using System.Security.Claims;
 
 namespace testApi.EndPoints
@@ -29,6 +30,7 @@ namespace testApi.EndPoints
 
 
         [HttpGet("{userid}")]
+        [OutputCache(PolicyName = "10min")]
         public async Task<IActionResult> GetUserFollowing(
           int userid, 
           [FromQuery] UserSortingRequest userSortingRequest)
@@ -49,17 +51,19 @@ namespace testApi.EndPoints
 
 
         [HttpGet]
-        public async Task<IActionResult> GetUserollowing(
-        int userid,
+        [Authorize]
+        [OutputCache(PolicyName = "1min")]
+        public async Task<IActionResult> GetMyFollowing(
         [FromQuery] UserSortingRequest userSortingRequest)
         {
-            var result = await _followService.GetUserFollowing(userid, userSortingRequest);
+            var result = await _followService.GetUserFollowing(Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), userSortingRequest);
             return EntityResultExtensions.ToActionResult(result, this);
         }
 
 
         [Authorize]
         [HttpGet("followers")]
+        [OutputCache(PolicyName = "1min")]
         public async Task<IActionResult> GetMyFollower(
             [FromQuery] UserSortingRequest userSortingRequest)
         {

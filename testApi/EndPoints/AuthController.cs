@@ -2,6 +2,7 @@
 using Core.Interfaces.Utils;
 using Core.Model.TargetDTO.Auth.input;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 using System.Net;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
