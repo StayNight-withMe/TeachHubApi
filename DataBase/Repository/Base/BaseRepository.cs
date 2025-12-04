@@ -12,6 +12,7 @@ namespace infrastructure.Repository.Base
         protected readonly DbSet<T> _dbSet;
         public BaseRepository(CourceDbContext courceDbContext) 
         {
+            
             _db = courceDbContext;
             _dbSet = _db.Set<T>();
         }
@@ -105,7 +106,7 @@ namespace infrastructure.Repository.Base
            return _dbSet.FindAsync(key.Item2!, key.Item2!).AsTask();
         }
           //
-
+          //
 
         /// <summary>
         /// частичное обновление, можно передавать не прикрепленные сущности, с primary key
