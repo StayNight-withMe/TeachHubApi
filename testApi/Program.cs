@@ -103,11 +103,34 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddOutputCache(opt =>
 {
     opt.AddPolicy("1min", poli => poli.Expire(TimeSpan.FromSeconds(60))
-    .SetVaryByQuery("desc", "pagenumber", "orderby", "thenby", "pagesize")
-    .Tag()
+    .SetVaryByQuery("*")
+    .SetVaryByHeader("Authorization")
+    .Tag("1min")
+    );
+
+    opt.AddPolicy("10min", poli => poli.Expire(TimeSpan.FromMinutes(10))
+    .SetVaryByQuery("*")
+    .SetVaryByHeader("Authorization")
+    .Tag("10min")
+    );
+
+    opt.AddPolicy("30min", poli => poli.Expire(TimeSpan.FromMinutes(30))
+    .SetVaryByQuery("*")
+    .Tag("30min")
     );
 
 
+    opt.AddPolicy("60min", poli => poli.Expire(TimeSpan.FromMinutes(60))
+    .SetVaryByQuery("*")
+    .Tag("60min")
+    );
+
+    opt.AddPolicy("CheckEmail1Hour", c => c.Expire(TimeSpan.FromMinutes(60))
+    .SetVaryByQuery("*")
+    .Tag("email-check")
+    
+
+);
 
 });
     

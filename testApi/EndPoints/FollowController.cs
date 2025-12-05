@@ -25,7 +25,7 @@ namespace testApi.EndPoints
         public async Task<IActionResult> Addfollowing(int userid)
         {
             var result = await _followService.CreateSubscription(Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), userid);
-            return EntityResultExtensions.ToActionResult(result, this);
+            return await EntityResultExtensions.ToActionResult(result, this);
         }
 
 
@@ -36,7 +36,7 @@ namespace testApi.EndPoints
           [FromQuery] UserSortingRequest userSortingRequest)
         {
             var result = await _followService.GetUserFollowing(userid, userSortingRequest);
-            return EntityResultExtensions.ToActionResult(result, this);
+            return  await EntityResultExtensions.ToActionResult(result, this);
         }
 
         [HttpGet("{userid}/followers")]
@@ -45,7 +45,7 @@ namespace testApi.EndPoints
         [FromQuery] UserSortingRequest userSortingRequest)
         {
             var result = await _followService.GetUserFollowers(userid, userSortingRequest);
-            return EntityResultExtensions.ToActionResult(result, this);
+            return await EntityResultExtensions.ToActionResult(result, this);
         }
 
 
@@ -57,7 +57,7 @@ namespace testApi.EndPoints
         [FromQuery] UserSortingRequest userSortingRequest)
         {
             var result = await _followService.GetUserFollowing(Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), userSortingRequest);
-            return EntityResultExtensions.ToActionResult(result, this);
+            return await EntityResultExtensions.ToActionResult(result, this);
         }
 
 
@@ -68,7 +68,7 @@ namespace testApi.EndPoints
             [FromQuery] UserSortingRequest userSortingRequest)
         {
             var result = await _followService.GetUserFollowers(Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), userSortingRequest);
-            return EntityResultExtensions.ToActionResult(result, this);
+            return await EntityResultExtensions.ToActionResult(result, this);
         }
 
         [Authorize]
@@ -76,7 +76,7 @@ namespace testApi.EndPoints
         public async Task<IActionResult> Deletefollowing(int following)
         {
             var result = await _followService.DeleteSubscription(Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), following);
-            return EntityResultExtensions.ToActionResult(result, this);
+            return await EntityResultExtensions.ToActionResult(result, this);
         }
 
     }

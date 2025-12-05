@@ -25,21 +25,21 @@ namespace testApi.EndPoints
             [FromQuery] UserSortingRequest userSortingRequest )
         {
             var result = await _favoritService.GetFavorite(Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), userSortingRequest);
-            return EntityResultExtensions.ToActionResult(result, this);
+            return await EntityResultExtensions.ToActionResult(result, this);
         }
 
         [HttpPost("{courseid}")]
         public async Task<IActionResult> Create(int courseid)
         {
             var result = await _favoritService.CreateFavorite(Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), courseid);
-            return EntityResultExtensions.ToActionResult(result, this); 
+            return await EntityResultExtensions.ToActionResult(result, this); 
         }
 
         [HttpDelete("{courseid}")]
         public async Task<IActionResult> Delete(int courseid)
         {
             var result = await _favoritService.DeleteFavorit(Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), courseid);
-            return EntityResultExtensions.ToActionResult(result, this);
+            return await EntityResultExtensions.ToActionResult(result, this);
         }
 
     }

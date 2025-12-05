@@ -105,8 +105,7 @@ namespace infrastructure.Repository.Base
         {
            return _dbSet.FindAsync(key.Item2!, key.Item2!).AsTask();
         }
-          //
-          //
+
 
         /// <summary>
         /// частичное обновление, можно передавать не прикрепленные сущности, с primary key

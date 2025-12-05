@@ -29,7 +29,7 @@ namespace testApi.EndPoints
         public async Task<IActionResult> UpdateCourse([FromBody] UpdateCourseDTO course)
         {
             var result = await _courseService.UpdateCourse(course, Convert.ToInt32(User.FindFirst("id").Value));
-            return EntityResultExtensions.ToActionResult(result, this);
+            return await EntityResultExtensions.ToActionResult(result, this);
 
         }
 
@@ -39,7 +39,7 @@ namespace testApi.EndPoints
         public async Task<IActionResult> CreateCourse([FromBody] CreateCourseDTO courceDTO)
         {
             var result = await _courseService.CreateCourse(courceDTO, Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier) ));
-            return EntityResultExtensions.ToActionResult(result, this);    
+            return await EntityResultExtensions.ToActionResult(result, this);    
         }
 
 
@@ -51,7 +51,7 @@ namespace testApi.EndPoints
             )
         {
             var result = await _courseService.SearchCourse(searchText, userSortingRequest);
-            return EntityResultExtensions.ToActionResult(result, this);
+            return await EntityResultExtensions.ToActionResult(result, this);
         }
 
 
@@ -60,7 +60,7 @@ namespace testApi.EndPoints
         public async Task<IActionResult> Remove(int id)
         {
             var result = await _courseService.RemoveCourse(id, User);
-            return EntityResultExtensions.ToActionResult(result, this);
+            return await EntityResultExtensions.ToActionResult(result, this);
         }
 
         
@@ -69,7 +69,7 @@ namespace testApi.EndPoints
         public async Task<IActionResult> GetAllCources([FromQuery] UserSortingRequest userSortingRequest)
         {
             var result = await _courseService.GetAllCourse(userSortingRequest);
-            return EntityResultExtensions.ToActionResult(result, this);
+            return await EntityResultExtensions.ToActionResult(result, this);
             
         }
 
@@ -79,7 +79,7 @@ namespace testApi.EndPoints
         public async Task<IActionResult> GetUserCourses([FromQuery] UserSortingRequest userSortingRequest)
         {
             var result = await _courseService.GetUserCourses(Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), User.FindFirstValue(ClaimTypes.Name), userSortingRequest);
-            return EntityResultExtensions.ToActionResult(result, this);   
+            return await EntityResultExtensions.ToActionResult(result, this);   
         }
 
 

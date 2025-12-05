@@ -27,7 +27,7 @@ namespace testApi.EndPoints
             [FromQuery] UserSortingRequest userSortingRequest)
         {
             var result = await _lessonService.GetLessonByChapterid(chapterid, userSortingRequest);
-            return EntityResultExtensions.ToActionResult(result, this);
+            return  await EntityResultExtensions.ToActionResult(result, this);
         }
 
 
@@ -37,7 +37,7 @@ namespace testApi.EndPoints
         public async Task<IActionResult> CreateLesson([FromBody] createLessonDTO lesson)
         {
             var result = await _lessonService.Create(lesson, Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)));
-            return EntityResultExtensions.ToActionResult(result, this);
+            return await EntityResultExtensions.ToActionResult(result, this);
         }
 
         [HttpPatch]
@@ -45,7 +45,7 @@ namespace testApi.EndPoints
         public async Task<IActionResult> UpdateLesson([FromBody] LessonUpdateDTO lesson)
         {
             var result = await _lessonService.UpdateLesson(lesson, Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)));
-            return EntityResultExtensions.ToActionResult(result, this);
+            return await EntityResultExtensions.ToActionResult(result, this);
         }
 
         [HttpDelete("{lessonid}")]
@@ -53,7 +53,7 @@ namespace testApi.EndPoints
         public async Task<IActionResult> DeleteLesson(int lessonid)
         {
             var result = await _lessonService.DeleteLessonForUser(lessonid, Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)));
-            return EntityResultExtensions.ToActionResult(result, this);
+            return await EntityResultExtensions.ToActionResult(result, this);
         }
 
         [HttpPatch("{lessonid}/visibility")]
@@ -61,7 +61,7 @@ namespace testApi.EndPoints
         public async Task<IActionResult> SwitchVisible(int lessonid)
         {
             var result = await _lessonService.SwitchVisible(lessonid, Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)));
-            return EntityResultExtensions.ToActionResult(result, this);
+            return await EntityResultExtensions.ToActionResult(result, this);
         }
 
 
@@ -70,7 +70,7 @@ namespace testApi.EndPoints
         public async Task<IActionResult> AdminDelete(int lessonid)
         {
             var result = await _lessonService.DeleteLessonForAdmin(lessonid);
-            return EntityResultExtensions.ToActionResult(result, this);
+            return await EntityResultExtensions.ToActionResult(result, this);
         }
 
     }
