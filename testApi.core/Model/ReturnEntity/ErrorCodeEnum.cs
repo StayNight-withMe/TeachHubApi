@@ -14,6 +14,7 @@
         ChapterNotFound = 7,
         IpNotFound = 8,
         lessonNotFound = 9,
+        NoRights = 10,
 
         // Бизнес-конфликты (409 Conflict)
         UserAlreadyExists = 101, 
@@ -24,8 +25,12 @@
         PasswordDontMatch = 107,
         FollowingError = 108,
 
+
         // Системные ошибки (500 Internal Server Error)
         DatabaseError = 201,
-        UnknownError = 299
+        UnknownError = 202,
+        TimeOutError = 203,
+        CloudError = 204,
+        ClientError = 205,
     }
 }

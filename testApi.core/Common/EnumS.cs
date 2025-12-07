@@ -13,8 +13,6 @@ namespace Core.Common
         admin = 2,
     }
 
-
-
     public enum PublicRole
     {
         user = 1,

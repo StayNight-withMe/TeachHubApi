@@ -1,4 +1,5 @@
-﻿using Amazon.S3;
+﻿using Amazon.Runtime;
+using Amazon.S3;
 using Amazon.S3.Model;
 using Core.Interfaces.Utils;
 using Microsoft.Extensions.Logging;
@@ -40,11 +41,29 @@ namespace infrastructure.Storage
             await _amazonS3.DeleteObjectAsync(_bucketName, fileName, ct );
             return true;
             }
-            catch ( Exception ex )
+            catch (AmazonS3Exception ex)
             {
                 _logger.LogError(ex.Message);
                 return false;
             }
+            catch (AmazonServiceException ex)
+            {
+                _logger.LogError(ex.Message);
+                return false;
+            }
+            catch (AmazonClientException ex)
+            {
+                _logger.LogError(ex.Message);
+                return false;
+            }
+
+           catch(TaskCanceledException ex)
+            {
+                _logger.LogError(ex.Message);
+                return false;
+            }
+ 
+            
         }
 
         public Task<Stream?> GetFileAsync(
@@ -84,7 +103,7 @@ namespace infrastructure.Storage
             var name = $"{Guid.NewGuid()}_{fileName}";
 
             var key = $"{lessonid}/{DateTime.UtcNow:G}_{name}";
-
+            
             await _amazonS3.PutObjectAsync(
                 new PutObjectRequest
                 {
