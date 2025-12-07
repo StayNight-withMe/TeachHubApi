@@ -12,8 +12,8 @@ namespace infrastructure.Entitiеs
         public int id {  get; set; }
         public int lessonid { get; set; }
         public string filekey { get; set; }
+        public string filename { get; set; }
         public string filetype { get; set; }
-        public string? fileurl { get; set; }
         public bool cloudstore { get; set; }
         public int order { get; set; }
 

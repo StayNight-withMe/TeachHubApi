@@ -83,7 +83,7 @@ namespace Applcation.Service.FavoritService
             }
         }
 
-        public async Task<TResult<PagedResponseDTO<FavoritOutputDTO>>> GetFavorite(int userid, UserSortingRequest sort)
+        public async Task<TResult<PagedResponseDTO<FavoritOutputDTO>>> GetFavorite(int userid, SortingAndPaginationDTO sort)
         {
             var entitiesList = await _favoritrepo.GetAllWithoutTracking().GetWithPaginationAndSorting(sort)
                .Include(c => c.course)

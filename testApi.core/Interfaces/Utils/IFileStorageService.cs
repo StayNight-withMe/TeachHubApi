@@ -14,18 +14,19 @@ namespace Core.Interfaces.Utils
             string fileName = "lesson",
             CancellationToken ct = default);
         Task<bool> DeleteFileAsync(
-            string fileName,
+            string key,
             int lessonid,
             CancellationToken ct = default);
         Task<Stream?> GetFileAsync(
-            string fileName,
+            string key,
             int lessonid,
             CancellationToken ct = default);
-        Task<string> GetPresignedUrlAsync(
+        string GetPresignedUrl(
             string fileName,
             int lessonid,
-            TimeSpan expiry, 
+            int minutes, 
             CancellationToken ct = default);
+       
     }
 }
 

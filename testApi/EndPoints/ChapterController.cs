@@ -25,7 +25,7 @@ namespace testApi.EndPoints
         [OutputCache(PolicyName = "10min")]
         [HttpGet("{courseId}")]
         public async Task<IActionResult> GetChapter(
-        [FromQuery] UserSortingRequest request,
+        [FromQuery] SortingAndPaginationDTO request,
         int courseId
         )
         {

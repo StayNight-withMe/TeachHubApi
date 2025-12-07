@@ -4,10 +4,13 @@ using Core.Interfaces.Repository;
 using Core.Interfaces.Service;
 using Core.Interfaces.Utils;
 using Core.Model.ReturnEntity;
+using Core.Model.TargetDTO.Common.input;
 using Core.Model.TargetDTO.Common.output;
 using Core.Model.TargetDTO.LessonFile.input;
 using Core.Model.TargetDTO.LessonFile.output;
 using infrastructure.Entitiеs;
+using infrastructure.Extensions;
+using infrastructure.Utils.PageService;
 using Logger;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -43,9 +46,42 @@ namespace Applcation.Service.LessonStorageService
             throw new NotImplementedException();
         }
 
-        public Task<TResult<PagedResponseDTO<LessonFileOutputDTO>>> GetLessonUrlFile(int lessonid)
+        public async Task<TResult<PagedResponseDTO<LessonFileOutputDTO>>> GetLessonUrlFile(
+            int lessonid, 
+            PaginationDTO pagination,
+            CancellationToken ct = default
+            )
         {
-            throw new NotImplementedException();
+            var lessonsFiles = await _lessonFileRepository
+                .GetAllWithoutTracking()
+                .Where(c => c.lessonid == lessonid)
+                .GetWithPagination(pagination)
+                .OrderBy(c => c.order)
+                .ToListAsync();
+            
+            if (lessonsFiles == null)
+            {
+                return TResult<PagedResponseDTO<LessonFileOutputDTO>>.FailedOperation(errorCode.lessonNotFound);
+            }
+
+            
+            var lessonOutPutDTOs = lessonsFiles
+                .Select(c => new LessonFileOutputDTO
+                {
+                id = c.id,
+                filename = c.filename,
+                url = _fileStorageService.GetPresignedUrl(c.filekey, c.lessonid, 60, ct),
+                order = c.order,
+                })
+                .ToList();
+
+
+            return PageService.CreatePage(
+                lessonOutPutDTOs,
+                pagination,
+                lessonOutPutDTOs.Count
+                );
+
         }
 
         public async Task<TResult> UploadFile(Stream stream, 
@@ -83,7 +119,6 @@ namespace Applcation.Service.LessonStorageService
                  cloudstore = metaData.cloudstore,
                  filetype = metaData.filetype,
                  order = metaData.order,
-                 fileurl = metaData.fileurl,
                 } 
                 );
                 return TResult.CompletedOperation();

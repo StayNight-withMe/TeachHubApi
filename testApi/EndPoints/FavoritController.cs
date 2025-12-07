@@ -22,7 +22,7 @@ namespace testApi.EndPoints
 
         [HttpGet]
         public async Task<IActionResult> Get(
-            [FromQuery] UserSortingRequest userSortingRequest )
+            [FromQuery] SortingAndPaginationDTO userSortingRequest )
         {
             var result = await _favoritService.GetFavorite(Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), userSortingRequest);
             return await EntityResultExtensions.ToActionResult(result, this);

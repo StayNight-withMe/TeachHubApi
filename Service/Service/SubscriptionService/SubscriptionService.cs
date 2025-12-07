@@ -87,7 +87,7 @@ namespace Applcation.Service.SubscriptionService
         }
 
 
-        private async Task<TResult<PagedResponseDTO<SubscribeOutput>>> CreatePageOfUser(IQueryable<SubscriptionEntites> queryable,UserSortingRequest userSortingRequest)
+        private async Task<TResult<PagedResponseDTO<SubscribeOutput>>> CreatePageOfUser(IQueryable<SubscriptionEntites> queryable,SortingAndPaginationDTO userSortingRequest)
         {
 
             var entityList = await queryable
@@ -113,7 +113,7 @@ namespace Applcation.Service.SubscriptionService
         }
 
 
-        public async Task<TResult<PagedResponseDTO<SubscribeOutput>>> GetUserFollowing(int userid, UserSortingRequest userSortingRequest)
+        public async Task<TResult<PagedResponseDTO<SubscribeOutput>>> GetUserFollowing(int userid, SortingAndPaginationDTO userSortingRequest)
         {
             var entityqw = _suubscriptionRepository
                 .GetAllWithoutTracking()
@@ -123,7 +123,7 @@ namespace Applcation.Service.SubscriptionService
 
         }
 
-        public async Task<TResult<PagedResponseDTO<SubscribeOutput>>> GetUserFollowers(int userid, UserSortingRequest userSortingRequest)
+        public async Task<TResult<PagedResponseDTO<SubscribeOutput>>> GetUserFollowers(int userid, SortingAndPaginationDTO userSortingRequest)
         {
             var entityqw = _suubscriptionRepository
                 .GetAllWithoutTracking()

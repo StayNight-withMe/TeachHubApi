@@ -33,7 +33,7 @@ namespace testApi.EndPoints
         [OutputCache(PolicyName = "10min")]
         public async Task<IActionResult> GetUserFollowing(
           int userid, 
-          [FromQuery] UserSortingRequest userSortingRequest)
+          [FromQuery] SortingAndPaginationDTO userSortingRequest)
         {
             var result = await _followService.GetUserFollowing(userid, userSortingRequest);
             return  await EntityResultExtensions.ToActionResult(result, this);
@@ -42,7 +42,7 @@ namespace testApi.EndPoints
         [HttpGet("{userid}/followers")]
         public async Task<IActionResult> GetUserFollowers(
         int userid,
-        [FromQuery] UserSortingRequest userSortingRequest)
+        [FromQuery] SortingAndPaginationDTO userSortingRequest)
         {
             var result = await _followService.GetUserFollowers(userid, userSortingRequest);
             return await EntityResultExtensions.ToActionResult(result, this);
@@ -54,7 +54,7 @@ namespace testApi.EndPoints
         [Authorize]
         [OutputCache(PolicyName = "1min")]
         public async Task<IActionResult> GetMyFollowing(
-        [FromQuery] UserSortingRequest userSortingRequest)
+        [FromQuery] SortingAndPaginationDTO userSortingRequest)
         {
             var result = await _followService.GetUserFollowing(Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), userSortingRequest);
             return await EntityResultExtensions.ToActionResult(result, this);
@@ -65,7 +65,7 @@ namespace testApi.EndPoints
         [HttpGet("followers")]
         [OutputCache(PolicyName = "1min")]
         public async Task<IActionResult> GetMyFollower(
-            [FromQuery] UserSortingRequest userSortingRequest)
+            [FromQuery] SortingAndPaginationDTO userSortingRequest)
         {
             var result = await _followService.GetUserFollowers(Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), userSortingRequest);
             return await EntityResultExtensions.ToActionResult(result, this);

@@ -75,13 +75,14 @@ namespace infrastructure.Storage
             throw new NotImplementedException();
         }
 
-        public async Task<string> GetPresignedUrlAsync(
-            string fileName,
-            int lessonid,
-            TimeSpan expiry, 
-            CancellationToken ct = default)
+
+        public string GetPresignedUrl(
+          string fileName,
+          int lessonid,
+          int min,
+          CancellationToken ct = default)
         {
-            return 
+            return
                 _amazonS3.GeneratePreSignedURL
                 (
                 _bucketName,

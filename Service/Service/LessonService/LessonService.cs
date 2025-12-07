@@ -121,7 +121,7 @@ namespace Applcation.Service.LessonService
             }
         }
 
-        public async Task<TResult<PagedResponseDTO<lessonOutputDTO>>> GetLessonByChapterid(int chapterid, UserSortingRequest userSortingRequest)
+        public async Task<TResult<PagedResponseDTO<lessonOutputDTO>>> GetLessonByChapterid(int chapterid, SortingAndPaginationDTO userSortingRequest)
         {
              var qwery =  _lessonRepository.GetAllWithoutTracking().Where(c => c.chapterid == chapterid  && c.isvisible == true);
             var lessons = await qwery.GetWithPaginationAndSorting(userSortingRequest, "isvisible", "chapterid", "id").ToListAsync();
@@ -140,7 +140,7 @@ namespace Applcation.Service.LessonService
         }
 
 
-        public async Task<TResult<PagedResponseDTO<lessonOutputDTO>>> GetUnVisibleLessonByChapterid(int userid, int chapterid, UserSortingRequest userSortingRequest)
+        public async Task<TResult<PagedResponseDTO<lessonOutputDTO>>> GetUnVisibleLessonByChapterid(int userid, int chapterid, SortingAndPaginationDTO userSortingRequest)
         {
             var qwery = _lessonRepository.GetAllWithoutTracking()
                 .Include(c => c.course)

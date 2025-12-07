@@ -13,7 +13,7 @@ namespace Core.Interfaces.Service
     {
         Task<TResult> Create(createLessonDTO lesson, int userid);
         Task<TResult<lessonOutputDTO>> UpdateLesson(LessonUpdateDTO newlesson, int userid);
-        Task<TResult<PagedResponseDTO<lessonOutputDTO>>> GetLessonByChapterid(int chapterid, UserSortingRequest userSortingRequest);
+        Task<TResult<PagedResponseDTO<lessonOutputDTO>>> GetLessonByChapterid(int chapterid, SortingAndPaginationDTO userSortingRequest);
         Task<TResult> DeleteLessonForUser(int lessonid, int userid);
         Task<TResult> DeleteLessonForAdmin(int lessonid);
         Task<TResult> SwitchVisible(int lessonid, int userid);

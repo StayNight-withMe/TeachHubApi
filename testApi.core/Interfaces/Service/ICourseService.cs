@@ -10,10 +10,10 @@ namespace Core.Interfaces.Service
     public interface ICourseService
     {
         public Task<TResult> CreateCourse(CreateCourseDTO courceDTO, int id);
-        public Task<TResult<PagedResponseDTO<CourseOutputDTO>>> GetAllCourse(UserSortingRequest userSortingRequest);
-        public Task<TResult<PagedResponseDTO<CourseOutputDTO>>> GetUserCourses(int id, string name, UserSortingRequest userSortingRequest);
+        public Task<TResult<PagedResponseDTO<CourseOutputDTO>>> GetAllCourse(SortingAndPaginationDTO userSortingRequest);
+        public Task<TResult<PagedResponseDTO<CourseOutputDTO>>> GetUserCourses(int id, string name, SortingAndPaginationDTO userSortingRequest);
         public Task<TResult<CourseOutputDTO>> UpdateCourse(UpdateCourseDTO updateCourseDTO, int userid);
-        public Task<TResult<PagedResponseDTO<CourseOutputDTO>>> SearchCourse(string search, UserSortingRequest userSortingRequest);
+        public Task<TResult<PagedResponseDTO<CourseOutputDTO>>> SearchCourse(string search, SortingAndPaginationDTO userSortingRequest);
         public Task<TResult> RemoveCourse(int id, ClaimsPrincipal user);
     }
 }

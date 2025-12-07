@@ -46,7 +46,7 @@ namespace testApi.EndPoints
         [HttpGet("search")]
         [OutputCache(PolicyName = "20min")]
         public async Task<IActionResult> SearchCourse(
-            [FromQuery] UserSortingRequest userSortingRequest,
+            [FromQuery] SortingAndPaginationDTO userSortingRequest,
             [FromQuery] string searchText
             )
         {
@@ -66,7 +66,7 @@ namespace testApi.EndPoints
         
         [HttpGet]
         [OutputCache(PolicyName = "120min")]
-        public async Task<IActionResult> GetAllCources([FromQuery] UserSortingRequest userSortingRequest)
+        public async Task<IActionResult> GetAllCources([FromQuery] SortingAndPaginationDTO userSortingRequest)
         {
             var result = await _courseService.GetAllCourse(userSortingRequest);
             return await EntityResultExtensions.ToActionResult(result, this);
@@ -76,7 +76,7 @@ namespace testApi.EndPoints
         [Authorize]
         [HttpGet("my")]
         [OutputCache(PolicyName = "10min")]
-        public async Task<IActionResult> GetUserCourses([FromQuery] UserSortingRequest userSortingRequest)
+        public async Task<IActionResult> GetUserCourses([FromQuery] SortingAndPaginationDTO userSortingRequest)
         {
             var result = await _courseService.GetUserCourses(Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), User.FindFirstValue(ClaimTypes.Name), userSortingRequest);
             return await EntityResultExtensions.ToActionResult(result, this);   

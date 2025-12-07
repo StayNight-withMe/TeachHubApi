@@ -25,7 +25,10 @@ namespace infrastructure.Utils.PageService
         }
 
 
-        public static TResult<PagedResponseDTO<T>> CreatePage<T>(List<T> list,UserSortingRequest userSortingRequest, int totalCount)
+
+    
+
+        public static TResult<PagedResponseDTO<T>> CreatePage<T>(List<T> list,SortingAndPaginationDTO userSortingRequest, int totalCount)
         {
 
              bool validate = PageValidate(userSortingRequest.PageSize, userSortingRequest.PageNumber);
@@ -35,6 +38,44 @@ namespace infrastructure.Utils.PageService
                 return TResult<PagedResponseDTO<T>>.FailedOperation(errorCode.InvalidDataFormat, "ошибка загрузки страницы");
             }
             
+
+            if (list == null)
+            {
+                return TResult<PagedResponseDTO<T>>.FailedOperation(errorCode.InvalidPagination, "неправильный фильтр");
+            }
+
+
+
+            return TResult<PagedResponseDTO<T>>.CompletedOperation(
+             new PagedResponseDTO<T>
+             {
+                 Data = list,
+
+                 Pagination = new PaginationInfo
+                 {
+                     PageSize = userSortingRequest.PageSize,
+
+                     Page = userSortingRequest.PageNumber,
+
+                     TotalCount = totalCount,
+
+                 }
+             }
+
+             );
+        }
+
+
+        public static TResult<PagedResponseDTO<T>> CreatePage<T>(List<T> list, PaginationDTO userSortingRequest, int totalCount)
+        {
+
+            bool validate = PageValidate(userSortingRequest.PageSize, userSortingRequest.PageNumber);
+
+            if (!validate)
+            {
+                return TResult<PagedResponseDTO<T>>.FailedOperation(errorCode.InvalidDataFormat, "ошибка загрузки страницы");
+            }
+
 
             if (list == null)
             {

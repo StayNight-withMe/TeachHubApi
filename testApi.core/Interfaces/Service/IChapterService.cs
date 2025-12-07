@@ -15,8 +15,8 @@ namespace Core.Interfaces.Service
     {
         Task<TResult> Create(CreateChapterDTO chapter, int userid);
         Task<TResult<ChapterOutDTO>> UpdateChapter(ChapterUpdateDTO newchapter, int userid);
-        Task<TResult<PagedResponseDTO<ChapterOutDTO>>> GetChaptersByCourseId(int courseid,  UserSortingRequest userSortingRequest);
-        Task<TResult<PagedResponseDTO<ChapterOutDTO>>> GetChaptersByCourseIdAndUserId(int courseid, int userid, UserSortingRequest userSortingRequest);
+        Task<TResult<PagedResponseDTO<ChapterOutDTO>>> GetChaptersByCourseId(int courseid,  SortingAndPaginationDTO userSortingRequest);
+        Task<TResult<PagedResponseDTO<ChapterOutDTO>>> GetChaptersByCourseIdAndUserId(int courseid, int userid, SortingAndPaginationDTO userSortingRequest);
         Task<TResult> DeleteChapter(int chapterid, int userid);
     }
 }

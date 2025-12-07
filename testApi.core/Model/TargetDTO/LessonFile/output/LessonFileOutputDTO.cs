@@ -8,7 +8,7 @@ namespace Core.Model.TargetDTO.LessonFile.output
 {
     public class LessonFileOutputDTO
     {
-        public int fileid {  get; set; }
+        public int id {  get; set; }
         public string filename { get; set; }
         public string url { get; set; }
         public int order {  get; set; }

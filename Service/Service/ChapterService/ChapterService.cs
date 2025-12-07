@@ -150,7 +150,7 @@ namespace Applcation.Service.chapterService
         public async Task<TResult<PagedResponseDTO<ChapterOutDTO>>> GetChaptersByCourseIdAndUserId(
             int courseid, 
             int userid, 
-            UserSortingRequest userSortingRequest
+            SortingAndPaginationDTO userSortingRequest
             )
         {
             var chapter = await _chapterRepository.GetAllWithoutTracking().GetWithPaginationAndSorting(userSortingRequest, "id", "courseid")
@@ -167,7 +167,7 @@ namespace Applcation.Service.chapterService
         }
 
 
-        private async Task<TResult<PagedResponseDTO<ChapterOutDTO>>> GetChapter(List<ChapterEntity> chapterEntities, UserSortingRequest userSortingRequest, int count)
+        private async Task<TResult<PagedResponseDTO<ChapterOutDTO>>> GetChapter(List<ChapterEntity> chapterEntities, SortingAndPaginationDTO userSortingRequest, int count)
         {
 
             List<ChapterOutDTO> chapters = chapterEntities.Select(c => new ChapterOutDTO
@@ -185,7 +185,7 @@ namespace Applcation.Service.chapterService
 
         public async Task<TResult<PagedResponseDTO<ChapterOutDTO>>> GetChaptersByCourseId(
             int courseid, 
-            UserSortingRequest userSortingRequest)
+            SortingAndPaginationDTO userSortingRequest)
         {
             var chapter = await _chapterRepository.GetAllWithoutTracking().GetWithPaginationAndSorting(userSortingRequest, "id", "courseid").Include(c => c.course).Where(c => c.course.id == courseid).ToListAsync();
 

@@ -24,7 +24,7 @@ namespace testApi.EndPoints
         [HttpGet("{chapterid}")]
         [OutputCache(PolicyName = "10min")]
         public async Task<IActionResult> GetLesson(int chapterid,
-            [FromQuery] UserSortingRequest userSortingRequest)
+            [FromQuery] SortingAndPaginationDTO userSortingRequest)
         {
             var result = await _lessonService.GetLessonByChapterid(chapterid, userSortingRequest);
             return  await EntityResultExtensions.ToActionResult(result, this);
