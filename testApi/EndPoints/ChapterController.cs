@@ -30,7 +30,7 @@ namespace testApi.EndPoints
         )
         {
             var result = await _chapterService.GetChaptersByCourseId(courseId, request);
-            return EntityResultExtensions.ToActionResult(result, this);
+            return await EntityResultExtensions.ToActionResult(result, this);
             
         }
 
@@ -41,7 +41,7 @@ namespace testApi.EndPoints
         public async Task<IActionResult> CreateChapter([FromBody] CreateChapterDTO createChapterDTO)
         {
             var result = await _chapterService.Create(createChapterDTO, Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)));
-            return EntityResultExtensions.ToActionResult(result, this);
+            return await EntityResultExtensions.ToActionResult(result, this);
         }
 
 
@@ -57,7 +57,7 @@ namespace testApi.EndPoints
                 return Ok(result.Value);
             }
 
-            return EntityResultExtensions.ToActionResult(result, this);
+            return await EntityResultExtensions.ToActionResult(result, this);
 
         }
 
@@ -107,7 +107,7 @@ namespace testApi.EndPoints
             {
                 return Ok();
             }
-            return EntityResultExtensions.ToActionResult(result, this);
+            return await EntityResultExtensions.ToActionResult(result, this);
         }
 
 

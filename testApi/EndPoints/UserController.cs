@@ -95,7 +95,6 @@ namespace testApi.EndPoints
             )
         {
             var result = await _usersService.AgressiveRemoveUser(id);
-  
             return await EntityResultExtensions.ToActionResult(result, this,
          opt: async () =>
          {

@@ -10,18 +10,12 @@ namespace testApi
 
         public static int ErrorMap(errorCode num)
         {
-            if ((int)num < 100)
+            return (int)num switch
             {
-                return 400;
-            }
-            else if ((int)num < 200)
-            {
-                return 409;
-            }
-            else
-            {
-                return 500;
-            }
+                < 100 => 400,
+                < 200 => 409,
+                _ => 500,
+            };
 
         }
 
@@ -43,7 +37,7 @@ namespace testApi
                 errorCode.UserAlreadyExists
                      => controllerBase.Conflict(new { code = result.ErrorCode.ToString(), message = "пользователь уже существует" }),
 
-                // 500 Internal Server Error 
+                
                 _ => controllerBase.StatusCode(ErrorMap(result.ErrorCode), new { code = result.ErrorCode.ToString(), message = result.MessageForUser })
             };
          }

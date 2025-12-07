@@ -14,6 +14,5 @@ namespace infrastructure.Entitiеs
         public string fileurl { get; set; }
         public string storage_type { get; set; }
         public int order { get; set; }
-
     }
 }

@@ -39,9 +39,8 @@ namespace testApi.EndPoints
             }
             else
             {
-                return EntityResultExtensions.ToActionResult(result, this);
+                return await EntityResultExtensions.ToActionResult(result, this);
             }
-            
         }
 
         [HttpPost("refrash")]

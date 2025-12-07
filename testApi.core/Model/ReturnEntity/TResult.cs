@@ -11,8 +11,8 @@
 
     public class TResult<T> : EntityOfTResult
     {
-        private TResult() { }        
-        public T Value { get; set; }
+        internal TResult() { }        
+        public T? Value { get; set; }
         public static TResult<T> CompletedOperation(T value)
             => new TResult<T> { Value = value, IsCompleted = true, ErrorCode = errorCode.None};
         public static TResult<T> FailedOperation(errorCode errorCode, string MessageForUser = null)
@@ -20,8 +20,6 @@
 
         //public static TResult<T> FailedOperation(errorCode errorCode)
         //    => new TResult<T> { IsCompleted = false, ErrorCode = errorCode};
-
-
         public static implicit operator TResult(TResult<T> value)
         {
             return new TResult { ErrorCode = value.ErrorCode, IsCompleted = value.IsCompleted, MessageForUser = value.MessageForUser};

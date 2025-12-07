@@ -23,6 +23,11 @@ using testApi.Middleware.RateLimit;
 using testApi.Middleware.Новая_папка;
 using Applcation.Service.SubscriptionService;
 using Applcation.Service.FavoritService;
+using Amazon.S3;
+using Microsoft.Extensions.Options;
+using infrastructure.Storage;
+using Amazon.Runtime;
+
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpContextAccessor();
@@ -30,7 +35,6 @@ var conntionString = builder.Configuration.GetConnectionString("DefaultConnectio
 
 // залупа1
 builder.Services.AddDbContext<CourceDbContext>(options => options.UseNpgsql(conntionString));
-
 //репозитории
 builder.Services.AddScoped<IBaseRepository<UserEntities>, BaseRepository<UserEntities>>();
 builder.Services.AddScoped<IBaseRepository<UserRoleEntities>, BaseRepository<UserRoleEntities>>();
@@ -52,11 +56,9 @@ builder.Services.AddScoped<ILessonService, LessonService>();
 builder.Services.AddScoped<ISubscriptionService, SubscriptionService>();
 builder.Services.AddScoped<IFavoritService, FavoritService>();
 //залупа2
-
 builder.Services.AddEndpointsApiExplorer(); //свагеру что бы найти
 builder.Services.AddSwaggerGen(); // свагеру для создания документа
 builder.Logging.AddConsole();
-
 //внешние иснтрументы
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<UsersMapperProfile>());
@@ -65,12 +67,25 @@ builder.Services.AddAutoMapper(cfg => cfg.AddProfile<AuthMapperProfile>());
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<CoursesMapperProfile>());
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<ChaptermMapperProfile>());
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<LessonMapperProfile>());
+builder.Services.AddScoped<IFileStorageService, BlackBlazeStorageService>();
+builder.Services.Configure<BackblazeOptions>(
+    builder.Configuration.GetSection("B2"));
+
+builder.Services.AddSingleton<IAmazonS3>(
+    sp =>
+    {
+        var opt = sp.GetRequiredService<IOptions<BackblazeOptions>>().Value;
+        return new AmazonS3Client(
+            new BasicAWSCredentials(opt.KeyId, opt.ApplicationKey), 
+            new AmazonS3Config { ServiceURL = opt.Endpoint });
+    });
 builder.Services.AddScoped<IHeaderService, HeaderService>();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]);
+
 
 builder.Services.AddAuthentication(options =>
 {
