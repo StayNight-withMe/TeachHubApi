@@ -107,6 +107,7 @@ namespace infrastructure.Repository.Base
         }
 
 
+
         /// <summary>
         /// частичное обновление, можно передавать не прикрепленные сущности, с primary key
         /// </summary>
@@ -150,8 +151,8 @@ namespace infrastructure.Repository.Base
                     }
                 }
             }
-
             
+
         }
 
     }

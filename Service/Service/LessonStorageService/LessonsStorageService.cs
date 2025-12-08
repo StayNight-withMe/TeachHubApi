@@ -26,26 +26,64 @@ namespace Applcation.Service.LessonStorageService
     public class LessonsStorageService : ILessonStorageService
     {
         private readonly IBaseRepository<LessonfilesEntities> _lessonFileRepository;
-        
+
+        private readonly IBaseRepository<LessonEntities> _lessonRepository;
+
         private readonly ILogger<LessonsStorageService> _logger;
         
         private readonly IFileStorageService _fileStorageService;
         
         public LessonsStorageService(
-            IBaseRepository<LessonfilesEntities> lessonRepository,
+            IBaseRepository<LessonfilesEntities> lessonFileRepository,
+            IBaseRepository<LessonEntities> lessonRepository,
             ILogger<LessonsStorageService>  logger,
             IFileStorageService fileStorageService
             ) 
         {
         _fileStorageService = fileStorageService;
-        _lessonFileRepository = lessonRepository;
+        _lessonFileRepository = lessonFileRepository;
+        _lessonRepository = lessonRepository;
         _logger = logger;
         }
-        public Task DeleteLessonUrlFile(string fileid, int lessonid, int userid)
+        public async Task<TResult> DeleteLessonUrlFile(
+            string fileid, 
+            int lessonid, 
+            int userid,
+            CancellationToken ct = default
+            )
         {
-            throw new NotImplementedException();
-        }
+            var lesson = await _lessonRepository
+                .GetAllWithoutTracking()
+                .Include(c => c.course)
+                .Where(c => c.course.creatorid == userid &&
+                 c.id == lessonid)
+                .FirstOrDefaultAsync();
 
+            if (lesson == null)
+            {
+                return TResult.FailedOperation(errorCode.NoRights);
+            }
+
+            var file = await _lessonFileRepository
+                .GetAllWithoutTracking()
+                .Where(c => c.id == lesson.id)
+                .FirstOrDefaultAsync();
+
+            if (file == null)
+            {
+                return TResult.FailedOperation(errorCode.NotFound);
+            }
+            try
+            {
+                await _fileStorageService.DeleteFileAsync(file.filekey, file.lessonid, ct);
+            }
+            catch (AmazonS3Exception ex)
+            {
+                _logger.LogError(ex);
+            }
+          
+
+        }
         public async Task<TResult<PagedResponseDTO<LessonFileOutputDTO>>> GetLessonUrlFile(
             int lessonid, 
             PaginationDTO pagination,
@@ -59,7 +97,7 @@ namespace Applcation.Service.LessonStorageService
                 .OrderBy(c => c.order)
                 .ToListAsync();
             
-            if (lessonsFiles == null)
+            if (lessonsFiles.Count == 0)
             {
                 return TResult<PagedResponseDTO<LessonFileOutputDTO>>.FailedOperation(errorCode.lessonNotFound);
             }
@@ -84,7 +122,8 @@ namespace Applcation.Service.LessonStorageService
 
         }
 
-        public async Task<TResult> UploadFile(Stream stream, 
+        public async Task<TResult> UploadFile(
+            Stream stream, 
             int userid, 
             MetaDataDTO metaData,
             string contentType,
@@ -92,14 +131,17 @@ namespace Applcation.Service.LessonStorageService
             )
         {
 
-            var user = await _lessonFileRepository.
-                GetAllWithoutTracking()
-                .Include(c => c.lesson)
-                .Include(c => c.lesson.course)
-                .Where(c => c.lesson.course.creatorid == userid)
+           var lesson = await _lessonRepository.GetAllWithoutTracking()
+                .Include(c => c.course)
+                .Where(
+                        c => c.id == metaData.lessonid && 
+                        c.course.creatorid == userid)
                 .FirstOrDefaultAsync();
 
-            if(user == null)
+
+
+
+            if (lesson == null)
             {
                 return TResult.FailedOperation(errorCode.NoRights);
             }

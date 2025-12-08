@@ -32,5 +32,6 @@
         TimeOutError = 203,
         CloudError = 204,
         ClientError = 205,
+        NotFound = 206,
     }
 }

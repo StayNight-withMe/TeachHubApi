@@ -71,7 +71,7 @@ namespace testApi
                 {
                     await opt();
                 }
-               return controllerBase.StatusCode(200, "Ok");
+               return controllerBase.Ok();
             }
 
             return MapToAction(result, controllerBase);
