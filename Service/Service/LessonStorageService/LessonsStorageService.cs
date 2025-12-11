@@ -63,7 +63,7 @@ namespace Applcation.Service.LessonStorageService
             {
                 return TResult.FailedOperation(errorCode.NoRights);
             }
-
+            ///
             var file = await _lessonFileRepository
                 .GetAllWithoutTracking()
                 .Where(c => c.id == lesson.id)
