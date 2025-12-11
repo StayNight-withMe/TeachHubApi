@@ -37,24 +37,24 @@ namespace infrastructure.Context
 
             base.OnModelCreating(modelBuilder);
 
-            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
-            {
-                var pk = entityType.FindPrimaryKey();
-                if (pk != null)
-                {
+            //foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            //{
+            //    var pk = entityType.FindPrimaryKey();
+            //    if (pk != null)
+            //    {
    
-                    var idProperty = pk.Properties.FirstOrDefault(p =>
-                        p.ClrType == typeof(int) || p.ClrType == typeof(long));
+            //        var idProperty = pk.Properties.FirstOrDefault(p =>
+            //            p.ClrType == typeof(int) || p.ClrType == typeof(long));
 
-                    if (idProperty != null)
-                    {
-                        modelBuilder.Entity(entityType.Name)
-                            .Property(idProperty.Name)
-                            .ValueGeneratedOnAdd()
-                            .UseHiLo();  
-                    }
-                }
-            }
+            //        if (idProperty != null)
+            //        {
+            //            modelBuilder.Entity(entityType.Name)
+            //                .Property(idProperty.Name)
+            //                .ValueGeneratedOnAdd()
+            //                .UseHiLo();  
+            //        }
+                //}
+            //}
 
         }
 

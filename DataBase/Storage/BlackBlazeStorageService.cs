@@ -38,11 +38,12 @@ namespace infrastructure.Storage
             
             try
             {
-            await _amazonS3.DeleteObjectAsync(_bucketName, fileName, ct );
+            await _amazonS3.DeleteObjectAsync(_bucketName, fileName, ct);
             return true;
             }
             catch (AmazonS3Exception ex)
             {
+                
                 _logger.LogError(ex.Message);
                 return false;
             }

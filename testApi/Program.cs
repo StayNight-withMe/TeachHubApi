@@ -1,8 +1,13 @@
+using Amazon.Runtime;
+using Amazon.S3;
 using Applcation.Service.AuthService;
 using Applcation.Service.chapterService;
 using Applcation.Service.CourceService;
-using Applcation.Service.UserService;
+using Applcation.Service.FavoritService;
 using Applcation.Service.LessonService;
+using Applcation.Service.LessonStorageService;
+using Applcation.Service.SubscriptionService;
+using Applcation.Service.UserService;
 using Core.Interfaces.Repository;
 using Core.Interfaces.Service;
 using Core.Interfaces.UoW;
@@ -10,23 +15,20 @@ using Core.Interfaces.Utils;
 using infrastructure.Context;
 using infrastructure.Entitiеs;
 using infrastructure.Repository.Base;
+using infrastructure.Storage;
 using infrastructure.UoW.implementation;
 using infrastructure.Utils.HeadersService;
 using infrastructure.Utils.JwtService;
 using infrastructure.Utils.Mapping.AutoMapperProfiles;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using testApi.Middleware.Exeption;
 using testApi.Middleware.RateLimit;
 using testApi.Middleware.Новая_папка;
-using Applcation.Service.SubscriptionService;
-using Applcation.Service.FavoritService;
-using Amazon.S3;
-using Microsoft.Extensions.Options;
-using infrastructure.Storage;
-using Amazon.Runtime;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -45,6 +47,7 @@ builder.Services.AddScoped<IBaseRepository<LessonEntities>, BaseRepository<Lesso
 builder.Services.AddScoped<IBaseRepository<LessonEntities>, BaseRepository<LessonEntities>>();
 builder.Services.AddScoped<IBaseRepository<SubscriptionEntites>, BaseRepository<SubscriptionEntites>>();
 builder.Services.AddScoped<IBaseRepository<FavoritEntities>, BaseRepository<FavoritEntities>>();
+builder.Services.AddScoped<IBaseRepository<LessonfilesEntities>, BaseRepository<LessonfilesEntities>>();
 //сервисы
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IUsersService ,UserService>();
@@ -55,6 +58,7 @@ builder.Services.AddScoped<IChapterService, ChapterService>();
 builder.Services.AddScoped<ILessonService, LessonService>();
 builder.Services.AddScoped<ISubscriptionService, SubscriptionService>();
 builder.Services.AddScoped<IFavoritService, FavoritService>();
+builder.Services.AddScoped<ILessonStorageService, LessonsStorageService>();
 //залупа2
 builder.Services.AddEndpointsApiExplorer(); //свагеру что бы найти
 builder.Services.AddSwaggerGen(); // свагеру для создания документа
@@ -76,8 +80,8 @@ builder.Services.AddSingleton<IAmazonS3>(
     {
         var opt = sp.GetRequiredService<IOptions<BackblazeOptions>>().Value;
         return new AmazonS3Client(
-            new BasicAWSCredentials(opt.KeyId, opt.ApplicationKey), 
-            new AmazonS3Config { ServiceURL = opt.Endpoint });
+            new BasicAWSCredentials(opt.KeyId, opt.ApplicationKey),
+            new AmazonS3Config { ServiceURL = opt.Endpoint, ForcePathStyle = true });
     });
 builder.Services.AddScoped<IHeaderService, HeaderService>();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

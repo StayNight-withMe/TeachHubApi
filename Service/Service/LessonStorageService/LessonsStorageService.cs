@@ -2,6 +2,7 @@
 using Amazon.S3;
 using Core.Interfaces.Repository;
 using Core.Interfaces.Service;
+using Core.Interfaces.UoW;
 using Core.Interfaces.Utils;
 using Core.Model.ReturnEntity;
 using Core.Model.TargetDTO.Common.input;
@@ -29,6 +30,8 @@ namespace Applcation.Service.LessonStorageService
 
         private readonly IBaseRepository<LessonEntities> _lessonRepository;
 
+        private readonly IUnitOfWork _unitOfWork;
+
         private readonly ILogger<LessonsStorageService> _logger;
         
         private readonly IFileStorageService _fileStorageService;
@@ -37,26 +40,38 @@ namespace Applcation.Service.LessonStorageService
             IBaseRepository<LessonfilesEntities> lessonFileRepository,
             IBaseRepository<LessonEntities> lessonRepository,
             ILogger<LessonsStorageService>  logger,
-            IFileStorageService fileStorageService
+            IFileStorageService fileStorageService,
+            IUnitOfWork unitOfWork
             ) 
         {
         _fileStorageService = fileStorageService;
         _lessonFileRepository = lessonFileRepository;
         _lessonRepository = lessonRepository;
         _logger = logger;
+        _unitOfWork = unitOfWork;
         }
         public async Task<TResult> DeleteLessonUrlFile(
-            string fileid, 
-            int lessonid, 
+            int fileid, 
             int userid,
             CancellationToken ct = default
             )
         {
+            var file = await _lessonFileRepository
+                    .GetAllWithoutTracking()
+                    .Where(c => c.id == fileid)
+                    .FirstOrDefaultAsync();
+
+            if (file == null)
+            {
+                return TResult.FailedOperation(errorCode.NotFound);
+            }
+
+
             var lesson = await _lessonRepository
                 .GetAllWithoutTracking()
                 .Include(c => c.course)
                 .Where(c => c.course.creatorid == userid &&
-                 c.id == lessonid)
+                 c.id == file.lessonid)
                 .FirstOrDefaultAsync();
 
             if (lesson == null)
@@ -64,24 +79,45 @@ namespace Applcation.Service.LessonStorageService
                 return TResult.FailedOperation(errorCode.NoRights);
             }
             ///
-            var file = await _lessonFileRepository
-                .GetAllWithoutTracking()
-                .Where(c => c.id == lesson.id)
-                .FirstOrDefaultAsync();
 
-            if (file == null)
-            {
-                return TResult.FailedOperation(errorCode.NotFound);
-            }
             try
             {
                 await _fileStorageService.DeleteFileAsync(file.filekey, file.lessonid, ct);
+                await _lessonFileRepository.DeleteById(file.id);
+                await _unitOfWork.CommitAsync();
+                return TResult.CompletedOperation();
             }
             catch (AmazonS3Exception ex)
             {
                 _logger.LogError(ex);
+                return TResult.FailedOperation(errorCode.CloudError);
             }
-          
+            catch(AmazonServiceException ex)
+            {
+                _logger.LogError(ex);
+                return TResult.FailedOperation(errorCode.CloudError);
+            }
+            catch (AmazonClientException ex)
+            {
+                _logger.LogError(ex);
+                return TResult.FailedOperation(errorCode.ClientError);
+            }
+            catch (TaskCanceledException ex)
+            {
+                _logger.LogError(ex);
+                return TResult.FailedOperation(errorCode.TimeOutError);
+            }
+            catch(DbUpdateException ex)
+            {
+                _logger.LogDBError(ex);
+                return TResult.FailedOperation(errorCode.DatabaseError);
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex);
+                return TResult.FailedOperation(errorCode.UnknownError);
+            }
+
 
         }
         public async Task<TResult<PagedResponseDTO<LessonFileOutputDTO>>> GetLessonUrlFile(
@@ -146,6 +182,9 @@ namespace Applcation.Service.LessonStorageService
                 return TResult.FailedOperation(errorCode.NoRights);
             }
 
+
+
+
             try
             {
                 var key = await _fileStorageService.UploadFileAsync(
@@ -154,15 +193,19 @@ namespace Applcation.Service.LessonStorageService
                     contentType,
                     ct : ct
                     );
-                await _lessonFileRepository.Create(new LessonfilesEntities 
-                { 
-                 lessonid = metaData.lessonid,
-                 filekey = key,
-                 cloudstore = metaData.cloudstore,
-                 filetype = metaData.filetype,
-                 order = metaData.order,
-                } 
+                await _lessonFileRepository.Create(new LessonfilesEntities
+                {
+                    filename = metaData.name,
+                    lessonid = metaData.lessonid,
+                    filekey = key,
+                    cloudstore = metaData.cloudstore,
+                    filetype = metaData.filetype,
+                    order = metaData.order,
+                }
                 );
+
+                await _unitOfWork.CommitAsync();
+
                 return TResult.CompletedOperation();
             }
             catch(AmazonS3Exception ex)

@@ -1,4 +1,5 @@
 ﻿using Core.Model.ReturnEntity;
+using Core.Model.TargetDTO.Common.input;
 using Core.Model.TargetDTO.Common.output;
 using Core.Model.TargetDTO.LessonFile.input;
 using Core.Model.TargetDTO.LessonFile.output;
@@ -11,17 +12,22 @@ namespace Core.Interfaces.Service
 {
     public interface ILessonStorageService
     {
-        Task<TResult<PagedResponseDTO<LessonFileOutputDTO>>> GetLessonUrlFile(int lessonid);
+        Task<TResult<PagedResponseDTO<LessonFileOutputDTO>>> GetLessonUrlFile(
+              int lessonid,
+            PaginationDTO pagination,
+            CancellationToken ct = default
+            );
         Task<TResult> UploadFile(
-            Stream stream, 
+          Stream stream,
             int userid,
             MetaDataDTO metaData,
-            string contentType);
-        Task DeleteLessonUrlFile(
-            string fileid,
-            int lessonid, 
+            string contentType,
+            CancellationToken ct = default
+            );
+        Task<TResult> DeleteLessonUrlFile(
+            int fileid,
             int userid,
-            CancellationToken ct
+            CancellationToken ct = default
             );
     }
 }

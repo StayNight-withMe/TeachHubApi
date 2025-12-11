@@ -31,8 +31,6 @@ namespace infrastructure.Repository.Base
             }
                 _dbSet.Add(value);
                 await Task.CompletedTask;
-            
-           
         }
         /// <summary>
         /// обновление сущности целиком, для применения изменений нужен коммит изменений
@@ -71,6 +69,7 @@ namespace infrastructure.Repository.Base
             return _dbSet.AsQueryable();
         }
 
+
         /// <summary>
         /// получения целого set используя IQueryable, сущности по умолчанию НЕ остаются прикреплены к EF 
         /// </summary>
@@ -79,6 +78,7 @@ namespace infrastructure.Repository.Base
         {
             return _dbSet.AsQueryable().AsNoTracking();
         }
+
 
         /// <summary>
         /// получение объекта(записи) из сущности по id, присутствует поддержка составных первичных ключей
