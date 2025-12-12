@@ -78,7 +78,7 @@ namespace Applcation.Service.LessonStorageService
             {
                 return TResult.FailedOperation(errorCode.NoRights);
             }
-            ///
+            
 
             try
             {

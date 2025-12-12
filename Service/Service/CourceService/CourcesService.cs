@@ -84,7 +84,9 @@ namespace Applcation.Service.CourceService
         }
 
 
-        public async Task<TResult<PagedResponseDTO<CourseOutputDTO>>> SearchCourse(string search, SortingAndPaginationDTO userSortingRequest)
+        public async Task<TResult<PagedResponseDTO<CourseOutputDTO>>> SearchCourse(
+            string search, 
+            SortingAndPaginationDTO userSortingRequest)
         {
             var listqw = _courceRepository.GetAllWithoutTracking()
                 .Where(c => c.searchvector
@@ -159,7 +161,10 @@ namespace Applcation.Service.CourceService
 
 
 
-        public async Task<TResult<PagedResponseDTO<CourseOutputDTO>>> GetUserCourses(int userid, string name, SortingAndPaginationDTO userSortingRequest)
+        public async Task<TResult<PagedResponseDTO<CourseOutputDTO>>> GetUserCourses(
+            int userid, 
+            string name, 
+            SortingAndPaginationDTO userSortingRequest)
         {
 
           
