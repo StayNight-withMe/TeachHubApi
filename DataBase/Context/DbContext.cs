@@ -17,8 +17,8 @@ namespace infrastructure.Context
         public DbSet<ChapterEntity> chapter { get; set; }
         public DbSet<LessonfilesEntities> lessonfiles { get; set; }
         public DbSet<SubscriptionEntites> subscription { get; set; }
-        public DbSet<CategoriesEntities> category { get; set; }
-        public DbSet<Course_CategoriesEntities> course_Categories { get; set; }
+        public DbSet<CategoriesEntities> categories { get; set; }
+        public DbSet<Course_CategoriesEntities> course_categories { get; set; }
 
         public CourceDbContext(DbContextOptions<CourceDbContext> options)
         : base(options){ }

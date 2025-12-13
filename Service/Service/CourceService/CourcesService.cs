@@ -72,8 +72,12 @@ namespace Applcation.Service.CourceService
 
             CourseEntities courseEntities = _mapper.Map<CourseEntities>(source);
             await _courceRepository.Create(courseEntities);
-            Course_CategoriesEntities course_CategoriesEntities = new Course_CategoriesEntities { courseid = courseEntities.id, categoryid = courceDTO.categoryid };
-            await _course_CategoriesRepository.Create(course_CategoriesEntities);
+
+            foreach(var i in courceDTO.categoryid)
+            {
+                Course_CategoriesEntities course_CategoriesEntities = new Course_CategoriesEntities { course = courseEntities, categoryid = i };
+                await _course_CategoriesRepository.Create(course_CategoriesEntities);
+            }
 
             try
             {

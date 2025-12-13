@@ -75,7 +75,8 @@ namespace Applcation.Service.UserService
                 RoleId = (int)role,
             };
            
-            await _userRoleRepository.Create(_mapper.Map<UserRoleEntities>(roleSource));
+            await _userRoleRepository.Create(
+                            _mapper.Map<UserRoleEntities>(roleSource));
 
 
             var authSource = new UserAuthMappingSource

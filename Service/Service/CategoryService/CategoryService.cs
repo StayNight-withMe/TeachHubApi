@@ -39,7 +39,7 @@ namespace Applcation.Service.CategoryService
         {
             var qwery = _categoryRepository
                 .GetAllWithoutTracking()
-                .Where(c => EF.Functions.Like(c.name, $"%{searchText}%"));
+                .Where(c => EF.Functions.ILike(c.name, $"%{searchText}%"));
 
             var resultEntities =  await qwery.GetWithPagination(pagination)
                 .OrderBy(c => c.parentid)
