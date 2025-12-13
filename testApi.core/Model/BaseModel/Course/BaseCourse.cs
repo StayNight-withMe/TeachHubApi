@@ -10,6 +10,7 @@ namespace Core.Model.BaseModel.Course
     {
             public string name { get; set; }
             public string description { get; set; }
+            public int categoryid { get; set; }
             public string field { get; set; }
     }
 }

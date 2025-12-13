@@ -78,12 +78,11 @@ namespace Applcation.Service.LessonStorageService
             {
                 return TResult.FailedOperation(errorCode.NoRights);
             }
-            
 
+            await _lessonFileRepository.DeleteById(file.id);
             try
             {
                 await _fileStorageService.DeleteFileAsync(file.filekey, file.lessonid, ct);
-                await _lessonFileRepository.DeleteById(file.id);
                 await _unitOfWork.CommitAsync();
                 return TResult.CompletedOperation();
             }

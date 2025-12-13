@@ -8,6 +8,7 @@ using Applcation.Service.LessonService;
 using Applcation.Service.LessonStorageService;
 using Applcation.Service.SubscriptionService;
 using Applcation.Service.UserService;
+using Applcation.Service.CategoryService;
 using Core.Interfaces.Repository;
 using Core.Interfaces.Service;
 using Core.Interfaces.UoW;
@@ -48,6 +49,8 @@ builder.Services.AddScoped<IBaseRepository<LessonEntities>, BaseRepository<Lesso
 builder.Services.AddScoped<IBaseRepository<SubscriptionEntites>, BaseRepository<SubscriptionEntites>>();
 builder.Services.AddScoped<IBaseRepository<FavoritEntities>, BaseRepository<FavoritEntities>>();
 builder.Services.AddScoped<IBaseRepository<LessonfilesEntities>, BaseRepository<LessonfilesEntities>>();
+builder.Services.AddScoped<IBaseRepository<CategoriesEntities>, BaseRepository<CategoriesEntities>>();
+builder.Services.AddScoped<IBaseRepository<Course_CategoriesEntities>, BaseRepository<Course_CategoriesEntities>>();
 //сервисы
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IUsersService ,UserService>();
@@ -59,6 +62,7 @@ builder.Services.AddScoped<ILessonService, LessonService>();
 builder.Services.AddScoped<ISubscriptionService, SubscriptionService>();
 builder.Services.AddScoped<IFavoritService, FavoritService>();
 builder.Services.AddScoped<ILessonStorageService, LessonsStorageService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 //залупа2
 builder.Services.AddEndpointsApiExplorer(); //свагеру что бы найти
 builder.Services.AddSwaggerGen(); // свагеру для создания документа

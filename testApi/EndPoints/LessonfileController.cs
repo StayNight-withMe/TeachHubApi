@@ -27,9 +27,7 @@ namespace testApi.EndPoints
             CancellationToken ct
             )
         {
-
             Stream stream = file.OpenReadStream();
-
             var result = await _lessonStorageService.UploadFile(
                 stream,
                 Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)),
@@ -37,7 +35,6 @@ namespace testApi.EndPoints
                 file.ContentType,
                 ct
                 );
-
             return await EntityResultExtensions.ToActionResult(result, this);
 
         }
@@ -65,11 +62,6 @@ namespace testApi.EndPoints
             var result = await _lessonStorageService.DeleteLessonUrlFile(fileid, Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), ct);
             return await EntityResultExtensions.ToActionResult(result, this);
         }
-
-
-
-
-
 
     }
 }

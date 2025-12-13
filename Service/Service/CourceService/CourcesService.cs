@@ -25,6 +25,7 @@ namespace Applcation.Service.CourceService
     {
 
         private readonly IBaseRepository<CourseEntities> _courceRepository;
+        private readonly IBaseRepository<Course_CategoriesEntities> _course_CategoriesRepository;
 
         private readonly ILogger<CourcesService> _logger;
 
@@ -37,13 +38,15 @@ namespace Applcation.Service.CourceService
             ILogger<CourcesService> logger,
             IMapper mapper,
             IUnitOfWork unitOfWork,
-            IBaseRepository<UserEntities> userRepository
+            IBaseRepository<UserEntities> userRepository,
+            IBaseRepository<Course_CategoriesEntities> course_CategoriesRepository
             )
         {
             _courceRepository = baseRepository;
             _logger = logger;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _course_CategoriesRepository = course_CategoriesRepository;
         }
 
 
@@ -69,6 +72,8 @@ namespace Applcation.Service.CourceService
 
             CourseEntities courseEntities = _mapper.Map<CourseEntities>(source);
             await _courceRepository.Create(courseEntities);
+            Course_CategoriesEntities course_CategoriesEntities = new Course_CategoriesEntities { courseid = courseEntities.id, categoryid = courceDTO.categoryid };
+            await _course_CategoriesRepository.Create(course_CategoriesEntities);
 
             try
             {
