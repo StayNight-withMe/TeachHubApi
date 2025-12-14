@@ -11,6 +11,7 @@ namespace Core.Model.TargetDTO.Courses.input
     {
         public string? creatorName { get; set; }
         public DateTime createdat { get; set; }
+        public int[] categoryid { get; set; }
 
     }
 }

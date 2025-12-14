@@ -13,6 +13,7 @@ namespace Core.Model.TargetDTO.Courses.input
         public string? name { get; set; }
         public string? description { get; set; }
         public string? field { get; set; }
+        public int[]? categoryid { get; set; }
     }
 }
 

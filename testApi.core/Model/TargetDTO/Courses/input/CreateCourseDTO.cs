@@ -9,7 +9,7 @@ namespace Core.Model.TargetDTO.Courses.input
 {
     public class CreateCourseDTO : BaseCourse
     {
-
+        public int[] categoryid { get; set; }
 
     }
 }

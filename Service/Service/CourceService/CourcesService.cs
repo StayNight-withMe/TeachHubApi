@@ -16,6 +16,7 @@ using infrastructure.Utils.PageService;
 using Logger;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 using System.Security.Claims;
 
 
@@ -23,8 +24,9 @@ namespace Applcation.Service.CourceService
 {
     public class CourcesService : ICourseService
     {
-
+        
         private readonly IBaseRepository<CourseEntities> _courceRepository;
+        
         private readonly IBaseRepository<Course_CategoriesEntities> _course_CategoriesRepository;
 
         private readonly ILogger<CourcesService> _logger;
@@ -101,20 +103,41 @@ namespace Applcation.Service.CourceService
                 .Where(c => c.searchvector
                 .Matches(search) );
 
+            
+
+
             var list = await listqw
                 .GetWithPaginationAndSorting(userSortingRequest)
                 .Include(c => c.user)
                 .ToListAsync();
 
-            return PageService.CreatePage(MapList(list), userSortingRequest, await listqw.CountAsync());
+
+          
+
+            return PageService.CreatePage(await MapList(list), userSortingRequest, await listqw.CountAsync());
         }
 
 
-        private List<CourseOutputDTO> MapList(List<CourseEntities> courseEntities)
+        private async Task<List<CourseOutputDTO>> MapList(List<CourseEntities> courseEntities)
         {
+
+            Dictionary<int, Dictionary<int, string>> categoryNames = new Dictionary<int, Dictionary<int, string>>();
+
+            foreach (var i in courseEntities)
+            {
+                categoryNames = await _course_CategoriesRepository
+               .GetAllWithoutTracking()
+               .Where(c => c.courseid == i.id)
+               .Include(c => c.categories)
+               .GroupBy(c => c.courseid)
+               .ToDictionaryAsync(c => c.Key, c => c.Select(c => c.categories).ToDictionary(c => c.id, c => c.name));
+            }
+
             return courseEntities
                .Select(c => new CourseOutputDTO
                {
+                   categorynames = categoryNames.ContainsKey(c.id) ? categoryNames[c.id] : new Dictionary<int, string>(),
+                   field = c.field,
                    description = c.description,
                    creatorid = c.user.id,
                    id = c.id,
@@ -133,7 +156,7 @@ namespace Applcation.Service.CourceService
                 .ToListAsync();
        
             return PageService.CreatePage(
-                MapList(courses), 
+                await MapList(courses), 
                 userSortingRequest, 
                 await _courceRepository.GetAll()
                     .CountAsync());
@@ -188,7 +211,7 @@ namespace Applcation.Service.CourceService
                 return TResult<PagedResponseDTO <CourseOutputDTO>>.FailedOperation(errorCode.CoursesNotFoud, "у вас нету своих курсов");
             }
 
-            List<CourseOutputDTO> courseDTOs = MapList(courseEntites);
+            List<CourseOutputDTO> courseDTOs = await MapList(courseEntites);
 
             return PageService
                 .CreatePage(courseDTOs, 
