@@ -28,7 +28,8 @@ namespace infrastructure.Utils.BloomFilter.implementation
         public string _tempfilePath { get; set; }
         public string _filePath { get ; set; }
         public string bloomDirectory { get; set; }
-        ILogger<EmailChecker> logger { get; set; }
+
+        private readonly ILogger<EmailChecker> _logger;
 
         public EmailChecker(
             IOptions<BloomOptions> options,
@@ -40,6 +41,7 @@ namespace infrastructure.Utils.BloomFilter.implementation
             bloomDirectory = options.Value.BloomFilterDirectory;
             exElement = options.Value.expectedElements;
             errorRate = options.Value.errorRate;
+            _logger = logger;
             FilterBuilder.Build(exElement, errorRate);
             LoadFilter();
         }
@@ -103,7 +105,8 @@ namespace infrastructure.Utils.BloomFilter.implementation
 
                 if (data == null || data.Length == 0)
                 {
-                    return; 
+                    _logger.LogWarning("Файл фильтра пуст или не существует. Загружается пустой фильтр.");
+                    return;
                 }
 
 
@@ -115,14 +118,14 @@ namespace infrastructure.Utils.BloomFilter.implementation
 
                         long expectedElements = reader.ReadInt64();
                         double errorRate = reader.ReadDouble();
-                        //HashMethod method = (HashMethod)reader.ReadInt32(); // Восстанавливаем HashMethod
+                        //HashMethod method = (HashMethod)reader.ReadInt32(); 
                         int bucketCount = reader.ReadInt32();
 
 
                         var bucketLengths = new int[bucketCount];
                         for (int i = 0; i < bucketCount; i++)
                         {
-                            bucketLengths[i] = reader.ReadInt32(); // int: Длина текущего byte[]
+                            bucketLengths[i] = reader.ReadInt32(); 
                         }
 
 
@@ -146,17 +149,15 @@ namespace infrastructure.Utils.BloomFilter.implementation
 
 
                         FilterBuilder.Build(options);
+
                     }
+                    _logger.LogInformation("Фильтр успешно загружен из файла.");
                 }
                 catch (Exception ex)
                 {
-                    // Ошибка десериализации (например, файл поврежден, или формат изменился)
-                    Console.WriteLine($"Критическая ошибка при десериализации фильтра. {ex.Message}");
-                    // Вернуть null, чтобы конструктор создал пустой фильтр
+                    _logger.LogCritical($"Критическая ошибка при десериализации фильтра. {ex.Message}");
                     return;
                 }
-
-
 
             }
             catch(Exception ex)
@@ -164,16 +165,9 @@ namespace infrastructure.Utils.BloomFilter.implementation
                 
                 return; 
             }
-
-
-
-
-          
         }
 
         
-
-
         private void SaveAtomically(byte[] data, string directory, string finalPath)
         {
             string tempPath = Path.Combine(directory, "bloomTemp.tmp");
