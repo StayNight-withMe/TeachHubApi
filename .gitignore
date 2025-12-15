@@ -21,7 +21,7 @@ _UpgradeReport_Files/
 ###############
 bin/
 obj/
-BloomFIlter/
+BloomFilterData/
 .vs/
 *.json
 *.csproj
