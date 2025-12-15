@@ -11,15 +11,7 @@ namespace Core.Model.Options
         public  string BloomFilterDirectory { get; set; }
         public string BloomDataFileName { get; set; }
         public string BloomTempFileName { get; set; }
-        public BloomOptions(
-            string bloomFilterDrectory, 
-            string bloomDataFileName = "bloomData.bin",
-            string bloomTempFileName = "bloomTemp.tmp" ) 
-        {
-            BloomFilterDirectory = bloomFilterDrectory;
-            BloomDataFileName = bloomDataFileName;
-            BloomTempFileName = bloomTempFileName;
-        }
-       
+        public int expectedElements { get; set; }
+        public double errorRate { get; set; }
     }
 }

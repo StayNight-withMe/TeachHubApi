@@ -1,6 +1,7 @@
 using Amazon.Runtime;
 using Amazon.S3;
 using Applcation.Service.AuthService;
+using Applcation.Service.CategoryService;
 using Applcation.Service.chapterService;
 using Applcation.Service.CourceService;
 using Applcation.Service.FavoritService;
@@ -8,16 +9,19 @@ using Applcation.Service.LessonService;
 using Applcation.Service.LessonStorageService;
 using Applcation.Service.SubscriptionService;
 using Applcation.Service.UserService;
-using Applcation.Service.CategoryService;
 using Core.Interfaces.Repository;
 using Core.Interfaces.Service;
 using Core.Interfaces.UoW;
 using Core.Interfaces.Utils;
+using Core.Model.Options;
+using infrastructure.BackgroundService;
 using infrastructure.Context;
 using infrastructure.Entitiеs;
 using infrastructure.Repository.Base;
 using infrastructure.Storage;
 using infrastructure.UoW.implementation;
+using infrastructure.Utils.BloomFilter.implementation;
+using infrastructure.Utils.BloomFilter.interfaces;
 using infrastructure.Utils.HeadersService;
 using infrastructure.Utils.JwtService;
 using infrastructure.Utils.Mapping.AutoMapperProfiles;
@@ -30,6 +34,7 @@ using System.Text;
 using testApi.Middleware.Exeption;
 using testApi.Middleware.RateLimit;
 using testApi.Middleware.Новая_папка;
+using static infrastructure.Utils.BloomFilter.interfaces.IEmailChecker;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -37,6 +42,7 @@ builder.Services.AddHttpContextAccessor();
 var conntionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 // залупа1
+builder.Services.AddHostedService<BloomRebuildService>();
 builder.Services.AddDbContext<CourceDbContext>(options => options.UseNpgsql(conntionString));
 //репозитории
 builder.Services.AddScoped<IBaseRepository<UserEntities>, BaseRepository<UserEntities>>();
@@ -75,9 +81,20 @@ builder.Services.AddAutoMapper(cfg => cfg.AddProfile<AuthMapperProfile>());
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<CoursesMapperProfile>());
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<ChaptermMapperProfile>());
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<LessonMapperProfile>());
+
+
+builder.Services.Configure<BloomOptions>(
+    builder.Configuration.GetSection("Bloom"));
+
+builder.Services.AddSingleton<IEmailChecker, EmailChecker>();
+
 builder.Services.AddScoped<IFileStorageService, BlackBlazeStorageService>();
+
+
 builder.Services.Configure<BackblazeOptions>(
     builder.Configuration.GetSection("B2"));
+
+
 
 builder.Services.AddSingleton<IAmazonS3>(
     sp =>
@@ -89,6 +106,7 @@ builder.Services.AddSingleton<IAmazonS3>(
     });
 builder.Services.AddScoped<IHeaderService, HeaderService>();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+
 builder.Services.AddOpenApi();
 
 var jwtSettings = builder.Configuration.GetSection("Jwt");
@@ -99,7 +117,6 @@ builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-
 })
 
      
