@@ -19,7 +19,8 @@ namespace Core.Interfaces.Service
             CancellationToken ct = default);
         Task<TResult<ChapterOutDTO>> UpdateChapter(
             ChapterUpdateDTO newchapter, 
-            int userid);
+            int userid,
+            CancellationToken ct = default);
         Task<TResult<PagedResponseDTO<ChapterOutDTO>>> GetChaptersByCourseId(
             int courseid,  
             SortingAndPaginationDTO userSortingRequest,

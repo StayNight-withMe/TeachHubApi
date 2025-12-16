@@ -1,12 +1,15 @@
-﻿using System;
+﻿using Core.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Model.TargetDTO
+namespace Core.Model.TargetDTO.ReviewReaction
 {
-    internal class ReviewReactionInputDTO
+    public class ReviewReactionInputDTO
     {
+        public int ReviewId { get; set; }
+        public ReactionType reaction { get; set; }
     }
 }

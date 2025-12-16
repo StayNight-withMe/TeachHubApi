@@ -10,9 +10,15 @@ namespace Core.Interfaces.Service
 {
     public interface IUsersService
     {
-        public Task<TResult<UserAuthDto>> RegistrationUser(RegistrationUserDto registrationUserDto, PublicRole role, string ip, string userAgent);
+        public Task<TResult<UserAuthDto>> RegistrationUser(
+            RegistrationUserDto registrationUserDto, 
+            PublicRole role, 
+            string ip, 
+            string userAgent,
+            CancellationToken ct = default
+            );
         public Task<TResult<checkEmailDTO>> CheckEmail(string email);
-        public Task<TResult> SoftDelete(int id);
-        public Task<TResult> AgressiveRemoveUser(int id);
+        public Task<TResult> SoftDelete(int id, CancellationToken ct = default);
+        public Task<TResult> AgressiveRemoveUser(int id, CancellationToken ct = default);
     }
 }

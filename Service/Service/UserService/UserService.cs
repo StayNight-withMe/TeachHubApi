@@ -60,11 +60,17 @@ namespace Applcation.Service.UserService
         }
 
      
-        public async Task<TResult<UserAuthDto>> RegistrationUser(RegistrationUserDto  registrationUserDto, PublicRole role, string ip, string UA)
+        public async Task<TResult<UserAuthDto>> RegistrationUser(
+            RegistrationUserDto  registrationUserDto, 
+            PublicRole role, 
+            string ip, 
+            string UA,
+            CancellationToken ct = default
+            )
         {
 
            
-            int Emailcount =  await _userRepository.GetAllWithoutTracking().CountAsync(c => c.email == registrationUserDto.email);
+            int Emailcount =  await _userRepository.GetAllWithoutTracking().CountAsync(c => c.email == registrationUserDto.email, ct);
             if(Emailcount > 0)
             {
                 TResult.FailedOperation(errorCode.UserAlreadyExists, "такой email уже существует");
@@ -132,23 +138,28 @@ namespace Applcation.Service.UserService
 
 
 
-        public async Task<TResult> AgressiveRemoveUser(int id)
+        public async Task<TResult> AgressiveRemoveUser(
+            int id,
+            CancellationToken ct = default
+            )
         {
-            var user = await _userRepository.GetByIdAsync(id);
+            var user = await _userRepository.GetByIdAsync(ct, id);
             if (user == null)
             {
                 _logger.LogRemoveUserNotFound(id);
                 return TResult<UserDto>.FailedOperation(errorCode.UserNotFound);
             }
-            await _userRepository.DeleteById(id);
+            await _userRepository.DeleteById(ct, id);
             var count =  await _unitOfWork.CommitAsync();
             return TResult.CompletedOperation();
         }
 
 
-        public async Task<TResult> SoftDelete(int id)
+        public async Task<TResult> SoftDelete(
+            int id,
+            CancellationToken ct = default)
         {
-            UserEntities? user = await _userRepository.GetByIdAsync(id);
+            UserEntities? user = await _userRepository.GetByIdAsync(ct, id);
             if (user == null)
             {
                 _logger.LogRemoveUserNotFound(id);

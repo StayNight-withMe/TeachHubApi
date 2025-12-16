@@ -18,9 +18,9 @@ namespace infrastructure.UoW.implementation
         _db = courceDbContext;
         }
 
-        public async Task<int> CommitAsync()
+        public async Task<int> CommitAsync(CancellationToken ct = default)
         {
-            return await _db.SaveChangesAsync();
+            return await _db.SaveChangesAsync(ct);
         }
 
         public void Dispose()

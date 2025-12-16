@@ -39,7 +39,10 @@ namespace Applcation.Service.FavoritService
             _favoritrepo = favoritrepo;
         }
 
-        public async Task<TResult> CreateFavorite(int userid, int courseid)
+        public async Task<TResult> CreateFavorite(
+            int userid, 
+            int courseid,
+            CancellationToken ct = default)
         {
             
             await _favoritrepo.Create(new FavoritEntities { userid = userid, courseid = courseid });
@@ -62,7 +65,8 @@ namespace Applcation.Service.FavoritService
 
         }
 
-        public async Task<TResult> DeleteFavorit(int userid, int courseid)
+        public async Task<TResult> DeleteFavorit(int userid, int courseid,
+            CancellationToken ct = default)
         {
             try
             {
@@ -83,7 +87,11 @@ namespace Applcation.Service.FavoritService
             }
         }
 
-        public async Task<TResult<PagedResponseDTO<FavoritOutputDTO>>> GetFavorite(int userid, SortingAndPaginationDTO sort)
+        public async Task<TResult<PagedResponseDTO<FavoritOutputDTO>>> GetFavorite(
+            int userid, 
+            SortingAndPaginationDTO sort,
+            CancellationToken ct = default
+            )
         {
             var entitiesList = await _favoritrepo.GetAllWithoutTracking().GetWithPaginationAndSorting(sort)
                .Include(c => c.course)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Core.Common;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace infrastructure.Entitiеs
         public int id { get; set; }
         public int reviewid { get; set; }
         public int userid { get; set; }
-        public int reactiontype { get; set; }
+        public ReactionType reactiontype { get; set; }
 
         [ForeignKey(nameof(reviewid))]
         public ReviewEntities review { get; set; }

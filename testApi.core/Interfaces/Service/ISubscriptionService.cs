@@ -12,9 +12,20 @@ namespace Core.Interfaces.Service
 {
     public interface ISubscriptionService
     {
-        Task<TResult> CreateSubscription(int followerid, int followingid);
-        Task<TResult<PagedResponseDTO<SubscribeOutput>>> GetUserFollowing(int userid, SortingAndPaginationDTO userSortingRequest);
-        Task<TResult<PagedResponseDTO<SubscribeOutput>>> GetUserFollowers(int userid, SortingAndPaginationDTO userSortingRequest);
-        Task<TResult> DeleteSubscription(int followerid, int followingid);
+        Task<TResult> CreateSubscription(
+            int followerid, 
+            int followingid, 
+            CancellationToken ct = default);
+        Task<TResult<PagedResponseDTO<SubscribeOutput>>> GetUserFollowing(
+            int userid, 
+            SortingAndPaginationDTO userSortingRequest, 
+            CancellationToken ct = default);
+        Task<TResult<PagedResponseDTO<SubscribeOutput>>> GetUserFollowers(
+            int userid, SortingAndPaginationDTO userSortingRequest, 
+            CancellationToken ct = default);
+        Task<TResult> DeleteSubscription(
+            int followerid, 
+            int followingid, 
+            CancellationToken ct = default);
     }
 }

@@ -9,11 +9,29 @@ namespace Core.Interfaces.Service
 {
     public interface ICourseService
     {
-        public Task<TResult> CreateCourse(CreateCourseDTO courceDTO, int id);
-        public Task<TResult<PagedResponseDTO<CourseOutputDTO>>> GetAllCourse(SortingAndPaginationDTO userSortingRequest);
-        public Task<TResult<PagedResponseDTO<CourseOutputDTO>>> GetUserCourses(int id, string name, SortingAndPaginationDTO userSortingRequest);
-        public Task<TResult<CourseOutputDTO>> UpdateCourse(UpdateCourseDTO updateCourseDTO, int userid);
-        public Task<TResult<PagedResponseDTO<CourseOutputDTO>>> SearchCourse(string search, SortingAndPaginationDTO userSortingRequest);
-        public Task<TResult> RemoveCourse(int id, ClaimsPrincipal user);
+        public Task<TResult> CreateCourse(
+            CreateCourseDTO courceDTO, 
+            int id, 
+            CancellationToken ct = default);
+        public Task<TResult<PagedResponseDTO<CourseOutputDTO>>> GetAllCourse(
+            SortingAndPaginationDTO userSortingRequest,
+            CancellationToken ct = default);
+        public Task<TResult<PagedResponseDTO<CourseOutputDTO>>> GetUserCourses(
+            int id, 
+            string name, 
+            SortingAndPaginationDTO userSortingRequest);
+        public Task<TResult<CourseOutputDTO>> UpdateCourse(
+            UpdateCourseDTO updateCourseDTO, 
+            int userid,
+            CancellationToken ct = default);
+        public Task<TResult<PagedResponseDTO<CourseOutputDTO>>> SearchCourse(
+            string search, 
+            SortingAndPaginationDTO userSortingRequest,
+            CancellationToken ct = default
+            );
+        public Task<TResult> RemoveCourse(
+            int id, 
+            ClaimsPrincipal user, 
+            CancellationToken ct = default);
     }
 }

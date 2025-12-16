@@ -13,6 +13,7 @@ using infrastructure.Utils.HeadersService;
 using Core.Model.TargetDTO.Auth.input;
 using Core.Model.TargetDTO.Users.input;
 using infrastructure.Utils.PasswodHashService;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace Applcation.Service.AuthService
@@ -46,15 +47,21 @@ namespace Applcation.Service.AuthService
         }
 
 
-        public async Task<TResult<UserAuthDto>> LoginUser(LoginUserDTO loginUserDTO, string ip, string userAgent)  
+        public async Task<TResult<UserAuthDto>> LoginUser(
+            LoginUserDTO loginUserDTO, 
+            string ip, 
+            string userAgent,
+            CancellationToken ct = default)  
         {
             
-
             if (ip == string.Empty)
             {
                 return TResult<UserAuthDto>.FailedOperation(errorCode.IpNotFound, "ошибка аутентификации, ip неизвествен");
             }
-            var user = _userRepository.GetAll().Where(c => c.email == loginUserDTO.email && c.isdelete == false).FirstOrDefault();
+            var user = await _userRepository
+                .GetAll()
+                .Where(c => c.email == loginUserDTO.email && c.isdelete == false)
+                .FirstOrDefaultAsync(ct);
             if(user != null)
             {
                 if(!PasswordHashService.VerifyPassword(loginUserDTO.password, user.password))
@@ -63,7 +70,7 @@ namespace Applcation.Service.AuthService
                 }
 
 
-                UserRoleEntities? userRole = await _userRolesRepository.GetByIdAsync(user.id, (int)loginUserDTO.role);
+                UserRoleEntities? userRole = await _userRolesRepository.GetByIdAsync(ct, user.id, (int)loginUserDTO.role);
                 if (userRole != null)
                 {
                    // Console.WriteLine($" IDROLE {userRole.roleid}, USERID {userRole.user.id}");
@@ -82,7 +89,7 @@ namespace Applcation.Service.AuthService
 
                 
             }
-            return TResult<UserAuthDto>.FailedOperation(errorCode.UserNotFound, "ошибка аутентификации");
+            return TResult<UserAuthDto>.FailedOperation(errorCode.UserNotFound);
         }
 
     }

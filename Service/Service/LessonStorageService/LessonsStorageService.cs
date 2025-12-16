@@ -59,7 +59,7 @@ namespace Applcation.Service.LessonStorageService
             var file = await _lessonFileRepository
                     .GetAllWithoutTracking()
                     .Where(c => c.id == fileid)
-                    .FirstOrDefaultAsync();
+                    .FirstOrDefaultAsync(ct);
 
             if (file == null)
             {
@@ -72,14 +72,14 @@ namespace Applcation.Service.LessonStorageService
                 .Include(c => c.course)
                 .Where(c => c.course.creatorid == userid &&
                  c.id == file.lessonid)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(ct);
 
             if (lesson == null)
             {
                 return TResult.FailedOperation(errorCode.NoRights);
             }
 
-            await _lessonFileRepository.DeleteById(file.id);
+            await _lessonFileRepository.DeleteById(ct, file.id);
             try
             {
                 await _fileStorageService.DeleteFileAsync(file.filekey, file.lessonid, ct);
@@ -130,7 +130,7 @@ namespace Applcation.Service.LessonStorageService
                 .Where(c => c.lessonid == lessonid)
                 .GetWithPagination(pagination)
                 .OrderBy(c => c.order)
-                .ToListAsync();
+                .ToListAsync(ct);
             
             if (lessonsFiles.Count == 0)
             {
@@ -172,17 +172,10 @@ namespace Applcation.Service.LessonStorageService
                         c => c.id == metaData.lessonid && 
                         c.course.creatorid == userid)
                 .FirstOrDefaultAsync();
-
-
-
-
             if (lesson == null)
             {
                 return TResult.FailedOperation(errorCode.NoRights);
             }
-
-
-
 
             try
             {
@@ -203,7 +196,7 @@ namespace Applcation.Service.LessonStorageService
                 }
                 );
 
-                await _unitOfWork.CommitAsync();
+                await _unitOfWork.CommitAsync(ct);
 
                 return TResult.CompletedOperation();
             }

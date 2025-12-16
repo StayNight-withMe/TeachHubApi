@@ -34,7 +34,7 @@ namespace testApi.Middleware.RateLimit
 
 
 
-        public async Task InvokeAsync(HttpContext context, IHeaderService headerService)
+        public async Task InvokeAsync(HttpContext context, IHeaderService headerService, CancellationToken ct = default)
         {
             Console.WriteLine("[MiddleWareRateLimit]");
             var ip = headerService.GetIp();
@@ -59,12 +59,12 @@ namespace testApi.Middleware.RateLimit
                 qw.TryDequeue(out _);
             }
             //(c => DateTime.UtcNow - c > _limitTimeSpan);            
-            Console.WriteLine($"количество запросв :: {qw.Count}");
+            _logger.LogInformation($"количество запросв :: {qw.Count}");
 
             if (qw.Count >= _limit)
             {
 
-                Console.WriteLine("Лимит запросов превышен");
+                _logger.LogInformation("Лимит запросов превышен");
                 await RateLimitDropError(context, qw);
                 return;
             }
@@ -76,7 +76,7 @@ namespace testApi.Middleware.RateLimit
                 _reqUests.TryRemove(ip, out _);
             }
 
-            Console.WriteLine("Переход к следующему");
+      
             await _next(context);
 
 
@@ -90,7 +90,7 @@ namespace testApi.Middleware.RateLimit
 
 
 
-        public async Task RateLimitDropError(HttpContext context, ConcurrentQueue<DateTime> times)
+        public async Task RateLimitDropError(HttpContext context, ConcurrentQueue<DateTime> times, CancellationToken ct = default)
         {
 
             context.Response.StatusCode = 429;
@@ -106,8 +106,6 @@ namespace testApi.Middleware.RateLimit
             {
                 TimeLimit = DateTime.UtcNow;
             }
-
-
 
             var response = new
             {

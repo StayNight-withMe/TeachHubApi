@@ -18,7 +18,12 @@ namespace Core.Common
         user = 1,
     }
 
-
+    public enum ReactionType
+    {
+        Like,
+        Dislike,
+        None
+    }
 
 
 }

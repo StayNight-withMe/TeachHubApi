@@ -40,11 +40,17 @@ namespace testApi.EndPoints
             )
         {
         
-            var result = await _usersService.RegistrationUser(registerUser, PublicRole.user, _headerService.GetIp(), _headerService.GetUserAgent());
+            var result = await _usersService.RegistrationUser(
+                registerUser, 
+                PublicRole.user, 
+                _headerService.GetIp(), 
+                _headerService.GetUserAgent(),
+                ct
+                );
 
                 if (!result.IsCompleted)
                 {
-                    return BadRequest(new { error = $"{result.MessageForUser}" });
+                    await EntityResultExtensions.ToActionResult(result, this);
                 }
             await _outputCacheStore.EvictByTagAsync("check-email", ct);
             return Ok(new { token = _jwtService.GenerateJwt(result.Value) });

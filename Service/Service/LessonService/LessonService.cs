@@ -47,11 +47,14 @@ namespace Applcation.Service.LessonService
             _mapper = mapper;
         }
 
-        public async Task<TResult> Create(createLessonDTO lesson, int userid)
+        public async Task<TResult> Create(
+            createLessonDTO lesson, 
+            int userid,
+            CancellationToken ct = default)
         {
              var course = await _courseRepository.GetAllWithoutTracking()
                 .Where(c => c.creatorid == userid && c.id == lesson.courseid)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(ct);
 
              if( course == null )
             {
@@ -61,7 +64,7 @@ namespace Applcation.Service.LessonService
             await _lessonRepository.Create(_mapper.Map<LessonEntities>(lesson));
             try
             {
-                await _unitOfWork.CommitAsync();
+                await _unitOfWork.CommitAsync(ct);
                 return TResult.CompletedOperation();
             }
             catch (DbUpdateException ex)
@@ -73,12 +76,14 @@ namespace Applcation.Service.LessonService
 
         }
 
-        public async Task<TResult> DeleteLessonForAdmin(int lessonid)
+        public async Task<TResult> DeleteLessonForAdmin(
+            int lessonid,
+            CancellationToken ct = default)
         {
-            await _lessonRepository.DeleteById(lessonid);
+            await _lessonRepository.DeleteById(ct, lessonid);
             try
             {
-                await _unitOfWork.CommitAsync();
+                await _unitOfWork.CommitAsync(ct);
                 return TResult.CompletedOperation();
             }
             catch(DbUpdateException ex)
@@ -89,7 +94,10 @@ namespace Applcation.Service.LessonService
 
         }
 
-        public async Task<TResult> DeleteLessonForUser(int lessonid, int userid)
+        public async Task<TResult> DeleteLessonForUser(
+            int lessonid, 
+            int userid,
+            CancellationToken ct = default)
         {
             var course = await _lessonRepository
                .GetAllWithoutTracking()
@@ -102,7 +110,7 @@ namespace Applcation.Service.LessonService
                 return TResult.FailedOperation(errorCode.CoursesNotFoud);
             }
 
-             await _lessonRepository.DeleteById(lessonid);
+             await _lessonRepository.DeleteById(ct, lessonid);
 
             try
             {
@@ -121,10 +129,14 @@ namespace Applcation.Service.LessonService
             }
         }
 
-        public async Task<TResult<PagedResponseDTO<lessonOutputDTO>>> GetLessonByChapterid(int chapterid, SortingAndPaginationDTO userSortingRequest)
+        public async Task<TResult<PagedResponseDTO<lessonOutputDTO>>> GetLessonByChapterid(
+            int chapterid, 
+            SortingAndPaginationDTO userSortingRequest,
+            CancellationToken ct = default
+            )
         {
              var qwery =  _lessonRepository.GetAllWithoutTracking().Where(c => c.chapterid == chapterid  && c.isvisible == true);
-            var lessons = await qwery.GetWithPaginationAndSorting(userSortingRequest, "isvisible", "chapterid", "id").ToListAsync();
+            var lessons = await qwery.GetWithPaginationAndSorting(userSortingRequest, "isvisible", "chapterid", "id").ToListAsync(ct);
 
             List<lessonOutputDTO> Outlist = lessons.Select(c => new lessonOutputDTO
             {
@@ -135,17 +147,23 @@ namespace Applcation.Service.LessonService
             ).ToList();
 
              
-            return PageService.CreatePage(Outlist, userSortingRequest,  await qwery.CountAsync());
+            return PageService.CreatePage(Outlist, userSortingRequest,  await qwery.CountAsync(ct));
 
         }
 
 
-        public async Task<TResult<PagedResponseDTO<lessonOutputDTO>>> GetUnVisibleLessonByChapterid(int userid, int chapterid, SortingAndPaginationDTO userSortingRequest)
+        public async Task<TResult<PagedResponseDTO<lessonOutputDTO>>> GetUnVisibleLessonByChapterid(
+            int userid, 
+            int chapterid, 
+            SortingAndPaginationDTO userSortingRequest,
+            CancellationToken ct = default)
         {
             var qwery = _lessonRepository.GetAllWithoutTracking()
                 .Include(c => c.course)
-                .Where(c => c.chapterid == chapterid && c.isvisible == false && c.course.creatorid == userid);
-            var lessons = await qwery.GetWithPaginationAndSorting(userSortingRequest, "isvisible", "chapterid", "id").ToListAsync();
+                .Where(c => c.chapterid == chapterid && 
+                       c.isvisible == false && 
+                       c.course.creatorid == userid);
+            var lessons = await qwery.GetWithPaginationAndSorting(userSortingRequest, "isvisible", "chapterid", "id").ToListAsync(ct);
 
             List<lessonOutputDTO> Outlist = lessons.Select(c => new lessonOutputDTO
             {
@@ -155,17 +173,20 @@ namespace Applcation.Service.LessonService
             }
             ).ToList();
 
-            return PageService.CreatePage(Outlist, userSortingRequest, await qwery.CountAsync());
+            return PageService.CreatePage(Outlist, userSortingRequest, await qwery.CountAsync(ct));
         }
 
 
 
-        public async Task<TResult> SwitchVisible(int lessonid, int userid)
+        public async Task<TResult> SwitchVisible(
+            int lessonid, 
+            int userid,
+            CancellationToken ct = default)
         {
             var lesson = await _lessonRepository.GetAll()
                 .Include(c => c.course)
                 .Where(c => c.course.creatorid == userid && c.id == lessonid)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(ct);
 
             if( lesson == null )
             {
@@ -176,7 +197,7 @@ namespace Applcation.Service.LessonService
 
             try
             {
-                await _unitOfWork.CommitAsync();
+                await _unitOfWork.CommitAsync(ct);
                 return TResult.CompletedOperation();
             }
             catch(DbUpdateException ex)
@@ -191,9 +212,17 @@ namespace Applcation.Service.LessonService
             }
         }
 
-        public async Task<TResult<lessonOutputDTO>> UpdateLesson(LessonUpdateDTO newlesson, int userid)
+        public async Task<TResult<lessonOutputDTO>> UpdateLesson(
+            LessonUpdateDTO newlesson, 
+            int userid,
+            CancellationToken ct = default
+            )
         {
-            var lesson = await _lessonRepository.GetAllWithoutTracking().Include(c => c.course).Where(c => c.id == newlesson.id && c.course.creatorid == userid).FirstOrDefaultAsync();   
+            var lesson = await _lessonRepository
+                .GetAllWithoutTracking()
+                .Include(c => c.course)
+                .Where(c => c.id == newlesson.id && c.course.creatorid == userid)
+                .FirstOrDefaultAsync(ct);   
         
             if( lesson == null )
             {
@@ -203,7 +232,7 @@ namespace Applcation.Service.LessonService
             await _lessonRepository.PartialUpdateAsync(lesson, newlesson);
             try
             {
-                await _unitOfWork.CommitAsync();
+                await _unitOfWork.CommitAsync(ct);
                 return TResult<lessonOutputDTO>.CompletedOperation(_mapper.Map<lessonOutputDTO>(lesson));
             }
             catch( DbUpdateException ex) 

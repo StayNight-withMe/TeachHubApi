@@ -48,9 +48,9 @@ namespace infrastructure.Repository.Base
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async virtual Task DeleteById(params object[] id)
+        public async virtual Task DeleteById(CancellationToken ct = default, params object[] id)
         {
-            var value = await _dbSet.FindAsync(id);
+            var value = await _dbSet.FindAsync(id, ct);
             if(value != null)
             {
                 _dbSet.Remove(value);
@@ -85,26 +85,26 @@ namespace infrastructure.Repository.Base
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public virtual async Task<T?> GetByIdAsync(params object[] id)
+        public virtual async Task<T?> GetByIdAsync(CancellationToken ct = default, params object[] id)
         {
-            return await _dbSet.FindAsync(id);
+            return await _dbSet.FindAsync(id, ct);
         }
 
 
         //пока что незнаю надо ли мне
-        public virtual Task<T?> GetByIdAsync<TId>(TId key)
-        where TId : notnull
-        {
-           return _dbSet.FindAsync(key).AsTask();
-        }
+        //public virtual Task<T?> GetByIdAsync<TId>(TId key)
+        //where TId : notnull
+        //{
+        //   return _dbSet.FindAsync(key).AsTask();
+        //}
     
 
-        public virtual Task<T?> GetByIdAsync<TId1, TId2>((TId1, TId2) key)
-            where TId1 : notnull
-            where TId2 : notnull
-        {
-           return _dbSet.FindAsync(key.Item2!, key.Item2!).AsTask();
-        }
+        //public virtual Task<T?> GetByIdAsync<TId1, TId2>((TId1, TId2) key)
+        //    where TId1 : notnull
+        //    where TId2 : notnull
+        //{
+        //   return _dbSet.FindAsync(key.Item2!, key.Item2!).AsTask();
+        //}
 
 
 
@@ -121,7 +121,6 @@ namespace infrastructure.Repository.Base
             if (partialDto == null) return;
 
             var entry = _db.Entry(entityToUpdate);
-
 
             if (entry.State == EntityState.Detached)
                 _db.Set<T>().Attach(entityToUpdate);
@@ -142,7 +141,6 @@ namespace infrastructure.Repository.Base
                 if (value != null || prop.PropertyType == typeof(string))
                 {
                     var entityProperty = entry.Property(prop.Name);
-                         Console.WriteLine($"Setting EF property '{prop.Name}' to {value ?? "NULL"}");
                     entityProperty.CurrentValue = value;
                     if (entityProperty.Metadata.PropertyInfo != null) 
                     {

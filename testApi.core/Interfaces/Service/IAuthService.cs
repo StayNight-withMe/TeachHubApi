@@ -11,6 +11,11 @@ namespace Core.Interfaces.Service
 {
     public interface IAuthService
     {
-        public Task<TResult<UserAuthDto>> LoginUser(LoginUserDTO loginUserDTO, string ip, string userAgent);
+        public Task<TResult<UserAuthDto>> LoginUser(
+            LoginUserDTO loginUserDTO, 
+            string ip, 
+            string userAgent,
+            CancellationToken ct = default
+            );
     }
 }

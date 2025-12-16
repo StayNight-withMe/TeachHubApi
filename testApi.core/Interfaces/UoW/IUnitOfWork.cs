@@ -8,6 +8,6 @@ namespace Core.Interfaces.UoW
 {
     public interface IUnitOfWork : IDisposable
     {
-        public Task<int> CommitAsync();
+        public Task<int> CommitAsync(CancellationToken ct = default);
     }
 }

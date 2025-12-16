@@ -12,8 +12,18 @@ namespace Core.Interfaces.Service
 {
     public interface IFavoritService
     {
-        Task<TResult<PagedResponseDTO<FavoritOutputDTO>>> GetFavorite(int userid, SortingAndPaginationDTO sort);
-        Task<TResult> DeleteFavorit(int userid, int courseid);
-        Task<TResult> CreateFavorite(int userid, int coureid);
+        Task<TResult<PagedResponseDTO<FavoritOutputDTO>>> GetFavorite(
+            int userid, 
+            SortingAndPaginationDTO sort, 
+            CancellationToken ct = default);
+        Task<TResult> DeleteFavorit(
+            int userid, 
+            int courseid,
+            CancellationToken ct = default
+            );
+        Task<TResult> CreateFavorite(
+            int userid, 
+            int coureid,
+            CancellationToken ct = default);
     }
 }

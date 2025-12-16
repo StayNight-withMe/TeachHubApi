@@ -11,12 +11,29 @@ namespace Core.Interfaces.Service
 {
     public interface ILessonService
     {
-        Task<TResult> Create(createLessonDTO lesson, int userid);
-        Task<TResult<lessonOutputDTO>> UpdateLesson(LessonUpdateDTO newlesson, int userid);
-        Task<TResult<PagedResponseDTO<lessonOutputDTO>>> GetLessonByChapterid(int chapterid, SortingAndPaginationDTO userSortingRequest);
-        Task<TResult> DeleteLessonForUser(int lessonid, int userid);
-        Task<TResult> DeleteLessonForAdmin(int lessonid);
-        Task<TResult> SwitchVisible(int lessonid, int userid);
+        Task<TResult> Create(
+            createLessonDTO lesson, 
+            int userid, 
+            CancellationToken ct = default);
+        Task<TResult<lessonOutputDTO>> UpdateLesson(
+            LessonUpdateDTO newlesson, 
+            int userid, 
+            CancellationToken ct = default);
+        Task<TResult<PagedResponseDTO<lessonOutputDTO>>> GetLessonByChapterid(
+            int chapterid, 
+            SortingAndPaginationDTO userSortingRequest, 
+            CancellationToken ct = default);
+        Task<TResult> DeleteLessonForUser(
+            int lessonid, 
+            int userid, 
+            CancellationToken ct = default);
+        Task<TResult> DeleteLessonForAdmin(
+            int lessonid, 
+            CancellationToken ct = default );
+        Task<TResult> SwitchVisible(
+            int lessonid, 
+            int userid, 
+            CancellationToken ct = default);
     }
 }
 

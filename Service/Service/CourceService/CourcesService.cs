@@ -53,16 +53,23 @@ namespace Applcation.Service.CourceService
 
 
 
-        public async Task<TResult> CreateCourse(CreateCourseDTO courceDTO, int id)
+        public async Task<TResult> CreateCourse(
+            CreateCourseDTO courceDTO, 
+            int id,
+            CancellationToken ct = default)
         {
             Console.WriteLine($"courseid : {id}");
          
 
-            bool cource = await _courceRepository.GetAllWithoutTracking().Where(c => c.creatorid == id && c.name == courceDTO.name).AnyAsync();
-            Console.WriteLine($"найден ли курс с таким же названием у пользователя : {cource} ");
+            bool cource = await _courceRepository
+                .GetAllWithoutTracking()
+                .Where(c => c.creatorid == id && 
+                       c.name == courceDTO.name)
+                .AnyAsync(ct);
+
             if(cource)
             {
-                return TResult.FailedOperation(errorCode.CourseTitleAlreadyExists, "у вас уже есть курс с таким названием" );
+                return TResult.FailedOperation(errorCode.CourseTitleAlreadyExists);
             }
 
             var source = new CourcesMappingSource
@@ -83,13 +90,13 @@ namespace Applcation.Service.CourceService
 
             try
             {
-                await _unitOfWork.CommitAsync();
+                await _unitOfWork.CommitAsync(ct);
                 return TResult.CompletedOperation();
             }
             catch(DbUpdateException ex)
             {
                 _logger.LogError(ex);                                                           
-                return TResult.FailedOperation(errorCode.DatabaseError, "ошибка на стороне сервера, не удалось сохранить курс");
+                return TResult.FailedOperation(errorCode.DatabaseError);
             }
 
         }
@@ -97,11 +104,13 @@ namespace Applcation.Service.CourceService
 
         public async Task<TResult<PagedResponseDTO<CourseOutputDTO>>> SearchCourse(
             string search, 
-            SortingAndPaginationDTO userSortingRequest)
+            SortingAndPaginationDTO userSortingRequest, 
+            CancellationToken ct = default)
         {
-            var listqw = _courceRepository.GetAllWithoutTracking()
+            var listqw = _courceRepository
+                .GetAllWithoutTracking()
                 .Where(c => c.searchvector
-                .Matches(search) );
+                .Matches(search));
 
             
 
@@ -109,12 +118,8 @@ namespace Applcation.Service.CourceService
             var list = await listqw
                 .GetWithPaginationAndSorting(userSortingRequest)
                 .Include(c => c.user)
-                .ToListAsync();
-
-
-          
-
-            return PageService.CreatePage(await MapList(list), userSortingRequest, await listqw.CountAsync());
+                .ToListAsync(ct);
+            return PageService.CreatePage(await MapList(list), userSortingRequest, await listqw.CountAsync(ct));
         }
 
 
@@ -148,28 +153,34 @@ namespace Applcation.Service.CourceService
         }
 
 
-        public async Task<TResult<PagedResponseDTO<CourseOutputDTO>>> GetAllCourse(SortingAndPaginationDTO userSortingRequest)
+        public async Task<TResult<PagedResponseDTO<CourseOutputDTO>>> GetAllCourse(
+            SortingAndPaginationDTO userSortingRequest,
+            CancellationToken ct = default
+            )
         {
             var courses = await _courceRepository.GetAllWithoutTracking()
                 .Include(c => c.user)
                 .GetWithPaginationAndSorting(userSortingRequest, "courseid", "creatorid", "description")
-                .ToListAsync();
+                .ToListAsync(ct);
        
             return PageService.CreatePage(
                 await MapList(courses), 
                 userSortingRequest, 
                 await _courceRepository.GetAll()
-                    .CountAsync());
+                    .CountAsync(ct));
 
         }
 
  
      
-        public async Task<TResult<CourseOutputDTO>> UpdateCourse(UpdateCourseDTO updateCourseDTO, int userid)
+        public async Task<TResult<CourseOutputDTO>> UpdateCourse(
+            UpdateCourseDTO updateCourseDTO, 
+            int userid,
+            CancellationToken ct = default)
         {
             var cousrse = await _courceRepository.GetAllWithoutTracking()
                 .Where(c => c.id == updateCourseDTO.id && c.creatorid == userid)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(ct);
 
             if(cousrse == null)
             {
@@ -180,7 +191,7 @@ namespace Applcation.Service.CourceService
 
             try
             {
-                await _unitOfWork.CommitAsync();
+                await _unitOfWork.CommitAsync(ct);
                 return TResult<CourseOutputDTO>.CompletedOperation(_mapper.Map<CourseOutputDTO>(updateCourseDTO));
             }
             catch (DbUpdateException ex)
@@ -223,7 +234,11 @@ namespace Applcation.Service.CourceService
         }
 
 
-        public async Task<TResult> RemoveCourse(int courseid, ClaimsPrincipal userClaim)
+        public async Task<TResult> RemoveCourse(
+            int courseid, 
+            ClaimsPrincipal userClaim,
+            CancellationToken ct = default
+            )
         {
             if(userClaim.IsInRole(Enum.GetName(AllRole.user)))
             {
@@ -233,7 +248,7 @@ namespace Applcation.Service.CourceService
                              .Where(
                              c => c.id == courseid &&  
                              c.user.email == userClaim.FindFirst(ClaimTypes.Email).Value.ToString())
-                             .FirstOrDefaultAsync();
+                             .FirstOrDefaultAsync(ct);
 
                 //UserEntities? user = await _userRepository.GetAll()
                 //    .Where(c => c.email == )
@@ -244,29 +259,28 @@ namespace Applcation.Service.CourceService
                     return TResult.FailedOperation(errorCode.CoursesNotFoud, "курс для удаление не найден");
                 }
 
-                await _courceRepository.DeleteById(cource.id);
+                await _courceRepository.DeleteById(ct, cource.id);
 
             }
             else if (userClaim.IsInRole(Enum.GetName(AllRole.admin)))
             {
 
-                var course =  await _courceRepository.GetByIdAsync(courseid);
+                var course =  await _courceRepository.GetByIdAsync(ct, courseid);
 
                 if(course != null)
-                await _courceRepository.DeleteById(courseid);
+                await _courceRepository.DeleteById(ct, courseid);
             }
 
 
             try
             {
-                await _unitOfWork.CommitAsync();
+                await _unitOfWork.CommitAsync(ct);
                 return TResult.CompletedOperation();
             }
             catch(DbUpdateException ex)
             {
                 _logger.LogError(ex);
-
-                return TResult.FailedOperation(errorCode.DatabaseError, "ошибка удаления курса");
+                return TResult.FailedOperation(errorCode.DatabaseError);
 
             }
         }
