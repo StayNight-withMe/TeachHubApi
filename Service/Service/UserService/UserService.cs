@@ -11,6 +11,7 @@ using Core.Model.TargetDTO.Auth.input;
 using Core.Model.TargetDTO.Users.input;
 using Core.Model.TargetDTO.Users.output;
 using infrastructure.Entitiеs;
+using infrastructure.Utils.BloomFilter.interfaces;
 using infrastructure.Utils.Mapping.MapperDTO;
 using infrastructure.Utils.PasswodHashService;
 using Logger;
@@ -34,12 +35,15 @@ namespace Applcation.Service.UserService
 
         private readonly IMapper _mapper;
 
-       
+        private readonly IEmailChecker _emailChecker;
+
+
 
         public UserService(
             IBaseRepository<UserEntities> repository, 
             IBaseRepository<RoleEntities> RoleRepository,
-            IBaseRepository<UserRoleEntities> userRoleRepository, 
+            IBaseRepository<UserRoleEntities> userRoleRepository,
+            IEmailChecker emailChecker,
             IUnitOfWork transaction, 
             IMapper mapper, 
             ILogger<IUsersService> logger
@@ -49,6 +53,7 @@ namespace Applcation.Service.UserService
             _userRepository = repository;
             _roleRepository = RoleRepository;
             _userRoleRepository = userRoleRepository;
+            _emailChecker = emailChecker;
             _mapper = mapper;
             _logger = logger;
          
@@ -102,14 +107,14 @@ namespace Applcation.Service.UserService
             catch(DbUpdateException ex) 
             {
                 _logger.LogError(ex.Message);
-                return TResult<UserAuthDto>.FailedOperation(errorCode.UnknownError, "ошибка регистрации");
+                return TResult<UserAuthDto>.FailedOperation(errorCode.UnknownError);
             }      
         }
 
 
         private bool IsValidEmail(string email)
         {
-            try { return new System.Net.Mail.MailAddress(email).Address == email; }  // Простая проверка
+            try { return new System.Net.Mail.MailAddress(email).Address == email; } 
             catch { return false; }
         }
 
@@ -119,19 +124,9 @@ namespace Applcation.Service.UserService
             {
                 return TResult<checkEmailDTO>.FailedOperation(errorCode.EmailInvalid);
             }
-            bool isTaken = await _userRepository.GetAllWithoutTracking().AnyAsync(c => c.email == email);
-            string message;
-           
-            if (isTaken)
-            {
-                message = "Этот email уже используется";
-            }
-            else
-            {
-                message = "Email доступен для регистрации";
+            bool isTaken = _emailChecker.EmailCheck(email);
 
-            }
-            return TResult<checkEmailDTO>.CompletedOperation(new checkEmailDTO { message = message, available = isTaken } );
+            return TResult<checkEmailDTO>.CompletedOperation(new checkEmailDTO { reasonCode = "TAKEN", available = isTaken } );
             //return TResult.FailedOperation(errorCode.EmailAlreadyExists);
         }
 
@@ -143,7 +138,7 @@ namespace Applcation.Service.UserService
             if (user == null)
             {
                 _logger.LogRemoveUserNotFound(id);
-                return TResult<UserDto>.FailedOperation(errorCode.UserNotFound, "ошибка удаления пользователь не найден");
+                return TResult<UserDto>.FailedOperation(errorCode.UserNotFound);
             }
             await _userRepository.DeleteById(id);
             var count =  await _unitOfWork.CommitAsync();
@@ -157,7 +152,7 @@ namespace Applcation.Service.UserService
             if (user == null)
             {
                 _logger.LogRemoveUserNotFound(id);
-                return TResult.FailedOperation(errorCode.UserNotFound, "ошибка удаления пользователь не найден");
+                return TResult.FailedOperation(errorCode.UserNotFound);
             }
              
             user.isdelete = true;

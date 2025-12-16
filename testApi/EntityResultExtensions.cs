@@ -28,17 +28,17 @@ namespace testApi
             {
                 // 400 Bad Request
                 errorCode.InvalidDataFormat or errorCode.PasswordTooShort or errorCode.EmailInvalid
-                    => controllerBase.BadRequest(new { code = result.ErrorCode.ToString(), message = "некорректные данные для регистрации" }),
+                    => controllerBase.BadRequest(new { code = result.ErrorCode.ToString() }),
 
                 // 409 Conflict
                 errorCode.FollowingError
-                    => controllerBase.Conflict(ErrorMap(result.ErrorCode)),
+                    => controllerBase.Conflict(new { code = result.ErrorCode.ToString()} ),
 
                 errorCode.UserAlreadyExists
-                     => controllerBase.Conflict(new { code = result.ErrorCode.ToString(), message = "пользователь уже существует" }),
+                     => controllerBase.Conflict(new { code = result.ErrorCode.ToString() }),
 
-                
-                _ => controllerBase.StatusCode(ErrorMap(result.ErrorCode), new { code = result.ErrorCode.ToString(), message = result.MessageForUser })
+
+                _ => controllerBase.StatusCode(ErrorMap(result.ErrorCode), new { code = result.ErrorCode.ToString() })
             };
          }
             
