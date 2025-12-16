@@ -13,10 +13,25 @@ namespace Core.Interfaces.Service
 {
     public interface IChapterService
     {
-        Task<TResult> Create(CreateChapterDTO chapter, int userid);
-        Task<TResult<ChapterOutDTO>> UpdateChapter(ChapterUpdateDTO newchapter, int userid);
-        Task<TResult<PagedResponseDTO<ChapterOutDTO>>> GetChaptersByCourseId(int courseid,  SortingAndPaginationDTO userSortingRequest);
-        Task<TResult<PagedResponseDTO<ChapterOutDTO>>> GetChaptersByCourseIdAndUserId(int courseid, int userid, SortingAndPaginationDTO userSortingRequest);
-        Task<TResult> DeleteChapter(int chapterid, int userid);
+        Task<TResult> Create(
+            CreateChapterDTO chapter, 
+            int userid,
+            CancellationToken ct = default);
+        Task<TResult<ChapterOutDTO>> UpdateChapter(
+            ChapterUpdateDTO newchapter, 
+            int userid);
+        Task<TResult<PagedResponseDTO<ChapterOutDTO>>> GetChaptersByCourseId(
+            int courseid,  
+            SortingAndPaginationDTO userSortingRequest,
+            CancellationToken ct = default);
+        Task<TResult<PagedResponseDTO<ChapterOutDTO>>> GetChaptersByCourseIdAndUserId(
+            int courseid, 
+            int userid, 
+            SortingAndPaginationDTO userSortingRequest, 
+            CancellationToken ct = default);
+        Task<TResult> DeleteChapter(
+            int chapterid, 
+            int userid, 
+            CancellationToken ct = default);
     }
 }

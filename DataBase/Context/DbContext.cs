@@ -1,4 +1,5 @@
-﻿using infrastructure.Entitiеs;
+﻿using Core.Common;
+using infrastructure.Entitiеs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
@@ -19,16 +20,19 @@ namespace infrastructure.Context
         public DbSet<SubscriptionEntites> subscription { get; set; }
         public DbSet<CategoriesEntities> categories { get; set; }
         public DbSet<Course_CategoriesEntities> course_categories { get; set; }
+        public DbSet<ReviewreactionEntities> reviewreaction { get; set; }
 
         public CourceDbContext(DbContextOptions<CourceDbContext> options)
         : base(options){ }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.HasPostgresEnum<ReactionType>();
 
             modelBuilder.Entity<UserRoleEntities>()
                 .HasKey(ur => new { ur.userid, ur.roleid });
-
 
             modelBuilder.Entity<SubscriptionEntites>()
                 .HasKey(s => new { s.followingid, s.followerid });

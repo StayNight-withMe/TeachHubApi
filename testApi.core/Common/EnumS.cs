@@ -18,4 +18,7 @@ namespace Core.Common
         user = 1,
     }
 
+
+
+
 }
