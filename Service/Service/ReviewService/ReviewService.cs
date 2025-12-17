@@ -57,10 +57,10 @@ namespace Applcation.Service.ReviewService
 
             if (review == null) 
             {
-                return TResult<ReviewOutputDTO>.FailedOperation(errorCode.);
+                return TResult<ReviewOutputDTO>.FailedOperation(errorCode.ReviewNotFound);
             }
 
-            review.lastchangedat = 
+            review.lastchangedat = DateTime.UtcNow;
 
             await _reviewRepository.PartialUpdateAsync(review, changedDTO);
 
@@ -121,32 +121,45 @@ namespace Applcation.Service.ReviewService
 
             var entitylist = await qwery.GetWithPaginationAndSorting(sortingAndPagination).ToListAsync(ct);
 
-            var dtolist = entitylist.Select(c => new ReviewOutputDTO
-            {
-               id = c.id,
-               content = c.content,
-               createdat = c.createdat,
-               courseId = c.courseid,
-               userId = c.userid,
-               dislikeCount = c.dislikecount,
-               likeCount = c.likecount,
-               lastchangedat = c.lastchangedat,
-            }).ToList();
-                        
+            var dtolist = MapEntityListToDTOList(entitylist);
+
             return PageService.CreatePage(dtolist, sortingAndPagination, await qwery.CountAsync(ct));
 
         }
 
 
+        private List<ReviewOutputDTO> MapEntityListToDTOList(List<ReviewEntities> entities)
+        {
+            var dtolist = entities.Select(c => new ReviewOutputDTO
+            {
+                id = c.id,
+                content = c.content,
+                createdat = c.createdat,
+                courseId = c.courseid,
+                userId = c.userid,
+                dislikeCount = c.dislikecount,
+                likeCount = c.likecount,
+                lastchangedat = c.lastchangedat,
+            }).ToList();
+            return dtolist;
+        }
 
 
 
-
-        public Task<TResult<PagedResponseDTO<ReviewOutputDTO>>> GetReviewsByUserId(
-            int userid, SortingAndPaginationDTO sortingAndPagination, 
+        public async Task<TResult<PagedResponseDTO<ReviewOutputDTO>>> GetReviewsByUserId(
+            int userid, 
+            SortingAndPaginationDTO sortingAndPagination, 
             CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            var qwery = _reviewRepository
+              .GetAllWithoutTracking()
+              .Where(c => c.userid  == userid);
+
+            var entitylist = await qwery.GetWithPaginationAndSorting(sortingAndPagination).ToListAsync(ct);
+
+            var dtolist = MapEntityListToDTOList(entitylist);
+
+            return PageService.CreatePage(dtolist, sortingAndPagination, await qwery.CountAsync(ct));
         }
 
         public async Task<TResult> PostReview(ReviewICreateDTO review,

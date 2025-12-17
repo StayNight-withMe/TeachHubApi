@@ -10,7 +10,7 @@ namespace infrastructure.Entitiеs
         public string content { get; set; }
         public int review { get; set; }
         public DateTime createdat { get; set; }
-        public DateTime lastchangedat { get; set; }  = DateTime.Now;
+        public DateTime lastchangedat { get; set; } 
         public int likecount { get; set; }
         public int dislikecount { get; set; }
 

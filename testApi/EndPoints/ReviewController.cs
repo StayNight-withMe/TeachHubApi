@@ -33,6 +33,19 @@ namespace testApi.EndPoints
         }
 
 
+        [HttpGet]
+        public async Task<IActionResult> GetMyReviews(
+         [FromQuery] SortingAndPaginationDTO sort,
+         CancellationToken ct
+     )
+        {
+            var result = await _reviewService.GetReviewsByUserId(Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), sort, ct);
+            return await EntityResultExtensions.ToActionResult(result, this);
+        }
+
+
+
+
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> PostReviews(
@@ -53,6 +66,18 @@ namespace testApi.EndPoints
             )
         {
             var result = await _reviewService.DeleteReview(reviewid, Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), ct);
+            return await EntityResultExtensions.ToActionResult(result, this);
+        }
+
+
+        [HttpPatch("{reviewid}")]
+        [Authorize]
+        public async Task<IActionResult> UpdateReview(
+        [FromQuery] ReviewChangedDTO review,
+        CancellationToken ct
+    )
+        {
+            var result = await _reviewService.UpdateReview(review, Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), ct);
             return await EntityResultExtensions.ToActionResult(result, this);
         }
 

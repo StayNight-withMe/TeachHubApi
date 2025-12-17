@@ -57,6 +57,8 @@ builder.Services.AddScoped<IBaseRepository<FavoritEntities>, BaseRepository<Favo
 builder.Services.AddScoped<IBaseRepository<LessonfilesEntities>, BaseRepository<LessonfilesEntities>>();
 builder.Services.AddScoped<IBaseRepository<CategoriesEntities>, BaseRepository<CategoriesEntities>>();
 builder.Services.AddScoped<IBaseRepository<Course_CategoriesEntities>, BaseRepository<Course_CategoriesEntities>>();
+builder.Services.AddScoped<IBaseRepository<ReviewEntities>, BaseRepository<ReviewEntities>>();
+builder.Services.AddScoped<IBaseRepository<ReviewreactionEntities>, BaseRepository<ReviewreactionEntities>>();
 //сервисы
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IUsersService ,UserService>();
