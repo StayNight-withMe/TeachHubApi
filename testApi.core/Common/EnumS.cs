@@ -18,11 +18,20 @@ namespace Core.Common
         user = 1,
     }
 
-    public enum ReactionType
+    public enum reaction_type
     {
+        /// <summary>
+        /// Like
+        /// </summary>
         Like,
+        /// <summary>
+        /// Dislike
+        /// </summary>
         Dislike,
-        None
+        /// <summary>
+        ///None (что бы убрать реакцию)
+        /// </summary>
+        None 
     }
 
 

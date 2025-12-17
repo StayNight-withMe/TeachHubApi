@@ -30,11 +30,29 @@ namespace testApi.EndPoints
             CancellationToken ct
             )
         {
+            Console.WriteLine(chapterid);
             var result = await _lessonService.GetLessonByChapterid(
                 chapterid, 
                 userSortingRequest, 
                 ct);
             return  await EntityResultExtensions.ToActionResult(result, this);
+        }
+
+        [HttpGet("my{chapterid}")]
+        [OutputCache(PolicyName = "1min")]
+        [Authorize]
+        public async Task<IActionResult> GetMyLesson(
+        int chapterid,
+        [FromQuery] SortingAndPaginationDTO userSortingRequest,
+        CancellationToken ct
+    )
+        {
+            var result = await _lessonService.GetUnVisibleLessonByChapterid(
+                Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)),
+                chapterid,
+                userSortingRequest,
+                ct);
+            return await EntityResultExtensions.ToActionResult(result, this);
         }
 
 

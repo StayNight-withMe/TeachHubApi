@@ -11,8 +11,6 @@ namespace Core.Model.BaseModel.Course
     {
             public string name { get; set; }
             public string description { get; set; }
-            [MaxLength(10, ErrorMessage = "category limit exceeded")]
-            
             public string field { get; set; }
     }
 }

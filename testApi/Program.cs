@@ -7,8 +7,11 @@ using Applcation.Service.CourceService;
 using Applcation.Service.FavoritService;
 using Applcation.Service.LessonService;
 using Applcation.Service.LessonStorageService;
+using Applcation.Service.ReviewReactionService;
+using Applcation.Service.ReviewService;
 using Applcation.Service.SubscriptionService;
 using Applcation.Service.UserService;
+using Core.Common;
 using Core.Interfaces.Repository;
 using Core.Interfaces.Service;
 using Core.Interfaces.UoW;
@@ -27,12 +30,13 @@ using infrastructure.Utils.JwtService;
 using infrastructure.Utils.Mapping.AutoMapperProfiles;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Applcation.Service.ReviewReactionService;
-using Applcation.Service.ReviewService;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Npgsql;
+using System;
 using System.Text;
+using System.Text.Json.Serialization;
 using testApi.Middleware.Exeption;
 using testApi.Middleware.RateLimit;
 using testApi.Middleware.Новая_папка;
@@ -43,9 +47,18 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpContextAccessor();
 var conntionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
+
+
+var dataSourceBuilder = new NpgsqlDataSourceBuilder(conntionString);
+dataSourceBuilder.MapEnum<reaction_type>(); // Название типа в C#
+var dataSource = dataSourceBuilder.Build();
+
 // залупа1
 builder.Services.AddHostedService<BloomRebuildService>();
-builder.Services.AddDbContext<CourceDbContext>(options => options.UseNpgsql(conntionString));
+builder.Services.AddDbContext<CourceDbContext>(options => options.UseNpgsql(dataSource));
+
+
+
 //репозитории
 builder.Services.AddScoped<IBaseRepository<UserEntities>, BaseRepository<UserEntities>>();
 builder.Services.AddScoped<IBaseRepository<UserRoleEntities>, BaseRepository<UserRoleEntities>>();
@@ -88,6 +101,12 @@ builder.Services.AddAutoMapper(cfg => cfg.AddProfile<CoursesMapperProfile>());
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<ChaptermMapperProfile>());
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<LessonMapperProfile>());
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<ReviewMapperProfile>());
+builder.Services.AddAutoMapper(cfg => cfg.AddProfile<ReviewReactionMapperProfile>());
+
+
+
+
+
 
 
 builder.Services.Configure<BloomOptions>(
@@ -183,7 +202,12 @@ builder.Services.AddOutputCache(opt =>
 );
 
 });
-    
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 
 var app = builder.Build();
 app.UseMiddleware<RateLimitMiddleware>(60, 20);

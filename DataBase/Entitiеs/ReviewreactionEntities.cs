@@ -13,7 +13,9 @@ namespace infrastructure.Entitiеs
         public int id { get; set; }
         public int reviewid { get; set; }
         public int userid { get; set; }
-        public ReactionType reactiontype { get; set; }
+
+        [Column("reactiontype", TypeName = "reaction_type")]
+        public reaction_type reactiontype { get; set; }
 
         [ForeignKey(nameof(reviewid))]
         public ReviewEntities review { get; set; }

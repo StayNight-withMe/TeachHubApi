@@ -14,7 +14,7 @@ namespace testApi.EndPoints
 {
 
     [ApiController]
-    [Route("api/course")]
+    [Route("api/courses")]
     [Tags("Курсы")]
     public class CoursesController : ControllerBase
     {

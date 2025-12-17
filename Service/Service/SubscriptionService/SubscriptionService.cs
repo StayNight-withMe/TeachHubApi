@@ -60,6 +60,9 @@ namespace Applcation.Service.SubscriptionService
                 if (pgEx.SqlState == 23505.ToString() || pgEx.SqlState == 23514.ToString())
                     return TResult.FailedOperation(errorCode.FollowingError);
 
+                if(pgEx.SqlState == 23503.ToString())
+                    return TResult.FailedOperation(errorCode.UserNotFound);
+
                 return TResult.FailedOperation(errorCode.DatabaseError);
             }
             catch(Exception ex) 
@@ -82,8 +85,12 @@ namespace Applcation.Service.SubscriptionService
                 await _unitOfWork.CommitAsync();
                 return TResult.CompletedOperation();
             }
-            catch(DbUpdateException ex)
+            catch(DbUpdateException ex) when (ex.InnerException is PostgresException pgEx)
             {
+
+                if (pgEx.SqlState == 23503.ToString())
+                    return TResult.FailedOperation(errorCode.UserNotFound);
+
                 _logger.LogDBError(ex);
                 return TResult.FailedOperation(errorCode.DatabaseError);
             }

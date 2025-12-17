@@ -112,13 +112,11 @@ namespace Applcation.Service.CourceService
                 .Where(c => c.searchvector
                 .Matches(search));
 
-            
-
-
             var list = await listqw
                 .GetWithPaginationAndSorting(userSortingRequest)
                 .Include(c => c.user)
                 .ToListAsync(ct);
+
             return PageService.CreatePage(await MapList(list), userSortingRequest, await listqw.CountAsync(ct));
         }
 

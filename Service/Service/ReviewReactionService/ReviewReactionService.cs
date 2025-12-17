@@ -24,7 +24,7 @@ namespace Applcation.Service.ReviewReactionService
 
         private readonly IUnitOfWork _unitOfWork;
 
-        private readonly IMapper _mapper; 
+        private readonly IMapper _mapper;
 
         public ReviewReactionService(
             IBaseRepository<ReviewreactionEntities> reviewReactionRepository,
@@ -37,23 +37,23 @@ namespace Applcation.Service.ReviewReactionService
             _unitOfWork = unitOfWork;
             _logger = logger;
             _mapper = mapper;
-            
+
         }
         public async Task<TResult> PutReaction(
-            ReviewReactionInputDTO reactionDTO, 
-            int userId, 
+            ReviewReactionInputDTO reactionDTO,
+            int userId,
             CancellationToken ct = default)
         {
             var reaction = await _reviewReactionRepository
                 .GetAll()
-                .Where(c => c.reviewid == reactionDTO.reviewId && 
+                .Where(c => c.reviewid == reactionDTO.reviewId &&
                        c.userid == userId)
                 .FirstOrDefaultAsync(ct);
 
 
-            if(reaction == null)
+            if (reaction == null)
             {
-                if(reactionDTO.reactiontype != Core.Common.ReactionType.None)
+                if (reactionDTO.reactiontype != Core.Common.reaction_type.None)
                 {
                     var entity = _mapper.Map<ReviewreactionEntities>(reactionDTO);
                     entity.userid = userId;
@@ -68,7 +68,7 @@ namespace Applcation.Service.ReviewReactionService
             {
                 return TResult.CompletedOperation();
             }
-            else if (reactionDTO.reactiontype == Core.Common.ReactionType.None)
+            else if (reactionDTO.reactiontype == Core.Common.reaction_type.None)
             {
                 await _reviewReactionRepository.DeleteById(ct, reaction.id);
             }
@@ -76,14 +76,14 @@ namespace Applcation.Service.ReviewReactionService
             {
                 reaction.reactiontype = reactionDTO.reactiontype;
             }
-           
+
 
             try
             {
                 await _unitOfWork.CommitAsync(ct);
                 return TResult.CompletedOperation();
             }
-            catch(DbUpdateException ex)
+            catch (DbUpdateException ex)
             {
                 _logger.LogDBError(ex);
                 return TResult.FailedOperation(errorCode.DatabaseError);

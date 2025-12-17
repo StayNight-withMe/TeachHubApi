@@ -34,6 +34,12 @@ namespace Core.Interfaces.Service
             int lessonid, 
             int userid, 
             CancellationToken ct = default);
+
+        Task<TResult<PagedResponseDTO<LessonUserOutputDTO>>> GetUnVisibleLessonByChapterid(
+            int userid,
+            int chapterid,
+            SortingAndPaginationDTO userSortingRequest,
+            CancellationToken ct = default);
     }
 }
 

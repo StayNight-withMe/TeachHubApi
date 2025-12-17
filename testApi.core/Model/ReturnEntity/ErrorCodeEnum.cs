@@ -27,6 +27,8 @@
         PasswordDontMatch = 107,
         FollowingError = 108,
         CommentYourSelfCourseError = 109,
+        LessonAlreadyExists = 110,
+        MoreThanOne = 111,
 
         // Системные ошибки (500 Internal Server Error)
         DatabaseError = 201,

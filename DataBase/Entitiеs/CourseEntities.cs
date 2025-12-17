@@ -8,9 +8,9 @@ namespace infrastructure.Entitiеs
         public int id { get; set; }
         public string name { get; set; } 
         public string description { get; set; } 
-        public DateTime createdat {  get; set; } = DateTime.UtcNow;
+        public DateTime createdat {  get; set; } 
         public int? creatorid { get; set; }
-        public decimal rating { get; set; }
+        public decimal? rating { get; set; } 
         public string field {  get; set; }
         public NpgsqlTsVector searchvector { get; set; }
 

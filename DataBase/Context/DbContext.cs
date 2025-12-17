@@ -27,9 +27,15 @@ namespace infrastructure.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
+            
 
-            modelBuilder.HasPostgresEnum<ReactionType>();
+            modelBuilder.HasPostgresEnum<reaction_type>();
+
+
+
+            modelBuilder.Entity<ReviewreactionEntities>()
+            .Property(e => e.reactiontype)
+            .HasConversion<string>();
 
             modelBuilder.Entity<UserRoleEntities>()
                 .HasKey(ur => new { ur.userid, ur.roleid });

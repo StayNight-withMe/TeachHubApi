@@ -13,6 +13,7 @@ using infrastructure.Utils.PageService;
 using Logger;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,11 +37,13 @@ namespace Applcation.Service.ReviewService
         public ReviewService(
         IMapper mapper,
         IBaseRepository<ReviewEntities> reviewRepository,
+        IBaseRepository<CourseEntities> courseRepository,
         IUnitOfWork unitOfWork,
         ILogger<ReviewService> logger
             ) 
         {
         _reviewRepository = reviewRepository;
+        _courseRepository = courseRepository;
         _unitOfWork = unitOfWork;
         _logger = logger;
         _mapper = mapper;
@@ -138,6 +141,7 @@ namespace Applcation.Service.ReviewService
                 content = c.content,
                 createdat = c.createdat,
                 courseId = c.courseid,
+                review = c.review,
                 userId = c.userid,
                 dislikecount = c.dislikecount,
                 likecount = c.likecount,
@@ -171,7 +175,8 @@ namespace Applcation.Service.ReviewService
 
             var existsFromUser = await _courseRepository
                 .GetAllWithoutTracking()
-                .Where(c => c.id == review.courseid)
+                .Where(c => c.id == review.courseid &&
+                       c.creatorid == userid )
                 .AnyAsync(ct);
 
             if(existsFromUser)
@@ -179,15 +184,31 @@ namespace Applcation.Service.ReviewService
                 return TResult.FailedOperation(errorCode.CommentYourSelfCourseError);
             }
 
+            var moreThanOneReview = await _reviewRepository
+         .GetAllWithoutTracking()
+         .Where(c => c.userid == userid)
+         .AnyAsync();
+
+            if(moreThanOneReview)
+            {
+                return TResult.FailedOperation(errorCode.MoreThanOne);
+            }
+
             var entity = _mapper.Map<ReviewEntities>(review);
+            entity.userid = userid;
             await _reviewRepository.Create(entity);
             try
             {
                 await _unitOfWork.CommitAsync(ct);
                 return TResult.CompletedOperation();
             }
-            catch(DbUpdateException ex)
+            catch(DbUpdateException ex) when (ex.InnerException is PostgresException pgEx)
             {
+                if(pgEx.SqlState == 23503.ToString())
+                {
+                    return TResult.FailedOperation(errorCode.CoursesNotFoud);
+                }
+
                 _logger.LogError(ex, "Ошибка бд при создании отзыва");
                 return TResult.FailedOperation(errorCode.DatabaseError);
             }

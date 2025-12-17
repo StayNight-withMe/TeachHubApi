@@ -32,6 +32,19 @@ namespace infrastructure.Utils.Mapping.AutoMapperProfiles
 
             CreateMap<ReviewEntities, ReviewOutputDTO>();
 
+            CreateMap<ReviewICreateDTO, ReviewEntities>()
+                .ForMember(
+                c => c.courseid,
+                c => c.MapFrom(c => c.courseid)
+                )
+                .ForMember(
+                c => c.content,
+                c => c.MapFrom(c => c.content)
+                )
+                .ForMember(
+                c => c.review,
+                c => c.MapFrom(c => c.review));
+
         }
     }
 }

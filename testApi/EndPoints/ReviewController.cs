@@ -34,6 +34,7 @@ namespace testApi.EndPoints
 
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetMyReviews(
          [FromQuery] SortingAndPaginationDTO sort,
          CancellationToken ct)
