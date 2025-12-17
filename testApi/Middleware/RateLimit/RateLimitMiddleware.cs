@@ -34,12 +34,10 @@ namespace testApi.Middleware.RateLimit
 
 
 
-        public async Task InvokeAsync(HttpContext context, IHeaderService headerService, CancellationToken ct = default)
+        public async Task InvokeAsync(HttpContext context, IHeaderService headerService)
         {
             Console.WriteLine("[MiddleWareRateLimit]");
             var ip = headerService.GetIp();
-
-            Console.WriteLine($"ip {ip} ");
 
             var qw = _reqUests.GetOrAdd(ip, _ => new ConcurrentQueue<DateTime>());
 
@@ -90,7 +88,7 @@ namespace testApi.Middleware.RateLimit
 
 
 
-        public async Task RateLimitDropError(HttpContext context, ConcurrentQueue<DateTime> times, CancellationToken ct = default)
+        public async Task RateLimitDropError(HttpContext context, ConcurrentQueue<DateTime> times)
         {
 
             context.Response.StatusCode = 429;

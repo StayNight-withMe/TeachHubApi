@@ -9,7 +9,7 @@ namespace Core.Model.TargetDTO.ReviewReaction
 {
     public class ReviewReactionInputDTO
     {
-        public int ReviewId { get; set; }
-        public ReactionType reaction { get; set; }
+        public int reviewId { get; set; }
+        public ReactionType reactiontype { get; set; }
     }
 }

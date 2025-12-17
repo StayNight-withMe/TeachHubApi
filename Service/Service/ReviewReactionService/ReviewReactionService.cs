@@ -39,37 +39,42 @@ namespace Applcation.Service.ReviewReactionService
             _mapper = mapper;
             
         }
-        public async Task<TResult> PutReaction(ReviewReactionInputDTO reactionDTO, int userId, CancellationToken ct = default)
+        public async Task<TResult> PutReaction(
+            ReviewReactionInputDTO reactionDTO, 
+            int userId, 
+            CancellationToken ct = default)
         {
             var reaction = await _reviewReactionRepository
                 .GetAll()
-                .Where(c => c.reviewid == reactionDTO.ReviewId && 
+                .Where(c => c.reviewid == reactionDTO.reviewId && 
                        c.userid == userId)
                 .FirstOrDefaultAsync(ct);
 
 
             if(reaction == null)
             {
-                if(reactionDTO.reaction != Core.Common.ReactionType.None)
+                if(reactionDTO.reactiontype != Core.Common.ReactionType.None)
                 {
-                    await _reviewReactionRepository.Create(_mapper.Map<ReviewreactionEntities>(reactionDTO));
+                    var entity = _mapper.Map<ReviewreactionEntities>(reactionDTO);
+                    entity.userid = userId;
+                    await _reviewReactionRepository.Create(entity);
                 }
                 else
                 {
                     return TResult.CompletedOperation();
                 }
             }
-            else if (reaction.reactiontype == reactionDTO.reaction)
+            else if (reaction.reactiontype == reactionDTO.reactiontype)
             {
                 return TResult.CompletedOperation();
             }
-            else if (reactionDTO.reaction == Core.Common.ReactionType.None)
+            else if (reactionDTO.reactiontype == Core.Common.ReactionType.None)
             {
                 await _reviewReactionRepository.DeleteById(ct, reaction.id);
             }
             else
             {
-                reaction.reactiontype = reactionDTO.reaction;
+                reaction.reactiontype = reactionDTO.reactiontype;
             }
            
 

@@ -27,6 +27,8 @@ using infrastructure.Utils.JwtService;
 using infrastructure.Utils.Mapping.AutoMapperProfiles;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Applcation.Service.ReviewReactionService;
+using Applcation.Service.ReviewService;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -71,6 +73,8 @@ builder.Services.AddScoped<ISubscriptionService, SubscriptionService>();
 builder.Services.AddScoped<IFavoritService, FavoritService>();
 builder.Services.AddScoped<ILessonStorageService, LessonsStorageService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IReviewService, ReviewService>();
+builder.Services.AddScoped<IReviewReactionService, ReviewReactionService>();
 //залупа2
 builder.Services.AddEndpointsApiExplorer(); //свагеру что бы найти
 builder.Services.AddSwaggerGen(); // свагеру для создания документа
@@ -83,10 +87,14 @@ builder.Services.AddAutoMapper(cfg => cfg.AddProfile<AuthMapperProfile>());
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<CoursesMapperProfile>());
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<ChaptermMapperProfile>());
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<LessonMapperProfile>());
+builder.Services.AddAutoMapper(cfg => cfg.AddProfile<ReviewMapperProfile>());
 
 
 builder.Services.Configure<BloomOptions>(
     builder.Configuration.GetSection("Bloom"));
+
+builder.Services.Configure<BloomRebuildOptions>(
+    builder.Configuration.GetSection("BloomRebuild"));
 
 builder.Services.AddSingleton<IEmailChecker, EmailChecker>();
 

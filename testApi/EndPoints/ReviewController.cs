@@ -36,8 +36,7 @@ namespace testApi.EndPoints
         [HttpGet]
         public async Task<IActionResult> GetMyReviews(
          [FromQuery] SortingAndPaginationDTO sort,
-         CancellationToken ct
-     )
+         CancellationToken ct)
         {
             var result = await _reviewService.GetReviewsByUserId(Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), sort, ct);
             return await EntityResultExtensions.ToActionResult(result, this);

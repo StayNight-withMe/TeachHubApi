@@ -137,8 +137,8 @@ namespace Applcation.Service.ReviewService
                 createdat = c.createdat,
                 courseId = c.courseid,
                 userId = c.userid,
-                dislikeCount = c.dislikecount,
-                likeCount = c.likecount,
+                dislikecount = c.dislikecount,
+                likecount = c.likecount,
                 lastchangedat = c.lastchangedat,
             }).ToList();
             return dtolist;
