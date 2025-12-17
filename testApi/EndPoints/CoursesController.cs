@@ -27,9 +27,12 @@ namespace testApi.EndPoints
 
         [HttpPatch]
         [Authorize]
-        public async Task<IActionResult> UpdateCourse([FromBody] UpdateCourseDTO course)
+        public async Task<IActionResult> UpdateCourse(
+            [FromBody] UpdateCourseDTO course,
+            CancellationToken ct
+            )
         {
-            var result = await _courseService.UpdateCourse(course, Convert.ToInt32(User.FindFirst("id").Value));
+            var result = await _courseService.UpdateCourse(course, Convert.ToInt32(User.FindFirst("id").Value),ct);
             return await EntityResultExtensions.ToActionResult(result, this);
 
         }
@@ -37,9 +40,12 @@ namespace testApi.EndPoints
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> CreateCourse([FromBody] CreateCourseDTO courceDTO)
+        public async Task<IActionResult> CreateCourse([
+            FromBody] CreateCourseDTO courceDTO, 
+            CancellationToken ct
+            )
         {
-            var result = await _courseService.CreateCourse(courceDTO, Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier) ));
+            var result = await _courseService.CreateCourse(courceDTO, Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), ct);
             return await EntityResultExtensions.ToActionResult(result, this);    
         }
 
@@ -55,8 +61,7 @@ namespace testApi.EndPoints
 
             if(searchText == null)
             {
-                var result = await _courseService.GetAllCourse(userSortingRequest, ct);
-                return await EntityResultExtensions.ToActionResult(result, this);
+                return BadRequest();
             }
 
             int userid = default;
@@ -65,8 +70,10 @@ namespace testApi.EndPoints
             {
                 userid = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             }
-   
-            var result1 = await _courseService.SearchCourse(searchText, userSortingRequest);
+
+            Console.WriteLine(userid);
+
+            var result1 = await _courseService.SearchCourse(searchText, userSortingRequest, userid, ct);
             return await EntityResultExtensions.ToActionResult(result1, this);
         }
 
@@ -88,9 +95,12 @@ namespace testApi.EndPoints
         [Authorize]
         [HttpGet("my")]
         [OutputCache(PolicyName = "10min")]
-        public async Task<IActionResult> GetUserCourses([FromQuery] SortingAndPaginationDTO userSortingRequest)
+        public async Task<IActionResult> GetUserCourses([
+            FromQuery] SortingAndPaginationDTO userSortingRequest,
+            CancellationToken ct
+            )
         {
-            var result = await _courseService.GetUserCourses(Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), User.FindFirstValue(ClaimTypes.Name), userSortingRequest);
+            var result = await _courseService.GetUserCourses(Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), User.FindFirstValue(ClaimTypes.Name), userSortingRequest, ct);
             return await EntityResultExtensions.ToActionResult(result, this);   
         }
 

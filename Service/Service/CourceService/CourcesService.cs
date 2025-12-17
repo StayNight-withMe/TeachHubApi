@@ -29,6 +29,8 @@ namespace Applcation.Service.CourceService
         
         private readonly IBaseRepository<Course_CategoriesEntities> _course_CategoriesRepository;
 
+        private readonly IBaseRepository<FavoritEntities> _favoriteRepository;
+
         private readonly ILogger<CourcesService> _logger;
 
         private readonly IMapper _mapper;
@@ -37,18 +39,21 @@ namespace Applcation.Service.CourceService
 
         public CourcesService(
             IBaseRepository<CourseEntities> baseRepository,
-            ILogger<CourcesService> logger,
-            IMapper mapper,
-            IUnitOfWork unitOfWork,
+            IBaseRepository<FavoritEntities> favoritRepository,
             IBaseRepository<UserEntities> userRepository,
-            IBaseRepository<Course_CategoriesEntities> course_CategoriesRepository
+            IBaseRepository<Course_CategoriesEntities> course_CategoriesRepository,
+            ILogger<CourcesService> logger,
+            IUnitOfWork unitOfWork,
+            IMapper mapper
+            
             )
         {
             _courceRepository = baseRepository;
-            _logger = logger;
-            _mapper = mapper;
-            _unitOfWork = unitOfWork;
+            _favoriteRepository = favoritRepository;
             _course_CategoriesRepository = course_CategoriesRepository;
+            _logger = logger;
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
 
@@ -105,23 +110,31 @@ namespace Applcation.Service.CourceService
         public async Task<TResult<PagedResponseDTO<CourseOutputDTO>>> SearchCourse(
             string search, 
             SortingAndPaginationDTO userSortingRequest, 
+            int userid = default,
             CancellationToken ct = default)
         {
             var listqw = _courceRepository
                 .GetAllWithoutTracking()
                 .Where(c => c.searchvector
                 .Matches(search));
+                
+
+           
+
 
             var list = await listqw
                 .GetWithPaginationAndSorting(userSortingRequest)
                 .Include(c => c.user)
                 .ToListAsync(ct);
 
-            return PageService.CreatePage(await MapList(list), userSortingRequest, await listqw.CountAsync(ct));
+            return PageService.CreatePage(await MapList(list, userid), userSortingRequest, await listqw.CountAsync(ct));
         }
 
 
-        private async Task<List<CourseOutputDTO>> MapList(List<CourseEntities> courseEntities)
+        private async Task<List<CourseOutputDTO>> MapList(
+            List<CourseEntities> courseEntities,
+            int userid = default
+            )
         {
 
             Dictionary<int, Dictionary<int, string>> categoryNames = new Dictionary<int, Dictionary<int, string>>();
@@ -133,8 +146,31 @@ namespace Applcation.Service.CourceService
                .Where(c => c.courseid == i.id)
                .Include(c => c.categories)
                .GroupBy(c => c.courseid)
-               .ToDictionaryAsync(c => c.Key, c => c.Select(c => c.categories).ToDictionary(c => c.id, c => c.name));
+               .ToDictionaryAsync(c => c.Key, c => c
+                                                    .Select(c => c.categories)
+                                                    .ToDictionary(c => c.id, c => c.name));
             }
+
+
+            
+            Dictionary<int, bool> favorietdict = new();
+
+            if (userid != default)
+            {
+                var userCourseId =  courseEntities
+                .Where(c => c.creatorid == userid)
+                .Select(c => c.id)
+                .FirstOrDefault();
+
+                favorietdict = await _favoriteRepository
+                    .GetAllWithoutTracking()
+                    .Where(c => c.userid == userid && c.courseid == userCourseId)
+                    .ToDictionaryAsync(c => c.courseid, c => true);
+
+            }
+
+
+
 
             return courseEntities
                .Select(c => new CourseOutputDTO
@@ -143,6 +179,7 @@ namespace Applcation.Service.CourceService
                    field = c.field,
                    description = c.description,
                    creatorid = c.user.id,
+                   favorite = favorietdict.TryGetValue(c.id, out var value),
                    id = c.id,
                    name = c.name,
                    creatorname = c.user.name ?? "удаленный аккаунт",

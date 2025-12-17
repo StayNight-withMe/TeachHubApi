@@ -29,6 +29,7 @@ namespace Core.Interfaces.Service
         public Task<TResult<PagedResponseDTO<CourseOutputDTO>>> SearchCourse(
             string search, 
             SortingAndPaginationDTO userSortingRequest,
+            int userid = default,
             CancellationToken ct = default
             );
         public Task<TResult> RemoveCourse(
