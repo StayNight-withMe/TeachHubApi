@@ -58,6 +58,13 @@ namespace testApi.EndPoints
                 var result = await _courseService.GetAllCourse(userSortingRequest, ct);
                 return await EntityResultExtensions.ToActionResult(result, this);
             }
+
+            int userid = default;
+
+            if((Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), User.FindFirstValue(ClaimTypes.Name)) != default)
+            {
+                userid = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            }
    
             var result1 = await _courseService.SearchCourse(searchText, userSortingRequest);
             return await EntityResultExtensions.ToActionResult(result1, this);
