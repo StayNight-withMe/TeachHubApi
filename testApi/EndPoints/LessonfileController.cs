@@ -10,6 +10,7 @@ namespace testApi.EndPoints
 {
     [ApiController]
     [Route("api/LessonStorage")]
+    [Tags("Файлы уроков")]
     public class LessonfileController : ControllerBase
     {
         private readonly ILessonStorageService _lessonStorageService;

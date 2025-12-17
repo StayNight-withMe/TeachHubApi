@@ -12,6 +12,7 @@ namespace testApi.EndPoints
 {
     [ApiController]
     [Route("api/auth")]
+    [Tags("Аутентификация")]
     public class AuthController : ControllerBase
     {
 

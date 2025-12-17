@@ -10,6 +10,7 @@ namespace testApi.EndPoints
 {
     [ApiController]
     [Route("api/user/follow")]
+    [Tags("Подписки")]
     public class FollowController : ControllerBase
     {
         private readonly ISubscriptionService _followService;

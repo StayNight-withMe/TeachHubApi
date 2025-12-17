@@ -12,6 +12,7 @@ namespace testApi.EndPoints
 {
     [ApiController]
     [Route("api/courses/chapter")]
+    [Tags("Разделы курсов")]
     public class ChapterController : ControllerBase
     {
 

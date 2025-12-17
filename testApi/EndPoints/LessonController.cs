@@ -12,6 +12,7 @@ namespace testApi.EndPoints
 {
     [ApiController]
     [Route("api/courses/chapter/lesson")]
+    [Tags("Уроки")]
     public class LessonController : ControllerBase
     {
         private readonly ILessonService _lessonService;

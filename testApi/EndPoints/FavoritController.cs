@@ -11,6 +11,7 @@ namespace testApi.EndPoints
     [Authorize]
     [ApiController]
     [Route("api/course/favorite")]
+    [Tags("Избранное")]
     public class FavoritController : ControllerBase
     {
         private readonly IFavoritService _favoritService;

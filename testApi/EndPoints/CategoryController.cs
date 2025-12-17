@@ -6,7 +6,7 @@ namespace testApi.EndPoints
 {
     [ApiController]
     [Route("api/[controller]")]
-    
+    [Tags("Категории")]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
