@@ -49,8 +49,18 @@ namespace testApi.Middleware.Новая_папка
             }
          
 
-
-            await _next(httpContext);
+            try
+            {
+                await _next(httpContext);
+            }
+            catch(OperationCanceledException ex)
+            {
+                _logger.LogDebug("сработал токен отмены в ip middleware");
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "unckown");
+            }
 
             
         }

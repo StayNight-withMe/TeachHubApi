@@ -9,7 +9,7 @@ using System.Security.Claims;
 namespace testApi.EndPoints
 {
     [ApiController]
-    [Route("api/user/follow")]
+    [Route("api/user/follows")]
     [Tags("Подписки")]
     public class FollowController : ControllerBase
     {

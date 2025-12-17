@@ -208,7 +208,9 @@ namespace Applcation.Service.CourceService
         public async Task<TResult<PagedResponseDTO<CourseOutputDTO>>> GetUserCourses(
             int userid, 
             string name, 
-            SortingAndPaginationDTO userSortingRequest)
+            SortingAndPaginationDTO userSortingRequest,
+            CancellationToken ct = default
+            )
         {
 
           
@@ -216,7 +218,7 @@ namespace Applcation.Service.CourceService
                 .Include(c => c.user)
                 .GetWithPaginationAndSorting(userSortingRequest, "courseid", "creatorid", "description")
                 .Where(c => c.creatorid == userid)
-                .ToListAsync();
+                .ToListAsync(ct);
 
             if(courseEntites == null)
             {
@@ -230,7 +232,7 @@ namespace Applcation.Service.CourceService
                 userSortingRequest, 
                 await _courceRepository.GetAll()
                     .Where(c => c.creatorid == userid)
-                    .CountAsync());
+                    .CountAsync(ct));
 
         }
 

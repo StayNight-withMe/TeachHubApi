@@ -14,7 +14,7 @@ namespace testApi.EndPoints
 {
 
     [ApiController]
-    [Route("api/courses")]
+    [Route("api/course")]
     [Tags("Курсы")]
     public class CoursesController : ControllerBase
     {
@@ -44,35 +44,39 @@ namespace testApi.EndPoints
         }
 
 
-        [HttpGet("search")]
+        [HttpGet]
         [OutputCache(PolicyName = "20min")]
         public async Task<IActionResult> SearchCourse(
             [FromQuery] SortingAndPaginationDTO userSortingRequest,
-            [FromQuery] string searchText
+            [FromQuery] string searchText = null,
+            CancellationToken ct = default
             )
         {
-            var result = await _courseService.SearchCourse(searchText, userSortingRequest);
-            return await EntityResultExtensions.ToActionResult(result, this);
+
+            if(searchText == null)
+            {
+                var result = await _courseService.GetAllCourse(userSortingRequest, ct);
+                return await EntityResultExtensions.ToActionResult(result, this);
+            }
+   
+            var result1 = await _courseService.SearchCourse(searchText, userSortingRequest);
+            return await EntityResultExtensions.ToActionResult(result1, this);
         }
+
+
 
 
         [HttpDelete("{id}")]
         [Authorize]
-        public async Task<IActionResult> Remove(int id)
+        public async Task<IActionResult> Remove(
+            int id,
+            CancellationToken ct
+            )
         {
-            var result = await _courseService.RemoveCourse(id, User);
+            var result = await _courseService.RemoveCourse(id, User, ct);
             return await EntityResultExtensions.ToActionResult(result, this);
         }
 
-        
-        [HttpGet]
-        [OutputCache(PolicyName = "120min")]
-        public async Task<IActionResult> GetAllCources([FromQuery] SortingAndPaginationDTO userSortingRequest)
-        {
-            var result = await _courseService.GetAllCourse(userSortingRequest);
-            return await EntityResultExtensions.ToActionResult(result, this);
-            
-        }
 
         [Authorize]
         [HttpGet("my")]

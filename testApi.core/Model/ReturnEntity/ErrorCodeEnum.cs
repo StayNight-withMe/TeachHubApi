@@ -26,7 +26,7 @@
         PasswordIsEasily = 105,
         PasswordDontMatch = 107,
         FollowingError = 108,
-
+        CommentYourSelfCourseError = 109,
 
         // Системные ошибки (500 Internal Server Error)
         DatabaseError = 201,

@@ -36,12 +36,9 @@ namespace testApi.Middleware.RateLimit
 
         public async Task InvokeAsync(HttpContext context, IHeaderService headerService)
         {
-            Console.WriteLine("[MiddleWareRateLimit]");
             var ip = headerService.GetIp();
 
             var qw = _reqUests.GetOrAdd(ip, _ => new ConcurrentQueue<DateTime>());
-
-
 
             //for(int i = 0; i < _reqUests[ip].Count; i++) 
             //{
@@ -57,12 +54,12 @@ namespace testApi.Middleware.RateLimit
                 qw.TryDequeue(out _);
             }
             //(c => DateTime.UtcNow - c > _limitTimeSpan);            
-            _logger.LogInformation($"количество запросв :: {qw.Count}");
+            _logger.LogDebug($"количество запросв :: {qw.Count}");
 
             if (qw.Count >= _limit)
             {
 
-                _logger.LogInformation("Лимит запросов превышен");
+                _logger.LogDebug("Лимит запросов превышен");
                 await RateLimitDropError(context, qw);
                 return;
             }
@@ -74,8 +71,14 @@ namespace testApi.Middleware.RateLimit
                 _reqUests.TryRemove(ip, out _);
             }
 
-      
-            await _next(context);
+            try
+            {
+                await _next(context);
+            }
+            catch(OperationCanceledException ex)
+            {
+                _logger.LogDebug("сработал токен отмены в rateLimit middleware");
+            }
 
 
         }

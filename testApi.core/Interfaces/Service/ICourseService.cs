@@ -19,7 +19,9 @@ namespace Core.Interfaces.Service
         public Task<TResult<PagedResponseDTO<CourseOutputDTO>>> GetUserCourses(
             int id, 
             string name, 
-            SortingAndPaginationDTO userSortingRequest);
+            SortingAndPaginationDTO userSortingRequest,
+            CancellationToken ct = default
+            );
         public Task<TResult<CourseOutputDTO>> UpdateCourse(
             UpdateCourseDTO updateCourseDTO, 
             int userid,

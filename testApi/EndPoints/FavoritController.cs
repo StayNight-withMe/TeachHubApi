@@ -10,7 +10,7 @@ namespace testApi.EndPoints
 
     [Authorize]
     [ApiController]
-    [Route("api/course/favorite")]
+    [Route("api/favorite")]
     [Tags("Избранное")]
     public class FavoritController : ControllerBase
     {

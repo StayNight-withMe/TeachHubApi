@@ -5,7 +5,7 @@ using Core.Interfaces.Service;
 namespace testApi.EndPoints
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/categories")]
     [Tags("Категории")]
     public class CategoryController : ControllerBase
     {

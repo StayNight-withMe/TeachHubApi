@@ -32,7 +32,7 @@ namespace Core.Interfaces.Service
             CancellationToken ct = default);
         Task<TResult> DeleteChapter(
             int chapterid, 
-            int userid, 
+            int userid = default, 
             CancellationToken ct = default);
     }
 }

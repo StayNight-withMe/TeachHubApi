@@ -15,11 +15,15 @@ namespace testApi.EndPoints
 {
     [ApiController]
     [Route("api/users")]
+    [Tags("Пользователи")]
     public class UserController : ControllerBase
     {
         private readonly IUsersService _usersService;
+
         private readonly IJwtService _jwtService;
+
         private readonly IHeaderService _headerService;
+
         private readonly IOutputCacheStore _outputCacheStore;
         public UserController( IUsersService usersService,
             IJwtService jwtService,
@@ -57,7 +61,7 @@ namespace testApi.EndPoints
         }
 
 
-        [HttpGet("check-email")]
+        [HttpGet("exists")]
         [OutputCache(PolicyName = "CheckEmail1Hour")]
         public async Task<IActionResult> CheckEmail(
             [FromQuery] string email,
@@ -78,7 +82,7 @@ namespace testApi.EndPoints
         }
 
 
-        [HttpDelete("admin/hardremove/{id}")]
+        [HttpDelete("admin/{id}/soft")]
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> AdminAgressiveDelete(
             int id,
@@ -93,7 +97,14 @@ namespace testApi.EndPoints
           });
         }
 
-        [HttpDelete("admin/softremove/{id}")]
+
+        /// <summary>
+        /// Delete user by admin (soft delete)
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="ct"></param>
+        /// <returns></returns>
+        [HttpDelete("admin/{id}/hard")]
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> AdminSoftDelete(
             int id,
@@ -109,7 +120,7 @@ namespace testApi.EndPoints
 
         }
 
-        [HttpPatch("remove")]
+        [HttpDelete("remove")]
         [Authorize]
         public async Task<IActionResult> SoftDelete(
             CancellationToken ct

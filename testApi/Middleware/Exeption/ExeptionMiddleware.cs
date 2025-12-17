@@ -16,9 +16,14 @@
 
         public async Task InvokeAsync(HttpContext httpContext)
         {
+
             try
             {
                 await _next(httpContext);
+            }
+            catch (OperationCanceledException ex)
+            {
+                _logger.LogDebug("сработал токен отмены");
             }
             catch (Exception ex)
             {

@@ -205,24 +205,29 @@ namespace Applcation.Service.chapterService
 
         public async Task<TResult> DeleteChapter(
             int chapterid,
-            int userid,
+            int userid = default,
             CancellationToken ct = default)
         {
-            var chapter = await _chapterRepository.GetAllWithoutTracking()
-                .Include(c => c.course)
-                .Where(c => c.id == chapterid && c.course.creatorid == userid)
-                .FirstOrDefaultAsync(ct);
-
-            if(chapter == null)
-            {
-                return TResult.FailedOperation(errorCode.ChapterNotFound);
-            }
-
-            await _chapterRepository.DeleteById(ct, chapter.id);
 
             try
             {
-                await _unitOfWork.CommitAsync(ct);
+                if(userid == default)
+                {
+                   await _chapterRepository
+                        .GetAll()
+                        .Where(c => c.id == chapterid)
+                        .ExecuteDeleteAsync();
+                }
+                else
+                {
+                    await _chapterRepository
+                             .GetAll()
+                             .Include(c => c.course)
+                             .Where(c => c.id == chapterid &&
+                                    c.course.creatorid == userid)
+                             .ExecuteDeleteAsync();
+                }
+         
                 return TResult.CompletedOperation();
             }
             catch (DbUpdateException ex)

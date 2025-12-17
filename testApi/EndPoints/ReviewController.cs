@@ -8,7 +8,7 @@ using System.Security.Claims;
 namespace testApi.EndPoints
 {
     [ApiController]
-    [Route("api/review")]
+    [Route("api/reviews")]
     [Tags("Отзывы")]
     public class ReviewController : ControllerBase
     {
@@ -49,7 +49,7 @@ namespace testApi.EndPoints
         [Authorize]
         public async Task<IActionResult> PostReviews(
             int courseid,
-            [FromQuery]ReviewICreateDTO reviewInputDTO,
+            [FromBody]ReviewICreateDTO reviewInputDTO,
             CancellationToken ct)
         {
             var result = await _reviewService.PostReview(reviewInputDTO, Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), ct);
@@ -72,7 +72,7 @@ namespace testApi.EndPoints
         [HttpPatch("{reviewid}")]
         [Authorize]
         public async Task<IActionResult> UpdateReview(
-        [FromQuery] ReviewChangedDTO review,
+        [FromBody] ReviewChangedDTO review,
         CancellationToken ct
     )
         {

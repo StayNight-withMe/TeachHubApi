@@ -8,7 +8,7 @@ using System.Security.Claims;
 namespace testApi.EndPoints
 {
     [ApiController]
-    [Route("api/review/reactiontype")]
+    [Route("api/review/reactions")]
     [Authorize]
     [Tags("Реакции на отзывы")]
     public class ReviewReactionController : ControllerBase

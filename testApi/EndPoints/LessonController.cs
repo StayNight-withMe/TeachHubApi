@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace testApi.EndPoints
 {
     [ApiController]
-    [Route("api/courses/chapter/lesson")]
+    [Route("api/lessons")]
     [Tags("Уроки")]
     public class LessonController : ControllerBase
     {
@@ -24,10 +24,16 @@ namespace testApi.EndPoints
 
         [HttpGet("{chapterid}")]
         [OutputCache(PolicyName = "10min")]
-        public async Task<IActionResult> GetLesson(int chapterid,
-            [FromQuery] SortingAndPaginationDTO userSortingRequest)
+        public async Task<IActionResult> GetLesson(
+            int chapterid,
+            [FromQuery] SortingAndPaginationDTO userSortingRequest,
+            CancellationToken ct
+            )
         {
-            var result = await _lessonService.GetLessonByChapterid(chapterid, userSortingRequest);
+            var result = await _lessonService.GetLessonByChapterid(
+                chapterid, 
+                userSortingRequest, 
+                ct);
             return  await EntityResultExtensions.ToActionResult(result, this);
         }
 
@@ -37,7 +43,9 @@ namespace testApi.EndPoints
         [Authorize]
         public async Task<IActionResult> CreateLesson([FromBody] createLessonDTO lesson)
         {
-            var result = await _lessonService.Create(lesson, Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)));
+            var result = await _lessonService.Create(
+                lesson, 
+                Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)));
             return await EntityResultExtensions.ToActionResult(result, this);
         }
 
@@ -45,7 +53,9 @@ namespace testApi.EndPoints
         [Authorize]
         public async Task<IActionResult> UpdateLesson([FromBody] LessonUpdateDTO lesson)
         {
-            var result = await _lessonService.UpdateLesson(lesson, Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)));
+            var result = await _lessonService.UpdateLesson(
+                lesson, 
+                Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)));
             return await EntityResultExtensions.ToActionResult(result, this);
         }
 
@@ -53,7 +63,9 @@ namespace testApi.EndPoints
         [Authorize]
         public async Task<IActionResult> DeleteLesson(int lessonid)
         {
-            var result = await _lessonService.DeleteLessonForUser(lessonid, Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)));
+            var result = await _lessonService.DeleteLessonForUser(
+                lessonid, 
+                Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)));
             return await EntityResultExtensions.ToActionResult(result, this);
         }
 
@@ -61,7 +73,9 @@ namespace testApi.EndPoints
         [Authorize]
         public async Task<IActionResult> SwitchVisible(int lessonid)
         {
-            var result = await _lessonService.SwitchVisible(lessonid, Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)));
+            var result = await _lessonService.SwitchVisible(
+                lessonid, 
+                Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)));
             return await EntityResultExtensions.ToActionResult(result, this);
         }
 

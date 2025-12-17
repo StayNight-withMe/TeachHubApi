@@ -25,6 +25,8 @@ namespace Applcation.Service.ReviewService
     {
         private readonly IBaseRepository<ReviewEntities> _reviewRepository;
 
+        private readonly IBaseRepository<CourseEntities> _courseRepository;
+
         private readonly IUnitOfWork _unitOfWork;
 
         private readonly ILogger<ReviewService> _logger;
@@ -166,6 +168,17 @@ namespace Applcation.Service.ReviewService
             int userid,
             CancellationToken ct = default)
         {
+
+            var existsFromUser = await _courseRepository
+                .GetAllWithoutTracking()
+                .Where(c => c.id == review.courseid)
+                .AnyAsync(ct);
+
+            if(existsFromUser)
+            {
+                return TResult.FailedOperation(errorCode.CommentYourSelfCourseError);
+            }
+
             var entity = _mapper.Map<ReviewEntities>(review);
             await _reviewRepository.Create(entity);
             try

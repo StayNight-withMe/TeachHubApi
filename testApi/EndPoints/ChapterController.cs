@@ -11,7 +11,7 @@ using System.Security.Claims;
 namespace testApi.EndPoints
 {
     [ApiController]
-    [Route("api/courses/chapter")]
+    [Route("api/chapters")]
     [Tags("Разделы курсов")]
     public class ChapterController : ControllerBase
     {

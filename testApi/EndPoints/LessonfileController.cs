@@ -9,7 +9,7 @@ using System.Security.Claims;
 namespace testApi.EndPoints
 {
     [ApiController]
-    [Route("api/LessonStorage")]
+    [Route("api/lessons")]
     [Tags("Файлы уроков")]
     public class LessonfileController : ControllerBase
     {
@@ -20,7 +20,7 @@ namespace testApi.EndPoints
         }
 
         [RequestSizeLimit(11 * 1024 * 1024)]
-        [HttpPost("upload")]
+        [HttpPost("files")]
         [Authorize]
         public async Task<IActionResult> UploadLessonFile(
             IFormFile file,
