@@ -149,6 +149,7 @@ namespace Applcation.Service.CourceService
                    name = c.name,
                    creatorname = c.user.name ?? "удаленный аккаунт",
                    createdat = c.createdat,
+                   rating = c.rating
                }).ToList();
         }
 

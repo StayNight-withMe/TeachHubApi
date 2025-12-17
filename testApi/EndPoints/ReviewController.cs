@@ -1,6 +1,9 @@
 ﻿using Core.Interfaces.Service;
 using Core.Model.TargetDTO.Common.input;
+using Core.Model.TargetDTO.Review.input;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace testApi.EndPoints
 {
@@ -17,7 +20,7 @@ namespace testApi.EndPoints
             _reviewService = reviewService;
         }
 
-
+        
         [HttpGet("{courseid}")]
         public async Task<IActionResult> GetReviews(
             int courseid,
@@ -28,6 +31,31 @@ namespace testApi.EndPoints
             var result = await _reviewService.GetReviewsByCourseId(courseid, sort, ct);
             return await EntityResultExtensions.ToActionResult(result, this);
         }
+
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> PostReviews(
+            int courseid,
+            [FromQuery]ReviewICreateDTO reviewInputDTO,
+            CancellationToken ct)
+        {
+            var result = await _reviewService.PostReview(reviewInputDTO, Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), ct);
+            return await EntityResultExtensions.ToActionResult(result, this);
+        }
+
+
+        [HttpDelete("{reviewid}")]
+        [Authorize]
+        public async Task<IActionResult> DeleteReview(
+            int reviewid,
+            CancellationToken ct
+            )
+        {
+            var result = await _reviewService.DeleteReview(reviewid, Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), ct);
+            return await EntityResultExtensions.ToActionResult(result, this);
+        }
+
 
 
     }

@@ -15,6 +15,8 @@
         IpNotFound = 8,
         lessonNotFound = 9,
         NoRights = 10,
+        ReviewNotFound = 11,
+
 
         // Бизнес-конфликты (409 Conflict)
         UserAlreadyExists = 101, 

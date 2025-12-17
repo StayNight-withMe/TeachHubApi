@@ -1,6 +1,7 @@
 ﻿using Core.Model.BaseModel.Course;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ namespace Core.Model.TargetDTO.Courses.output
         public int id { get; set; }
         public string creatorname {  get; set; }
         public int creatorid { get; set; }
+        public decimal rating { get; set; }
         public Dictionary<int, string> categorynames { get; set; } 
         public DateTime createdat {  get; set; }
     }

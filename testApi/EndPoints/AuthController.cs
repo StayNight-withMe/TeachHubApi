@@ -45,7 +45,7 @@ namespace testApi.EndPoints
         }
 
         [HttpPost("refrash")]
-        public async Task<IActionResult> RefrashToken()
+        public IActionResult RefrashToken()
         {
             string? oldJwt = Request.Headers.Authorization;
             if (oldJwt == null)

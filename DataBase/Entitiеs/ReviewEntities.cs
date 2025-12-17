@@ -9,7 +9,8 @@ namespace infrastructure.Entitiеs
         public int courseid { get; set; } 
         public string content { get; set; }
         public int review { get; set; }
-        public TimeSpan createdat { get; set; }
+        public DateTime createdat { get; set; }
+        public DateTime lastchangedat { get; set; }  = DateTime.Now;
         public int likecount { get; set; }
         public int dislikecount { get; set; }
 

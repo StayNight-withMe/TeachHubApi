@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Core.Model.TargetDTO.Review.input
 {
-    public class ReviewInputDTO
+    public class ReviewICreateDTO
     {
         public int courseid { get; set; }
         public string content { get; set; }

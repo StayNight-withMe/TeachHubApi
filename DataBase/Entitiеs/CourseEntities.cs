@@ -10,6 +10,7 @@ namespace infrastructure.Entitiеs
         public string description { get; set; } 
         public DateTime createdat {  get; set; } = DateTime.UtcNow;
         public int? creatorid { get; set; }
+        public decimal rating { get; set; }
         public string field {  get; set; }
         public NpgsqlTsVector searchvector { get; set; }
 

@@ -10,6 +10,7 @@ using Core.Model.TargetDTO.Review.output;
 using infrastructure.Entitiеs;
 using infrastructure.Extensions;
 using infrastructure.Utils.PageService;
+using Logger;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -43,6 +44,45 @@ namespace Applcation.Service.ReviewService
         _mapper = mapper;
         }
 
+        public async Task<TResult<ReviewOutputDTO>> UpdateReview(
+            ReviewChangedDTO changedDTO, 
+            int userid, 
+            CancellationToken ct = default)
+        {
+            var review = await _reviewRepository
+                .GetAllWithoutTracking()
+                .Where(c => c.userid == userid &&
+                       c.id == changedDTO.reviewid)
+                .FirstOrDefaultAsync(ct);
+
+            if (review == null) 
+            {
+                return TResult<ReviewOutputDTO>.FailedOperation(errorCode.);
+            }
+
+            review.lastchangedat = 
+
+            await _reviewRepository.PartialUpdateAsync(review, changedDTO);
+
+            try
+            {
+                await _unitOfWork.CommitAsync(ct);
+                return TResult<ReviewOutputDTO>.CompletedOperation(_mapper.Map<ReviewOutputDTO>(review));
+            }
+            catch(DbUpdateException ex)
+            {
+                _logger.LogDBError(ex);
+                return TResult<ReviewOutputDTO>.FailedOperation(errorCode.DatabaseError);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex);
+                return TResult<ReviewOutputDTO>.FailedOperation(errorCode.UnknownError);
+            }
+
+
+        }
+
         public async Task<TResult> DeleteReview(
             int reviewId, 
             int userId, 
@@ -50,7 +90,10 @@ namespace Applcation.Service.ReviewService
         {
             try
             {
-                await _reviewRepository.GetAll().Where(c => c.id == reviewId && c.userid == userId).ExecuteDeleteAsync(ct);
+                await _reviewRepository.GetAll()
+                    .Where(c => c.id == reviewId && 
+                           c.userid == userId)
+                    .ExecuteDeleteAsync(ct);
                 return TResult.CompletedOperation();
             }
             catch(DbUpdateException ex) 
@@ -87,13 +130,26 @@ namespace Applcation.Service.ReviewService
                userId = c.userid,
                dislikeCount = c.dislikecount,
                likeCount = c.likecount,
+               lastchangedat = c.lastchangedat,
             }).ToList();
                         
             return PageService.CreatePage(dtolist, sortingAndPagination, await qwery.CountAsync(ct));
 
         }
 
-        public async Task<TResult> PostReview(ReviewInputDTO review,
+
+
+
+
+
+        public Task<TResult<PagedResponseDTO<ReviewOutputDTO>>> GetReviewsByUserId(
+            int userid, SortingAndPaginationDTO sortingAndPagination, 
+            CancellationToken ct = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<TResult> PostReview(ReviewICreateDTO review,
             int userid,
             CancellationToken ct = default)
         {
