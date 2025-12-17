@@ -13,9 +13,10 @@ namespace Core.Model.TargetDTO.Review.output
         public int userId { get; set; }
         public int courseId { get; set; }
         public string content { get; set; }
-        public int likeCount { get; set; }
-        public TimeSpan lastchangedat { get; set; }
-        public int dislikeCount { get; set; }
-        public TimeSpan createdat { get; set; }
+        public int review { get; set; }
+        public int likecount { get; set; }
+        public DateTime lastchangedat { get; set; }
+        public int dislikecount { get; set; }
+        public DateTime createdat { get; set; }
     }
 }
