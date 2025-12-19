@@ -202,12 +202,15 @@ namespace Applcation.Service.LessonService
             int userid,
             CancellationToken ct = default)
         {
-            var lesson = await _lessonRepository.GetAll()
+            var lesson = await _lessonRepository
+                .GetAll()
                 .Include(c => c.course)
-                .Where(c => c.course.creatorid == userid && c.id == lessonid)
+                .Where(c => c.course.creatorid == userid &&
+                        c.id == lessonid)
                 .FirstOrDefaultAsync(ct);
 
-            if( lesson == null )
+            
+            if ( lesson == null )
             {
                 return TResult.FailedOperation(errorCode.lessonNotFound);
             }

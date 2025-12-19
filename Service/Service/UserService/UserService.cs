@@ -70,15 +70,23 @@ namespace Applcation.Service.UserService
         {
 
            
-            int Emailcount =  await _userRepository.GetAllWithoutTracking().CountAsync(c => c.email == registrationUserDto.email, ct);
+            int Emailcount =  
+                await _userRepository
+                .GetAllWithoutTracking()
+                .CountAsync(c => c.email == registrationUserDto.email, ct);
+
+
             if(Emailcount > 0)
             {
-                TResult.FailedOperation(errorCode.UserAlreadyExists, "такой email уже существует");
+                TResult.FailedOperation(errorCode.UserAlreadyExists);
             }
 
             registrationUserDto.password = PasswordHashService.PasswordHashing(registrationUserDto.password);
             UserEntities userEntities = _mapper.Map<UserEntities>(registrationUserDto);
+
             await _userRepository.Create(userEntities);
+
+            Console.WriteLine(userEntities.id);
 
             var roleSource = new UserRoleMappingSource
             {
@@ -99,13 +107,9 @@ namespace Applcation.Service.UserService
             };
 
 
-            
-
-
             try
             {
-                
-                int count = await _unitOfWork.CommitAsync();
+                int count = await _unitOfWork.CommitAsync(ct);
                 var userAuth = _mapper.Map<UserAuthDto>(authSource);
                 _logger.LogAffectedRows(count);
                 return TResult<UserAuthDto>.CompletedOperation(userAuth);

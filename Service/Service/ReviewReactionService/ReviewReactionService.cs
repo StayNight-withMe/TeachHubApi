@@ -44,13 +44,14 @@ namespace Applcation.Service.ReviewReactionService
             int userId,
             CancellationToken ct = default)
         {
-            var reaction = await _reviewReactionRepository
+            var reaction = await 
+                _reviewReactionRepository
                 .GetAll()
                 .Where(c => c.reviewid == reactionDTO.reviewId &&
                        c.userid == userId)
                 .FirstOrDefaultAsync(ct);
 
-
+            
             if (reaction == null)
             {
                 if (reactionDTO.reactiontype != Core.Common.reaction_type.None)
