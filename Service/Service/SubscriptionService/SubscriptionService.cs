@@ -23,8 +23,8 @@ namespace Applcation.Service.SubscriptionService
         private readonly IBaseRepository<SubscriptionEntites> _suubscriptionRepository;
         
         private readonly IUnitOfWork _unitOfWork;
-        
-        //private readonly IMapper _mapper;
+
+        ////private readonly IMapper _mapper;
 
         public SubscriptionService(
             IBaseRepository<SubscriptionEntites> subrepo,
