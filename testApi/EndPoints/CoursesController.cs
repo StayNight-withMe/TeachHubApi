@@ -80,7 +80,7 @@ namespace testApi.EndPoints
 
 
 
-        [HttpPut]
+        [HttpPut("icon")]
         [Authorize]
         public async Task<IActionResult> UploadCourseIcon(
             IFormFile file,
