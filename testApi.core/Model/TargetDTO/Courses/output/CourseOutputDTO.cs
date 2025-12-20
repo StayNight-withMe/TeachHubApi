@@ -11,6 +11,7 @@ namespace Core.Model.TargetDTO.Courses.output
     public class CourseOutputDTO : BaseCourse
     {
         public int id { get; set; }
+        public string? iconurl { get; set; }
         public string creatorname {  get; set; }
         public bool favorite { get; set; }
         public int creatorid { get; set; }

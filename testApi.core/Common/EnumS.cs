@@ -34,5 +34,10 @@ namespace Core.Common
         None 
     }
 
+    public enum SetImageStatus 
+    {
+    Remove,
+    Upload,
+    }
 
 }

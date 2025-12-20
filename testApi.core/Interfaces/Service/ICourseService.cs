@@ -38,10 +38,11 @@ namespace Core.Interfaces.Service
             ClaimsPrincipal user, 
             CancellationToken ct = default);
 
-        Task<TResult> UploadFile(
+        Task<TResult> SetImgFile(
             Stream stream,
-              int userid,
-              CancellationToken ct = default
+            int userid,
+            CourseSetImageDTO courseSetImageDTO,  
+            CancellationToken ct = default
               );
 
 

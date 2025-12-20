@@ -7,6 +7,7 @@ using Core.Model.TargetDTO.Courses.input;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
+using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -59,7 +60,7 @@ namespace testApi.EndPoints
             )
         {
 
-            if(searchText == null)
+            if(string.IsNullOrEmpty(searchText))
             {
                 return BadRequest();
             }
@@ -78,6 +79,48 @@ namespace testApi.EndPoints
         }
 
 
+
+        [HttpPut]
+        [Authorize]
+        public async Task<IActionResult> UploadCourseIcon(
+            IFormFile file,
+            [FromForm] CourseSetImageDTO setImageDTO,
+            CancellationToken ct
+            )
+        {
+
+            if (file == null || file.Length == 0)
+                return BadRequest(new {code = "file Not Found"});
+
+            var allowedTypes = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            {
+                "image/jpeg",
+                "image/png",
+                "image/gif",
+                "image/webp",
+                "image/bmp"
+            };
+
+            if(!allowedTypes.Contains(setImageDTO.ContentType))
+            {
+                return BadRequest(new { code = "ContentType is not on the allowed list" });
+            }
+
+            Stream stream = file.OpenReadStream();
+
+            var result = await _courseService.SetImgFile(
+                stream,
+                Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)),
+                setImageDTO,
+                ct
+                );
+
+            return await EntityResultExtensions.ToActionResult(result, this);
+        }
+
+
+
+      
 
 
         [HttpDelete("{id}")]

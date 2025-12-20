@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Core.Interfaces.Utils
 {
-    internal interface ILessonFileService
+    public interface ILessonFileService : IFileService
     {
     }
 }

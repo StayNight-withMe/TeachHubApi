@@ -9,7 +9,7 @@ using System.Security.Claims;
 namespace testApi.EndPoints
 {
     [ApiController]
-    [Route("api/lessonsfiles")]
+    [Route("api/lessonsfiles  35")]
     [Tags("Файлы уроков")]
     public class LessonfileController : ControllerBase
     {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Core.Interfaces.Utils
 {
-    public interface IFileService
+    public interface IFileService : IFileStorageService
     {
         Task<string> UploadFileAsync(Stream fileStream,
             int fileid,

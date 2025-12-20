@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace infrastructure.Storage.Implementation
 {
-    public class CourseImageService : BaseStorageService, IFileService
+    public class CourseImageService : BaseStorageService, ICourseImageService
     {
         public CourseImageService(
             IAmazonS3 amazonS3, 
