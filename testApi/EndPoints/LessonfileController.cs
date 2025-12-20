@@ -1,4 +1,5 @@
 ﻿using Amazon.Util.Internal;
+using Asp.Versioning;
 using Core.Interfaces.Service;
 using Core.Model.TargetDTO.Common.input;
 using Core.Model.TargetDTO.LessonFile.input;
@@ -11,6 +12,7 @@ namespace testApi.EndPoints
     [ApiController]
     [Route("api/lessonsfiles")]
     [Tags("Файлы уроков")]
+    [ApiVersion("1.0")]
     public class LessonfileController : ControllerBase
     {
         private readonly ILessonStorageService _lessonStorageService;

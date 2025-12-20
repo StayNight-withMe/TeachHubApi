@@ -1,4 +1,5 @@
-﻿using Core.Interfaces.Service;
+﻿using Asp.Versioning;
+using Core.Interfaces.Service;
 using Core.Model.TargetDTO.Common.input;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,7 @@ namespace testApi.EndPoints
     [ApiController]
     [Route("api/favorites")]
     [Tags("Избранное")]
+    [ApiVersion("1.0")]
     public class FavoritController : ControllerBase
     {
         private readonly IFavoritService _favoritService;

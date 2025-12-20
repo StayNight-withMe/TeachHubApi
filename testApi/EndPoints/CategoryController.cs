@@ -1,12 +1,14 @@
-﻿using Core.Model.TargetDTO.Common.input;
-using Microsoft.AspNetCore.Mvc;
+﻿using Asp.Versioning;
 using Core.Interfaces.Service;  
+using Core.Model.TargetDTO.Common.input;
+using Microsoft.AspNetCore.Mvc;
 
 namespace testApi.EndPoints
 {
     [ApiController]
     [Route("api/categories")]
     [Tags("Категории")]
+    [ApiVersion("1.0")]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;

@@ -1,4 +1,5 @@
-﻿using Core.Interfaces.Service;
+﻿using Asp.Versioning;
+using Core.Interfaces.Service;
 using Core.Model.TargetDTO.Common.input;
 using Core.Model.TargetDTO.Lesson.input;
 using Microsoft.AspNetCore.Authorization;
@@ -13,6 +14,7 @@ namespace testApi.EndPoints
     [ApiController]
     [Route("api/lessons")]
     [Tags("Уроки")]
+    [ApiVersion("1.0")]
     public class LessonController : ControllerBase
     {
         private readonly ILessonService _lessonService;

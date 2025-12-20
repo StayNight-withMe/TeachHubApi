@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Asp.Versioning;
+using AutoMapper;
 using Core.Common;
 using Core.Interfaces.Service;
 using Core.Interfaces.Utils;
@@ -16,6 +17,7 @@ namespace testApi.EndPoints
     [ApiController]
     [Route("api/users")]
     [Tags("Пользователи")]
+    [ApiVersion("1.0")]
     public class UserController : ControllerBase
     {
         private readonly IUsersService _usersService;

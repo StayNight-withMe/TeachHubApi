@@ -1,4 +1,5 @@
-﻿using Core.Interfaces.Service;
+﻿using Asp.Versioning;
+using Core.Interfaces.Service;
 using Core.Model.ReturnEntity;
 using Core.Model.TargetDTO.Chapter.input;
 using Core.Model.TargetDTO.Common.input;
@@ -13,6 +14,7 @@ namespace testApi.EndPoints
     [ApiController]
     [Route("api/chapters")]
     [Tags("Разделы курсов")]
+    [ApiVersion("1.0")]
     public class ChapterController : ControllerBase
     {
 

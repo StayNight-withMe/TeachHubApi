@@ -1,11 +1,8 @@
-﻿using Core.Interfaces.Service;
+﻿using Asp.Versioning;
+using Core.Interfaces.Service;
 using Core.Interfaces.Utils;
 using Core.Model.TargetDTO.Auth.input;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.OutputCaching;
-using System.Net;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
 
 
 namespace testApi.EndPoints
@@ -13,6 +10,7 @@ namespace testApi.EndPoints
     [ApiController]
     [Route("api/auth")]
     [Tags("Аутентификация")]
+    [ApiVersion("1.0")]
     public class AuthController : ControllerBase
     {
 

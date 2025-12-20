@@ -1,4 +1,5 @@
-﻿using Core.Interfaces.Service;
+﻿using Asp.Versioning;
+using Core.Interfaces.Service;
 using Core.Interfaces.Utils;
 using Core.Model.TargetDTO.Common.input;
 using Microsoft.AspNetCore.Authorization;
@@ -11,6 +12,7 @@ namespace testApi.EndPoints
     [ApiController]
     [Route("api/user/follows")]
     [Tags("Подписки")]
+    [ApiVersion("1.0")]
     public class FollowController : ControllerBase
     {
         private readonly ISubscriptionService _followService;

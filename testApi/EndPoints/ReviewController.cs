@@ -1,4 +1,5 @@
-﻿using Core.Interfaces.Service;
+﻿using Asp.Versioning;
+using Core.Interfaces.Service;
 using Core.Model.TargetDTO.Common.input;
 using Core.Model.TargetDTO.Review.input;
 using Microsoft.AspNetCore.Authorization;
@@ -10,6 +11,7 @@ namespace testApi.EndPoints
     [ApiController]
     [Route("api/reviews")]
     [Tags("Отзывы")]
+    [ApiVersion("1.0")]
     public class ReviewController : ControllerBase
     {
         private readonly IReviewService _reviewService;

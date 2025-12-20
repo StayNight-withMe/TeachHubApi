@@ -1,4 +1,5 @@
 ﻿using Applcation.Service.chapterService;
+using Asp.Versioning;
 using Core.Interfaces.Service;
 using Core.Model.TargetDTO.Chapter.input;
 using Core.Model.TargetDTO.Common.input;
@@ -17,6 +18,7 @@ namespace testApi.EndPoints
     [ApiController]
     [Route("api/courses")]
     [Tags("Курсы")]
+    [ApiVersion("1.0")]
     public class CoursesController : ControllerBase
     {
         private readonly ICourseService _courseService;

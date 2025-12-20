@@ -1,8 +1,8 @@
-﻿using Core.Interfaces.Service;
+﻿using Asp.Versioning;
+using Core.Interfaces.Service;
+using Core.Model.TargetDTO.ReviewReaction;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Core.Model.TargetDTO.ReviewReaction;
-
 using System.Security.Claims;
 
 namespace testApi.EndPoints
@@ -11,6 +11,7 @@ namespace testApi.EndPoints
     [Route("api/reviews/reactions")]
     [Authorize]
     [Tags("Реакции на отзывы")]
+    [ApiVersion("1.0")]
     public class ReviewReactionController : ControllerBase
     {
         private readonly IReviewReactionService _reviewReactionService;   
