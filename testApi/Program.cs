@@ -22,6 +22,7 @@ using infrastructure.Context;
 using infrastructure.Entitiås;
 using infrastructure.Repository.Base;
 using infrastructure.Storage;
+using infrastructure.Storage.Implementation;
 using infrastructure.UoW.implementation;
 using infrastructure.Utils.BloomFilter.implementation;
 using infrastructure.Utils.BloomFilter.interfaces;
@@ -117,7 +118,7 @@ builder.Services.Configure<BloomRebuildOptions>(
 
 builder.Services.AddSingleton<IEmailChecker, EmailChecker>();
 
-builder.Services.AddScoped<IFileStorageService, BlackBlazeStorageService>();
+builder.Services.AddScoped<IFileStorageService, LessonFileStorageService>();
 
 
 builder.Services.Configure<BackblazeOptions>(

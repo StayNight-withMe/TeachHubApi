@@ -12,17 +12,17 @@ using System.Threading.Tasks;
 
 namespace infrastructure.Storage
 {
-    public class BlackBlazeStorageService : IFileStorageService
+    public class CourseImageStorageService : IFileStorageService
     {
         private readonly IAmazonS3 _amazonS3;
-        
+
         private readonly string _bucketName;
 
         private readonly ILogger _logger;
 
-        public BlackBlazeStorageService(IAmazonS3 amazonS3, 
+        public CourseImageStorageService(IAmazonS3 amazonS3,
             IOptions<BackblazeOptions> options,
-            ILogger<BlackBlazeStorageService> logger
+            ILogger<LessonFileStorageService> logger
             )
         {
             _amazonS3 = amazonS3;
@@ -31,19 +31,19 @@ namespace infrastructure.Storage
         }
 
         public async Task<bool> DeleteFileAsync(
-            string fileName, 
+            string fileName,
             int lessonid,
             CancellationToken ct = default)
         {
-            
+
             try
             {
-            await _amazonS3.DeleteObjectAsync(_bucketName, fileName, ct);
-            return true;
+                await _amazonS3.DeleteObjectAsync(_bucketName, fileName, ct);
+                return true;
             }
             catch (AmazonS3Exception ex)
             {
-                
+
                 _logger.LogError(ex.Message);
                 return false;
             }
@@ -58,18 +58,18 @@ namespace infrastructure.Storage
                 return false;
             }
 
-           catch(TaskCanceledException ex)
+            catch (TaskCanceledException ex)
             {
                 _logger.LogError(ex.Message);
                 return false;
             }
- 
-            
+
+
         }
 
         public Task<Stream?> GetFileAsync(
-            string fileName, 
-            int lessonid, 
+            string fileName,
+            int lessonid,
             CancellationToken ct = default
             )
         {
@@ -94,9 +94,9 @@ namespace infrastructure.Storage
 
         }
 
-        public async Task<string> UploadFileAsync(Stream fileStream, 
-            int lessonid, 
-            string contentType, 
+        public async Task<string> UploadFileAsync(Stream fileStream,
+            int lessonid,
+            string contentType,
             string fileName = "lesson",
             CancellationToken ct = default
             )
@@ -105,7 +105,7 @@ namespace infrastructure.Storage
             var name = $"{Guid.NewGuid()}_{fileName}";
 
             var key = $"{lessonid}/{DateTime.UtcNow:G}_{name}";
-            
+
             await _amazonS3.PutObjectAsync(
                 new PutObjectRequest
                 {
@@ -123,3 +123,4 @@ namespace infrastructure.Storage
         }
     }
 }
+
