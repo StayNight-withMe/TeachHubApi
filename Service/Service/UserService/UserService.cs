@@ -86,7 +86,6 @@ namespace Applcation.Service.UserService
 
             await _userRepository.Create(userEntities);
 
-            Console.WriteLine(userEntities.id);
 
             var roleSource = new UserRoleMappingSource
             {
