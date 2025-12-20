@@ -12,13 +12,12 @@ namespace Core.Interfaces.Utils
         Task<bool> DeleteFileAsync(
             string key,
             CancellationToken ct = default);
-        abstract Task<Stream?> GetFileAsync(
+        Task<Stream?> GetFileAsync(
             string key,
             CancellationToken ct = default);
         string GetPresignedUrl(
             string fileName,
-            int minutes, 
-            CancellationToken ct = default);
+            int minutes);
        
     }
 }

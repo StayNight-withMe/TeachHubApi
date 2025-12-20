@@ -1,9 +1,11 @@
 ﻿
+using Amazon.S3;
 using AutoMapper;
 using Core.Common;
 using Core.Interfaces.Repository;
 using Core.Interfaces.Service;
 using Core.Interfaces.UoW;
+using Core.Interfaces.Utils;
 using Core.Model.ReturnEntity;
 using Core.Model.TargetDTO.Common.input;
 using Core.Model.TargetDTO.Common.output;
@@ -33,6 +35,8 @@ namespace Applcation.Service.CourceService
 
         private readonly ILogger<CourcesService> _logger;
 
+        private readonly ICourseImageService _courseFileService;
+
         private readonly IMapper _mapper;
 
         private readonly IUnitOfWork _unitOfWork;
@@ -43,6 +47,7 @@ namespace Applcation.Service.CourceService
             IBaseRepository<UserEntities> userRepository,
             IBaseRepository<Course_CategoriesEntities> course_CategoriesRepository,
             ILogger<CourcesService> logger,
+            ICourseImageService courseFileService,
             IUnitOfWork unitOfWork,
             IMapper mapper
             
@@ -52,6 +57,7 @@ namespace Applcation.Service.CourceService
             _favoriteRepository = favoritRepository;
             _course_CategoriesRepository = course_CategoriesRepository;
             _logger = logger;
+            _courseFileService = courseFileService;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
@@ -176,6 +182,7 @@ namespace Applcation.Service.CourceService
                .Select(c => new CourseOutputDTO
                {
                    categorynames = categoryNames.ContainsKey(c.id) ? categoryNames[c.id] : new Dictionary<int, string>(),
+                   iconurl = c.imgfilekey == null ? null : _courseFileService.GetPresignedUrl(c.imgfilekey, 10080),
                    field = c.field,
                    description = c.description,
                    creatorid = c.user.id,
@@ -322,5 +329,121 @@ namespace Applcation.Service.CourceService
 
             }
         }
+
+        public async Task<TResult> SetImgFile(
+            Stream stream, 
+            int userid, 
+            CourseSetImageDTO courseSetImageDTO, 
+            CancellationToken ct = default)
+        {
+            var course = await _courceRepository
+                .GetAll()
+                .Where(c => c.id == courseSetImageDTO.courseid && 
+                       c.creatorid == userid)
+                .FirstOrDefaultAsync(ct);
+
+            switch(courseSetImageDTO.SetStatus)
+            {
+                case SetImageStatus.Upload:
+                    {
+                        if (course == null)
+                        {
+                            return TResult.FailedOperation(errorCode.CoursesNotFoud);
+                        }
+
+                        if (course.imgfilekey != null)
+                        {
+                            try
+                            {
+                                await _courseFileService.DeleteFileAsync(
+                              course.imgfilekey,
+                              ct);
+
+                            }
+                            catch (AmazonS3Exception ex)
+                            {
+                                _logger.LogError(ex);
+                                return TResult.FailedOperation(errorCode.CloudError);
+                            }
+                            catch (Exception ex)
+                            {
+                                _logger.LogError(ex);
+                                return TResult.FailedOperation(errorCode.UnknownError);
+                            }
+
+                        }
+
+                        string fileKey = await _courseFileService.UploadFileAsync(
+                            stream,
+                            course.id,
+                            courseSetImageDTO.ContentType,
+                            "courseimg",
+                            ct);
+                        course.imgfilekey = fileKey;
+
+                        try
+                        {
+                            await _unitOfWork.CommitAsync(ct);
+                            return TResult.CompletedOperation();
+                        }
+                        catch (DbUpdateException ex)
+                        {
+                            _logger.LogDBError(ex);
+                            return TResult.FailedOperation(errorCode.DatabaseError);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError(ex);
+                            return TResult.FailedOperation(errorCode.UnknownError);
+                        }
+                       
+
+
+                    }
+
+
+                case SetImageStatus.Remove:
+                    {
+                        var course1 = await _courceRepository
+                         .GetAll()
+                         .Where(c => c.id == courseSetImageDTO.courseid &&
+                                c.creatorid == userid)
+                         .FirstOrDefaultAsync(ct);
+
+                        course.imgfilekey = null;
+
+                        try
+                        {
+                            var count = await _unitOfWork.CommitAsync(ct);
+                            if(count == 0)
+                            {
+                                return TResult.FailedOperation(errorCode.NotFound);
+                            }
+                            return TResult.CompletedOperation();
+                        }
+                        catch (DbUpdateException ex)
+                        {
+                            _logger.LogDBError(ex);
+                            return TResult.FailedOperation(errorCode.DatabaseError);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError(ex);
+                            return TResult.FailedOperation(errorCode.UnknownError);
+                        }
+                    }
+
+                default:
+                    return TResult.FailedOperation(errorCode.InvalidDataFormat );
+                        
+
+                    }
+
+
+
+
+            }
+
+        }
     }
-}
+

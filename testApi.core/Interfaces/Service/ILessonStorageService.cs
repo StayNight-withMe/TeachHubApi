@@ -20,7 +20,7 @@ namespace Core.Interfaces.Service
         Task<TResult> UploadFile(
           Stream stream,
             int userid,
-            MetaDataDTO metaData,
+            MetaDataLessonDTO metaData,
             string contentType,
             CancellationToken ct = default
             );

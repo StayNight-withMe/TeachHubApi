@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Core.Model.TargetDTO.LessonFile.input
 {
-    public class MetaDataDTO
+    public class MetaDataLessonDTO
     {
         public int lessonid { get; set; }
         public string fileurl { get; set; } = string.Empty;

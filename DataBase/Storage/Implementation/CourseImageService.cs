@@ -13,15 +13,15 @@ using System.Threading.Tasks;
 
 namespace infrastructure.Storage.Implementation
 {
-    public class LessonFileStorageService : BaseStorageService, ILessonFileService
+    public class CourseImageService : BaseStorageService, IFileService
     {
-        public LessonFileStorageService(
-            IAmazonS3 amazonS3,
-            IOptions<BackblazeOptions> options,
-            ILogger<CourseImageService> logger)
+        public CourseImageService(
+            IAmazonS3 amazonS3, 
+            IOptions<BackblazeOptions> options, 
+            ILogger<CourseImageService> logger) 
             : base(amazonS3, options) 
         {
-        _logger = logger;
+            _logger = logger;
         }
 
 
@@ -29,16 +29,17 @@ namespace infrastructure.Storage.Implementation
             Stream fileStream,
                   int lessonid,
                   string contentType,
-                  string fileName = "lesson",
+                  string fileName = "courseimg",
                   CancellationToken ct = default
                   )
         {
-            return await base.UploadFileAsync(fileStream,
-                  lessonid,
-                  contentType,
-                  "lessons",
-                  fileName,
-                  ct);
+          return  await base.UploadFileAsync(fileStream,
+                lessonid,
+                contentType,
+                "course-images",
+                fileName,
+                ct);
         }
     }
 }
+

@@ -74,7 +74,7 @@ builder.Services.AddScoped<IBaseRepository<LessonfilesEntities>, BaseRepository<
 builder.Services.AddScoped<IBaseRepository<CategoriesEntities>, BaseRepository<CategoriesEntities>>();
 builder.Services.AddScoped<IBaseRepository<Course_CategoriesEntities>, BaseRepository<Course_CategoriesEntities>>();
 builder.Services.AddScoped<IBaseRepository<ReviewEntities>, BaseRepository<ReviewEntities>>();
-builder.Services.AddScoped<IBaseRepository<ReviewreactionEntities>, BaseRepository<ReviewreactionEntities>>();
+builder.Services.AddScoped<IBaseRepository<ReviewreactionEntities>, BaseRepository<ReviewreactionEntities>>(); 
 //сервисы
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IUsersService ,UserService>();
@@ -104,6 +104,8 @@ builder.Services.AddAutoMapper(cfg => cfg.AddProfile<LessonMapperProfile>());
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<ReviewMapperProfile>());
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<ReviewReactionMapperProfile>());
 
+builder.Services.AddScoped<ILessonFileService, LessonFileStorageService>();
+builder.Services.AddScoped<ICourseImageService, CourseImageService>();
 
 
 

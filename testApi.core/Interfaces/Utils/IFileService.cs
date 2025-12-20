@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace Core.Interfaces.Utils
 {
-    internal class IFileService
+    public interface IFileService
     {
+        Task<string> UploadFileAsync(Stream fileStream,
+            int fileid,
+            string contentType,
+            string fileName = "file",
+            CancellationToken ct = default);
     }
 }

@@ -1,9 +1,10 @@
 ﻿using Core.Model.ReturnEntity;
 using Core.Model.TargetDTO.Common.input;
+using Core.Model.TargetDTO.Common.output;
 using Core.Model.TargetDTO.Courses.input;
 using Core.Model.TargetDTO.Courses.output;
+using Core.Model.TargetDTO.LessonFile.input;
 using System.Security.Claims;
-using Core.Model.TargetDTO.Common.output;
 
 namespace Core.Interfaces.Service
 {
@@ -36,5 +37,14 @@ namespace Core.Interfaces.Service
             int id, 
             ClaimsPrincipal user, 
             CancellationToken ct = default);
+
+        Task<TResult> UploadFile(
+            Stream stream,
+              int userid,
+              CancellationToken ct = default
+              );
+
+
+
     }
 }

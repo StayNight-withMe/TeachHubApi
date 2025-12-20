@@ -24,7 +24,7 @@ namespace testApi.EndPoints
         [Authorize]
         public async Task<IActionResult> UploadLessonFile(
             IFormFile file,
-            [FromForm] MetaDataDTO metaData,
+            [FromForm] MetaDataLessonDTO metaData,
             CancellationToken ct
             )
         {

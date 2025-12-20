@@ -33,22 +33,23 @@ namespace Applcation.Service.LessonStorageService
         private readonly IUnitOfWork _unitOfWork;
 
         private readonly ILogger<LessonsStorageService> _logger;
-        
-        private readonly IFileStorageService _fileStorageService;
-        
+
+        private readonly ILessonFileService _lessonFileService;
+
         public LessonsStorageService(
             IBaseRepository<LessonfilesEntities> lessonFileRepository,
             IBaseRepository<LessonEntities> lessonRepository,
             ILogger<LessonsStorageService>  logger,
             IFileStorageService fileStorageService,
+            ILessonFileService fileService,
             IUnitOfWork unitOfWork
             ) 
         {
-        _fileStorageService = fileStorageService;
         _lessonFileRepository = lessonFileRepository;
         _lessonRepository = lessonRepository;
         _logger = logger;
         _unitOfWork = unitOfWork;
+        _lessonFileService = fileService;
         }
         public async Task<TResult> DeleteLessonUrlFile(
             int fileid, 
@@ -82,7 +83,7 @@ namespace Applcation.Service.LessonStorageService
             await _lessonFileRepository.DeleteById(ct, file.id);
             try
             {
-                await _fileStorageService.DeleteFileAsync(file.filekey, file.lessonid, ct);
+                await _lessonFileService.DeleteFileAsync(file.filekey, ct);
                 await _unitOfWork.CommitAsync();
                 return TResult.CompletedOperation();
             }
@@ -143,7 +144,7 @@ namespace Applcation.Service.LessonStorageService
                 {
                 id = c.id,
                 filename = c.filename,
-                url = _fileStorageService.GetPresignedUrl(c.filekey, c.lessonid, 60, ct),
+                url = _lessonFileService.GetPresignedUrl(c.filekey, 60),
                 order = c.order,
                 })
                 .ToList();
@@ -160,7 +161,7 @@ namespace Applcation.Service.LessonStorageService
         public async Task<TResult> UploadFile(
             Stream stream, 
             int userid, 
-            MetaDataDTO metaData,
+            MetaDataLessonDTO metaData,
             string contentType,
             CancellationToken ct = default
             )
@@ -179,7 +180,7 @@ namespace Applcation.Service.LessonStorageService
 
             try
             {
-                var key = await _fileStorageService.UploadFileAsync(
+                var key = await _lessonFileService.UploadFileAsync(
                     stream, 
                     metaData.lessonid, 
                     contentType,
