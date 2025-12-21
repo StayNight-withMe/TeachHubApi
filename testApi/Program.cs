@@ -11,7 +11,6 @@ using Applcation.Service.ReviewReactionService;
 using Applcation.Service.ReviewService;
 using Applcation.Service.SubscriptionService;
 using Applcation.Service.UserService;
-using Core.Common;
 using Core.Interfaces.Repository;
 using Core.Interfaces.Service;
 using Core.Interfaces.UoW;
@@ -49,7 +48,6 @@ var conntionString = builder.Configuration.GetConnectionString("DefaultConnectio
 
 
 var dataSourceBuilder = new NpgsqlDataSourceBuilder(conntionString);
-dataSourceBuilder.MapEnum<reaction_type>(); // Название типа в C#
 var dataSource = dataSourceBuilder.Build();
 
 // залупа1
