@@ -31,17 +31,15 @@ using infrastructure.Utils.JwtService;
 using infrastructure.Utils.Mapping.AutoMapperProfiles;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Npgsql;
-using System;
 using System.Text;
 using System.Text.Json.Serialization;
 using testApi.Middleware.Exeption;
 using testApi.Middleware.RateLimit;
 using testApi.Middleware.Новая_папка;
-using static infrastructure.Utils.BloomFilter.interfaces.IEmailChecker;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -109,7 +107,12 @@ builder.Services.AddScoped<ICourseImageService, CourseImageService>();
 
 
 
-
+builder.Services.AddApiVersioning(o =>
+{
+    o.AssumeDefaultVersionWhenUnspecified = true;  
+    o.DefaultApiVersion = new Asp.Versioning.ApiVersion(1, 0);
+    o.ReportApiVersions = true;  
+});
 
 
 builder.Services.Configure<BloomOptions>(
