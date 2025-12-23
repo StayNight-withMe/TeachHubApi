@@ -91,6 +91,7 @@ namespace Applcation.Service.CourceService
             };
 
             CourseEntities courseEntities = _mapper.Map<CourseEntities>(source);
+
             await _courceRepository.Create(courseEntities);
 
             foreach(var i in courceDTO.categoryid)

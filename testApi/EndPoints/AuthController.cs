@@ -20,7 +20,10 @@ namespace testApi.EndPoints
 
         private readonly IHeaderService _headerService;
 
-        public AuthController(IAuthService authService, IJwtService jwtService, IHeaderService headerService)
+        public AuthController(
+            IAuthService authService, 
+            IJwtService jwtService, 
+            IHeaderService headerService)
         {
             _authService = authService;
             _jwtService = jwtService;

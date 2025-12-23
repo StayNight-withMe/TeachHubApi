@@ -54,12 +54,10 @@ namespace testApi.EndPoints
         public async Task<IActionResult> UpdateChapter( [FromBody] ChapterUpdateDTO chapterUpdateDTO )
         {
             var result = await _chapterService.UpdateChapter(chapterUpdateDTO, Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)));
-
             if (result.IsCompleted)
             {
                 return Ok(result.Value);
             }
-
             return await EntityResultExtensions.ToActionResult(result, this);
 
         }
