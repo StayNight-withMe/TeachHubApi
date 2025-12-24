@@ -92,7 +92,7 @@ namespace testApi.EndPoints
         {
 
             if (file == null || file.Length == 0)
-                return BadRequest(new {code = "file Not Found"});
+                return BadRequest(new {code = "fileNotFound"});
 
             var allowedTypes = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
             {
@@ -103,10 +103,13 @@ namespace testApi.EndPoints
                 "image/bmp"
             };
 
-            if(!allowedTypes.Contains(setImageDTO.ContentType))
+            if(!allowedTypes.Contains(file.ContentType))
             {
                 return BadRequest(new { code = "ContentType is not on the allowed list" });
             }
+
+
+            Console.WriteLine(file.ContentType);
 
             Stream stream = file.OpenReadStream();
 
@@ -114,8 +117,12 @@ namespace testApi.EndPoints
                 stream,
                 Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)),
                 setImageDTO,
+                file.ContentType,
                 ct
                 );
+
+            Console.WriteLine(result.IsCompleted);
+
 
             return await EntityResultExtensions.ToActionResult(result, this);
         }

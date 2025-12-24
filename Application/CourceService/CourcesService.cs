@@ -334,7 +334,8 @@ namespace Applcation.Service.CourceService
         public async Task<TResult> SetImgFile(
             Stream stream, 
             int userid, 
-            CourseSetImageDTO courseSetImageDTO, 
+            CourseSetImageDTO courseSetImageDTO,
+            string ContentType,
             CancellationToken ct = default)
         {
             var course = await _courceRepository
@@ -347,6 +348,7 @@ namespace Applcation.Service.CourceService
             {
                 case SetImageStatus.Upload:
                     {
+                        _logger.LogInformation("Upload");
                         if (course == null)
                         {
                             return TResult.FailedOperation(errorCode.CoursesNotFoud);
@@ -377,7 +379,7 @@ namespace Applcation.Service.CourceService
                         string fileKey = await _courseFileService.UploadFileAsync(
                             stream,
                             course.id,
-                            courseSetImageDTO.ContentType,
+                            ContentType,
                             "courseimg",
                             ct);
                         course.imgfilekey = fileKey;
@@ -397,21 +399,19 @@ namespace Applcation.Service.CourceService
                             _logger.LogError(ex);
                             return TResult.FailedOperation(errorCode.UnknownError);
                         }
-                       
-
-
                     }
 
 
                 case SetImageStatus.Remove:
                     {
+                        _logger.LogInformation("Remove");
                         var course1 = await _courceRepository
                          .GetAll()
                          .Where(c => c.id == courseSetImageDTO.courseid &&
                                 c.creatorid == userid)
                          .FirstOrDefaultAsync(ct);
 
-                        course.imgfilekey = null;
+                        course.imgfilekey = string.Empty;
 
                         try
                         {

@@ -86,7 +86,7 @@ namespace testApi.EndPoints
             {
                 return Ok();
             }
-            return Forbid("отсутствуют права на удаление");
+            return Forbid();
         }
 
 

@@ -33,6 +33,7 @@ namespace Core.Interfaces.Service
             int userid = default,
             CancellationToken ct = default
             );
+
         public Task<TResult> RemoveCourse(
             int id, 
             ClaimsPrincipal user, 
@@ -42,6 +43,7 @@ namespace Core.Interfaces.Service
             Stream stream,
             int userid,
             CourseSetImageDTO courseSetImageDTO,  
+            string contentType,
             CancellationToken ct = default
               );
 

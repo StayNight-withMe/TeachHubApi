@@ -9,7 +9,6 @@ namespace Core.Model.TargetDTO.Courses.input
 {
     public class CourseSetImageDTO
     {
-        public string ContentType { get; set; }
         public int courseid { get; set; }
         public SetImageStatus SetStatus { get; set; }
     }
