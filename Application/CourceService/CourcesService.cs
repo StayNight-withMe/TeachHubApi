@@ -401,7 +401,6 @@ namespace Applcation.Service.CourceService
                         }
                     }
 
-
                 case SetImageStatus.Remove:
                     {
                         _logger.LogInformation("Remove");
