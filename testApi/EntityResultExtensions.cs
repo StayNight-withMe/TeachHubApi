@@ -37,6 +37,14 @@ namespace testApi
                 errorCode.UserAlreadyExists
                      => controllerBase.Conflict(new { code = result.ErrorCode.ToString() }),
 
+                errorCode.NotFound
+                    => controllerBase.NotFound(),
+
+                errorCode.ChapterNotFound
+                  => controllerBase.NotFound(),
+
+                errorCode.CoursesNotFoud
+                  => controllerBase.NotFound(),
 
                 _ => controllerBase.StatusCode(ErrorMap(result.ErrorCode), new { code = result.ErrorCode.ToString() })
             };

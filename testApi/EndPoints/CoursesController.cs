@@ -81,18 +81,17 @@ namespace testApi.EndPoints
         }
 
 
-
+        [RequestSizeLimit(11 * 1024 * 1024)]
         [HttpPut("icon")]
         [Authorize]
         public async Task<IActionResult> UploadCourseIcon(
-            IFormFile file,
+            IFormFile? file,
             [FromForm] CourseSetImageDTO setImageDTO,
             CancellationToken ct
             )
         {
 
-            if (file == null || file.Length == 0)
-                return BadRequest(new {code = "fileNotFound"});
+         
 
             var allowedTypes = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
             {
@@ -103,21 +102,31 @@ namespace testApi.EndPoints
                 "image/bmp"
             };
 
-            if(!allowedTypes.Contains(file.ContentType))
+        
+
+
+            Stream? stream = null;
+
+            string? ContentType = null;
+
+            if (file != null && file.Length != 0)
             {
-                return BadRequest(new { code = "ContentType is not on the allowed list" });
+
+                if (!allowedTypes.Contains(file.ContentType))
+                {
+                    return BadRequest(new { code = "ContentType is not on the allowed list" });
+                }
+
+                stream = file.OpenReadStream();
+
+                ContentType = file.ContentType;
             }
-
-
-            Console.WriteLine(file.ContentType);
-
-            Stream stream = file.OpenReadStream();
 
             var result = await _courseService.SetImgFile(
                 stream,
                 Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)),
                 setImageDTO,
-                file.ContentType,
+                ContentType,
                 ct
                 );
 

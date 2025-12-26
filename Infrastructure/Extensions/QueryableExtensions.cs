@@ -35,7 +35,7 @@ namespace infrastructure.Extensions
                     }
                 }
                 var finnaly = query.Skip(userSortingRequest.PageSize * (userSortingRequest.PageNumber - 1))
-    .Take(userSortingRequest.PageSize);
+             .Take(userSortingRequest.PageSize);
 
 
                 return finnaly;

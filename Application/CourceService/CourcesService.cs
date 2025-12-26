@@ -144,7 +144,7 @@ namespace Applcation.Service.CourceService
             )
         {
 
-            Dictionary<int, Dictionary<int, string>> categoryNames = new Dictionary<int, Dictionary<int, string>>();
+            Dictionary<int, Dictionary<int, string>> categoryNames = new();
 
             foreach (var i in courseEntities)
             {
@@ -332,10 +332,10 @@ namespace Applcation.Service.CourceService
         }
 
         public async Task<TResult> SetImgFile(
-            Stream stream, 
+            Stream? stream, 
             int userid, 
             CourseSetImageDTO courseSetImageDTO,
-            string ContentType,
+            string? ContentType,
             CancellationToken ct = default)
         {
             var course = await _courceRepository
@@ -344,20 +344,30 @@ namespace Applcation.Service.CourceService
                        c.creatorid == userid)
                 .FirstOrDefaultAsync(ct);
 
-            switch(courseSetImageDTO.SetStatus)
+            switch(courseSetImageDTO.setstatus)
             {
                 case SetImageStatus.Upload:
                     {
+                        if(stream == null)
+                        {
+                            return TResult.FailedOperation(errorCode.InvalidDataFormat);
+                        }
+
+
                         _logger.LogInformation("Upload");
                         if (course == null)
                         {
                             return TResult.FailedOperation(errorCode.CoursesNotFoud);
                         }
 
-                        if (course.imgfilekey != null)
+
+
+
+                        if (!string.IsNullOrEmpty(course.imgfilekey))
                         {
                             try
                             {
+
                                 await _courseFileService.DeleteFileAsync(
                               course.imgfilekey,
                               ct);
@@ -410,7 +420,7 @@ namespace Applcation.Service.CourceService
                                 c.creatorid == userid)
                          .FirstOrDefaultAsync(ct);
 
-                        course.imgfilekey = string.Empty;
+                        course.imgfilekey = null;
 
                         try
                         {
@@ -434,7 +444,7 @@ namespace Applcation.Service.CourceService
                     }
 
                 default:
-                    return TResult.FailedOperation(errorCode.InvalidDataFormat );
+                    return TResult.FailedOperation(errorCode.InvalidDataFormat);
                         
 
                     }

@@ -40,10 +40,10 @@ namespace Core.Interfaces.Service
             CancellationToken ct = default);
 
         Task<TResult> SetImgFile(
-            Stream stream,
+            Stream? stream,
             int userid,
             CourseSetImageDTO courseSetImageDTO,  
-            string contentType,
+            string? contentType,
             CancellationToken ct = default
               );
 
