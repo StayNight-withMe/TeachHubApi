@@ -1,4 +1,5 @@
-﻿using Core.Common;
+﻿using Core.Common.EnumS;
+using infrastructure.Utils.HashIdConverter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace Core.Model.TargetDTO.ReviewReaction
 {
     public class ReviewReactionInputDTO
     {
-        public int reviewId { get; set; }
+        public Hashid reviewId { get; set; }
         public reaction_type reactiontype { get; set; }
     }
 }

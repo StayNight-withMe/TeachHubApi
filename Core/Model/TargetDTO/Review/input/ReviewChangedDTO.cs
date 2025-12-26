@@ -1,4 +1,5 @@
-﻿using System;
+﻿using infrastructure.Utils.HashIdConverter;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace Core.Model.TargetDTO.Review.input
 {
     public class ReviewChangedDTO
     {
-        public int reviewid { get; set; }
+        public Hashid reviewid { get; set; }
 
         [Range(0, 10)]
         public int review {  get; set; }

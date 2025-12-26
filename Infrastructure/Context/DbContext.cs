@@ -1,4 +1,4 @@
-﻿using Core.Common;
+﻿using Core.Common.EnumS;
 using infrastructure.Entitiеs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;

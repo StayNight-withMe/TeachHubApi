@@ -1,6 +1,6 @@
 ﻿using Asp.Versioning;
 using AutoMapper;
-using Core.Common;
+using Core.Common.EnumS;
 using Core.Interfaces.Service;
 using Core.Interfaces.Utils;
 using Core.Model.ReturnEntity;

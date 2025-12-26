@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Common
+namespace Core.Common.EnumS
 {
 
     public enum AllRole

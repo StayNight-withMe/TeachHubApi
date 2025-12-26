@@ -1,4 +1,5 @@
-﻿using System;
+﻿using infrastructure.Utils.HashIdConverter;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -9,9 +10,9 @@ namespace Core.Model.TargetDTO.Review.output
 {
     public class ReviewOutputDTO
     {
-        public int id { get; set; }
-        public int userId { get; set; }
-        public int courseId { get; set; }
+        public Hashid id { get; set; }
+        public Hashid userId { get; set; }
+        public Hashid courseId { get; set; }
         public string content { get; set; }
         public int review { get; set; }
         public int likecount { get; set; }

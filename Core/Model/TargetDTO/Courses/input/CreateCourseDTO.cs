@@ -1,4 +1,5 @@
 ﻿using Core.Model.BaseModel.Course;
+using infrastructure.Utils.HashIdConverter;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,7 +12,7 @@ namespace Core.Model.TargetDTO.Courses.input
     public class CreateCourseDTO : BaseCourse
     {
         [MaxLength(10, ErrorMessage = "category limit exceeded")]
-        public int[] categoryid { get; set; }
+        public Hashid[] categoryid { get; set; }
 
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using infrastructure.Utils.HashIdConverter;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,7 @@ namespace Core.Model.TargetDTO.LessonFile.input
 {
     public class MetaDataLessonDTO
     {
-        public int lessonid { get; set; }
+        public Hashid lessonid { get; set; }
         public string fileurl { get; set; } = string.Empty;
         public string name { get; set; }
         public string filetype { get; set; }

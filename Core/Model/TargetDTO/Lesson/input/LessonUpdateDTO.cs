@@ -1,4 +1,5 @@
 ﻿using Core.Model.BaseModel.Lesson;
+using infrastructure.Utils.HashIdConverter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace Core.Model.TargetDTO.Lesson.input
 {
     public class LessonUpdateDTO
     {
-        public int id { get; set; }
+        public Hashid id { get; set; }
         public string? name { get; set; }
         public int? order { get; set; }
     }

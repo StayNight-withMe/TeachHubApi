@@ -1,4 +1,4 @@
-﻿using Core.Common;
+﻿using Core.Common.EnumS;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;

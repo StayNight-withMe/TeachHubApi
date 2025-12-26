@@ -2,7 +2,10 @@
 using Core.Interfaces.Service;
 using Core.Interfaces.Utils;
 using Core.Model.TargetDTO.Auth.input;
+using Core.Model.TargetDTO.Courses.output;
+using infrastructure.Utils.HashIdConverter;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 
 namespace testApi.EndPoints
@@ -29,6 +32,25 @@ namespace testApi.EndPoints
             _jwtService = jwtService;
             _headerService = headerService;
         }
+
+        [HttpGet("test")]
+        public IActionResult Test()
+        {
+            var id = new Hashid(123);
+            // Это заставит сериализатор работать прямо здесь, в коде
+            var json = System.Text.Json.JsonSerializer.Serialize(id, new JsonSerializerOptions
+            {
+                Converters = { new HashidJsonConverter() }
+            });
+
+            return Ok(new
+            {
+                DirectJson = json,
+                RawObject = id
+            }); 
+        }
+
+
 
         [HttpPost("login")]
         public async Task<IActionResult> LoginUser([FromBody]LoginUserDTO loginUserDTO)

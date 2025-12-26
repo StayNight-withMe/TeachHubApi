@@ -1,4 +1,5 @@
 ﻿using Core.Model.BaseModel.Course;
+using infrastructure.Utils.HashIdConverter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +10,10 @@ namespace Core.Model.TargetDTO.Courses.input
 {
     public class UpdateCourseDTO 
     {
-        public int id { get; set; }
+        public Hashid id { get; set; }
         public string? name { get; set; }
         public string? description { get; set; }
-        public string? field { get; set; }
+        public Hashid? field { get; set; }
         public int[]? categoryid { get; set; }
     }
 }

@@ -1,7 +1,7 @@
 ﻿
 using Amazon.S3;
 using AutoMapper;
-using Core.Common;
+using Core.Common.EnumS;
 using Core.Interfaces.Repository;
 using Core.Interfaces.Service;
 using Core.Interfaces.UoW;
@@ -13,6 +13,7 @@ using Core.Model.TargetDTO.Courses.input;
 using Core.Model.TargetDTO.Courses.output;
 using infrastructure.Entitiеs;
 using infrastructure.Extensions;
+using infrastructure.Utils.HashIdConverter;
 using infrastructure.Utils.Mapping.MapperDTO;
 using infrastructure.Utils.PageService;
 using Logger;
@@ -144,22 +145,33 @@ namespace Applcation.Service.CourceService
             )
         {
 
-            Dictionary<int, Dictionary<int, string>> categoryNames = new();
+            Dictionary<Hashid, Dictionary<Hashid, string>> categoryNames = new();
 
             foreach (var i in courseEntities)
             {
-                categoryNames = await _course_CategoriesRepository
-               .GetAllWithoutTracking()
-               .Where(c => c.courseid == i.id)
-               .Include(c => c.categories)
-               .GroupBy(c => c.courseid)
-               .ToDictionaryAsync(c => c.Key, c => c
-                                                    .Select(c => c.categories)
-                                                    .ToDictionary(c => c.id, c => c.name));
+                // Получаем данные из БД (там int)
+                var dbResult = await _course_CategoriesRepository
+                    .GetAllWithoutTracking()
+                    .Where(c => c.courseid == i.id)
+                    .Include(c => c.categories)
+                    .GroupBy(c => c.courseid)
+                    .ToDictionaryAsync(
+                        g => (Hashid)g.Key, // Преобразуем ID курса в Hashid
+                        g => g.Select(c => c.categories)
+                              .ToDictionary(cat => (Hashid)cat.id, cat => cat.name) // Преобразуем ID категории в Hashid
+                    );
+
+                // Добавляем в общий словарь
+                foreach (var entry in dbResult)
+                {
+                    categoryNames[entry.Key] = entry.Value;
+                }
             }
 
 
-            
+
+
+
             Dictionary<int, bool> favorietdict = new();
 
             if (userid != default)
@@ -182,7 +194,7 @@ namespace Applcation.Service.CourceService
             return courseEntities
                .Select(c => new CourseOutputDTO
                {
-                   categorynames = categoryNames.ContainsKey(c.id) ? categoryNames[c.id] : new Dictionary<int, string>(),
+                   categorynames = categoryNames.ContainsKey(c.id) ? categoryNames[c.id] : new Dictionary<Hashid, string>(),
                    iconurl = c.imgfilekey == null ? null : _courseFileService.GetPresignedUrl(c.imgfilekey, 10080),
                    field = c.field,
                    description = c.description,

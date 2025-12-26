@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Hashids.net" Version="1.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Model\BaseModel\Role\" />
+    <Folder Include="Model\TargetDTO\Auth\output\" />
+    <Folder Include="Model\TargetDTO\Category\output\" />
+    <Folder Include="Model\TargetDTO\Favorit\input\" />
+    <Folder Include="Model\TargetDTO\Subscription\input\" />
+  </ItemGroup>
+
+</Project>

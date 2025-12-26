@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper;
-using Core.Common;
+using Core.Common.EnumS;
 using Core.Interfaces.Repository;
 using Core.Interfaces.Service;
 using Core.Interfaces.UoW;

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Core.Common.EnumS;
 using Core.Interfaces.Repository;
 using Core.Interfaces.Service;
 using Core.Interfaces.UoW;
@@ -54,7 +55,7 @@ namespace Applcation.Service.ReviewReactionService
             
             if (reaction == null)
             {
-                if (reactionDTO.reactiontype != Core.Common.reaction_type.None)
+                if (reactionDTO.reactiontype != reaction_type.None)
                 {
                     var entity = _mapper.Map<ReviewreactionEntities>(reactionDTO);
                     entity.userid = userId;
@@ -69,7 +70,7 @@ namespace Applcation.Service.ReviewReactionService
             {
                 return TResult.CompletedOperation();
             }
-            else if (reactionDTO.reactiontype == Core.Common.reaction_type.None)
+            else if (reactionDTO.reactiontype == reaction_type.None)
             {
                 await _reviewReactionRepository.DeleteById(ct, reaction.id);
             }

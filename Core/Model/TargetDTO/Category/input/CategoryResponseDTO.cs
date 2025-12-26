@@ -1,4 +1,5 @@
-﻿using System;
+﻿using infrastructure.Utils.HashIdConverter;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,8 +9,8 @@ namespace Core.Model.TargetDTO.Category.input
 {
     public class CategoryResponseDTO
     {
-        public int id { get; set; }
-        public int parentid { get; set; }
+        public Hashid id { get; set; }
+        public Hashid parentid { get; set; }
         public string name { get; set; }
     }
 }

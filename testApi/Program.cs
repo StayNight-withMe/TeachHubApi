@@ -25,6 +25,7 @@ using infrastructure.Storage.Implementation;
 using infrastructure.UoW.implementation;
 using infrastructure.Utils.BloomFilter.implementation;
 using infrastructure.Utils.BloomFilter.interfaces;
+using infrastructure.Utils.HashIdConverter;
 using infrastructure.Utils.HeadersService;
 using infrastructure.Utils.JwtService;
 using infrastructure.Utils.Mapping.AutoMapperProfiles;
@@ -38,6 +39,7 @@ using System.Text.Json.Serialization;
 using testApi.Middleware.Exeption;
 using testApi.Middleware.RateLimit;
 using testApi.Middleware.Ќова€_папка;
+using testApi.WebUtils.HashIdConverter;
 
 
 
@@ -46,6 +48,27 @@ builder.Services.AddHttpContextAccessor();
 var conntionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 
+builder.Services.AddControllers(options =>
+{
+    
+    options.ModelBinderProviders.Insert(0, new HashidModelBinderProvider());
+})
+.AddJsonOptions(options =>
+{
+    
+    options.JsonSerializerOptions.Converters.Add(new HashidJsonConverter());
+    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
+
+builder.Services.AddSwaggerGen(c =>
+{
+    
+    c.MapType<Hashid>(() => new Microsoft.OpenApi.Models.OpenApiSchema
+    {
+        Type = "string",
+        Example = new Microsoft.OpenApi.Any.OpenApiString("jR8vWd")
+    });
+});
 
 var dataSourceBuilder = new NpgsqlDataSourceBuilder(conntionString);
 var dataSource = dataSourceBuilder.Build();
@@ -90,7 +113,7 @@ builder.Services.AddEndpointsApiExplorer(); //свагеру что бы найти
 builder.Services.AddSwaggerGen(); // свагеру дл€ создани€ документа
 builder.Logging.AddConsole();
 //внешние иснтрументы
-builder.Services.AddControllers();
+//builder.Services.AddControllers();
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<UsersMapperProfile>());
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<RoleMapperProfile>());
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<AuthMapperProfile>());
@@ -207,11 +230,6 @@ builder.Services.AddOutputCache(opt =>
 
 });
 
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-    });
 
 var app = builder.Build();
 app.UseMiddleware<RateLimitMiddleware>(60, 20);

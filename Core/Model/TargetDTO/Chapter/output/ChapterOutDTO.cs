@@ -1,4 +1,5 @@
 ﻿using Core.Model.BaseModel.Chapter;
+using infrastructure.Utils.HashIdConverter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace Core.Model.TargetDTO.Chapter.output
 {
     public class ChapterOutDTO : BaseChapter
     {
-        public int id { get; set; }
+        public Hashid id { get; set; }
     }
 }

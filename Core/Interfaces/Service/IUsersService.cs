@@ -1,4 +1,4 @@
-﻿using Core.Common;
+﻿using Core.Common.EnumS;
 using Core.Model.BaseModel.Auth;
 using Core.Model.BaseModel.User;
 using Core.Model.ReturnEntity;

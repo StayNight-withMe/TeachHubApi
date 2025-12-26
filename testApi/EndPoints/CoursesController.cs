@@ -1,5 +1,6 @@
 ﻿using Applcation.Service.chapterService;
 using Asp.Versioning;
+using Core.Common.EnumS;
 using Core.Interfaces.Service;
 using Core.Model.TargetDTO.Chapter.input;
 using Core.Model.TargetDTO.Common.input;
@@ -109,7 +110,10 @@ namespace testApi.EndPoints
 
             string? ContentType = null;
 
-            if (file != null && file.Length != 0)
+            if (
+                file != null && 
+                file.Length != 0 
+                && setImageDTO.setstatus == SetImageStatus.Upload)
             {
 
                 if (!allowedTypes.Contains(file.ContentType))

@@ -1,8 +1,10 @@
-﻿namespace Core.Model.TargetDTO.Users.output
+﻿using infrastructure.Utils.HashIdConverter;
+
+namespace Core.Model.TargetDTO.Users.output
 {
     public class UserRoleDto
     {
-        public int UserId { get; set; }
-        public int RoleId { get; set; }
+        public Hashid UserId { get; set; }
+        public Hashid RoleId { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Core.Model.BaseModel.Course;
+using infrastructure.Utils.HashIdConverter;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,13 +11,13 @@ namespace Core.Model.TargetDTO.Courses.output
 {
     public class CourseOutputDTO : BaseCourse
     {
-        public int id { get; set; }
+        public Hashid id { get; set; }
         public string? iconurl { get; set; }
         public string creatorname {  get; set; }
         public bool favorite { get; set; }
-        public int creatorid { get; set; }
+        public Hashid creatorid { get; set; }
         public decimal? rating { get; set; }
-        public Dictionary<int, string> categorynames { get; set; } 
+        public Dictionary<Hashid, string> categorynames { get; set; } 
         public DateTime createdat {  get; set; }
     }
 }

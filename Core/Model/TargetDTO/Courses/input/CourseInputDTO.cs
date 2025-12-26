@@ -1,4 +1,5 @@
 ﻿using Core.Model.BaseModel.Course;
+using infrastructure.Utils.HashIdConverter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace Core.Model.TargetDTO.Courses.input
     {
         public string? creatorName { get; set; }
         public DateTime createdat { get; set; }
-        public int[] categoryid { get; set; }
+        public Hashid[] categoryid { get; set; }
 
     }
 }
