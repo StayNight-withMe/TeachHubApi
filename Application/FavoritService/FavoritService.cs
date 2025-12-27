@@ -4,9 +4,8 @@ using Core.Model.ReturnEntity;
 using Core.Model.TargetDTO.Common.input;
 using Core.Model.TargetDTO.Common.output;
 using Core.Model.TargetDTO.Favorit.output;
-using infrastructure.Entitiеs;
 using infrastructure.Extensions;
-using infrastructure.Repository.Base;
+//using infrastructure.Repository.Base;
 using infrastructure.Utils.PageService;
 using Logger;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +16,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Core.Interfaces.Repository;
+using infrastructure.DataBase.Entitiеs;
 
 namespace Applcation.Service.FavoritService
 {

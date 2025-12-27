@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Core.Model.TargetDTO.Lesson.input;
 using Core.Model.TargetDTO.Lesson.output;
-using infrastructure.Entitiеs;
+using infrastructure.DataBase.Entitiеs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,9 +15,9 @@ namespace infrastructure.Utils.Mapping.AutoMapperProfiles
         public LessonMapperProfile()
         {
 
-            CreateMap<createLessonDTO, LessonEntities>();
+            CreateMap<createLessonDTO, LessonEntity>();
 
-            CreateMap<LessonEntities, lessonOutputDTO>();
+            CreateMap<LessonEntity, lessonOutputDTO>();
 
 
         }

@@ -7,7 +7,7 @@ using Core.Model.TargetDTO.Common.input;
 using Core.Model.TargetDTO.Common.output;
 using Core.Model.TargetDTO.Lesson.input;
 using Core.Model.TargetDTO.Lesson.output;
-using infrastructure.Entitiеs;
+using infrastructure.DataBase.Entitiеs;
 using infrastructure.Extensions;
 using infrastructure.Utils.PageService;
 using Logger;
@@ -19,11 +19,11 @@ namespace Applcation.Service.LessonService
 {
     public class LessonService : ILessonService
     {
-        private readonly IBaseRepository<LessonEntities> _lessonRepository;
+        private readonly IBaseRepository<LessonEntity> _lessonRepository;
 
         private readonly IBaseRepository<ChapterEntity> _chapterRepository;
 
-        private readonly IBaseRepository<CourseEntities> _courseRepository;
+        private readonly IBaseRepository<CourseEntity> _courseRepository;
 
         private readonly IUnitOfWork _unitOfWork;
 
@@ -34,8 +34,8 @@ namespace Applcation.Service.LessonService
         public LessonService(ILogger<LessonService> logger, 
             IUnitOfWork unitOfWork, 
             IBaseRepository<ChapterEntity> chapterRepository, 
-            IBaseRepository<LessonEntities> lessonRepository,
-            IBaseRepository<CourseEntities> courseRepository,
+            IBaseRepository<LessonEntity> lessonRepository,
+            IBaseRepository<CourseEntity> courseRepository,
             IMapper mapper
             ) 
         { 
@@ -75,7 +75,7 @@ namespace Applcation.Service.LessonService
             }
 
 
-            await _lessonRepository.Create(_mapper.Map<LessonEntities>(lesson));
+            await _lessonRepository.Create(_mapper.Map<LessonEntity>(lesson));
             try
             {
                 await _unitOfWork.CommitAsync(ct);

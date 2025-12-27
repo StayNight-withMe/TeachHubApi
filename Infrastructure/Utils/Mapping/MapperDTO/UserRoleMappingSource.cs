@@ -1,11 +1,10 @@
-﻿using infrastructure.Entitiеs;
-
+﻿using infrastructure.DataBase.Entitiеs;
 
 namespace infrastructure.Utils.Mapping.MapperDTO
 {
     public class UserRoleMappingSource
     {
-        public UserEntities User { get; set; }
+        public UserEntity User { get; set; }
         public int RoleId { get; set; }
     }
 }

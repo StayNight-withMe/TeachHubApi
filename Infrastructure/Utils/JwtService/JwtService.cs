@@ -1,5 +1,6 @@
 ﻿using Core.Interfaces.Service;
 using Core.Model.TargetDTO.Users.input;
+using infrastructure.Utils.HashIdConverter;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -30,9 +31,11 @@ namespace infrastructure.Utils.JwtService
 
         public string GenerateJwt(UserAuthDto user)
         {
+
+            var encodedId = HashidsHelper.Encode(user.id);
             List<Claim> claims = new()
             {
-                new Claim(ClaimTypes.NameIdentifier, user.id.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, encodedId),
                 new Claim(ClaimTypes.Email, user.email),
                 new Claim(ClaimTypes.Role, user.role.ToString()),
                 new Claim(ClaimTypes.Name, user.name.ToString()),

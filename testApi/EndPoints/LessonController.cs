@@ -1,4 +1,5 @@
 ﻿using Asp.Versioning;
+using Core.Common.Types.HashId;
 using Core.Interfaces.Service;
 using Core.Model.TargetDTO.Common.input;
 using Core.Model.TargetDTO.Lesson.input;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using testApi.WebUtils.JwtClaimUtil;
 
 namespace testApi.EndPoints
 {
@@ -18,8 +20,15 @@ namespace testApi.EndPoints
     public class LessonController : ControllerBase
     {
         private readonly ILessonService _lessonService;
-        public LessonController(ILessonService lessonService)
+
+        private readonly JwtClaimUtil _claims;
+
+        public LessonController(
+            ILessonService lessonService,
+            JwtClaimUtil claims
+            )
         {
+            _claims = claims;
             _lessonService = lessonService;
         }
 
@@ -27,12 +36,11 @@ namespace testApi.EndPoints
         [HttpGet("{chapterid}")]
         [OutputCache(PolicyName = "10min")]
         public async Task<IActionResult> GetLesson(
-            int chapterid,
+            Hashid chapterid,
             [FromQuery] SortingAndPaginationDTO userSortingRequest,
             CancellationToken ct
             )
         {
-            Console.WriteLine(chapterid);
             var result = await _lessonService.GetLessonByChapterid(
                 chapterid, 
                 userSortingRequest, 
@@ -44,13 +52,13 @@ namespace testApi.EndPoints
         [OutputCache(PolicyName = "1min")]
         [Authorize]
         public async Task<IActionResult> GetMyLesson(
-        int chapterid,
+        Hashid chapterid,
         [FromQuery] SortingAndPaginationDTO userSortingRequest,
         CancellationToken ct
     )
         {
             var result = await _lessonService.GetUnVisibleLessonByChapterid(
-                Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)),
+                _claims.UserId,
                 chapterid,
                 userSortingRequest,
                 ct);
@@ -64,8 +72,8 @@ namespace testApi.EndPoints
         public async Task<IActionResult> CreateLesson([FromBody] createLessonDTO lesson)
         {
             var result = await _lessonService.Create(
-                lesson, 
-                Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)));
+                lesson,
+                _claims.UserId);
             return await EntityResultExtensions.ToActionResult(result, this);
         }
 
@@ -74,35 +82,35 @@ namespace testApi.EndPoints
         public async Task<IActionResult> UpdateLesson([FromBody] LessonUpdateDTO lesson)
         {
             var result = await _lessonService.UpdateLesson(
-                lesson, 
-                Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)));
+                lesson,
+                _claims.UserId);
             return await EntityResultExtensions.ToActionResult(result, this);
         }
 
         [HttpDelete("{lessonid}")]
         [Authorize]
-        public async Task<IActionResult> DeleteLesson(int lessonid)
+        public async Task<IActionResult> DeleteLesson([FromRoute] Hashid lessonid)
         {
             var result = await _lessonService.DeleteLessonForUser(
                 lessonid, 
-                Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)));
+                _claims.UserId);
             return await EntityResultExtensions.ToActionResult(result, this);
         }
 
         [HttpPatch("{lessonid}/visibility")]
         [Authorize]
-        public async Task<IActionResult> SwitchVisible(int lessonid)
+        public async Task<IActionResult> SwitchVisible([FromRoute] Hashid lessonid)
         {
             var result = await _lessonService.SwitchVisible(
                 lessonid, 
-                Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)));
+                _claims.UserId);
             return await EntityResultExtensions.ToActionResult(result, this);
         }
 
 
         [HttpDelete("admin/{lessonid}")]
         [Authorize(Roles = "admin")]
-        public async Task<IActionResult> AdminDelete(int lessonid)
+        public async Task<IActionResult> AdminDelete([FromRoute] Hashid lessonid)
         {
             var result = await _lessonService.DeleteLessonForAdmin(lessonid);
             return await EntityResultExtensions.ToActionResult(result, this);

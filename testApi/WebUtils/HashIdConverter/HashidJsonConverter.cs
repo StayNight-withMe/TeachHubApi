@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Core.Common.Types.HashId;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

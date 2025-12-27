@@ -1,5 +1,5 @@
 ﻿using Core.Interfaces.Repository;
-using infrastructure.Entitiеs;
+using infrastructure.DataBase.Entitiеs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +14,7 @@ namespace infrastructure.Utils.BloomFilter.interfaces
             public bool EmailCheck(string email);
             public void AddEmail(string email);
             public Task RebuildFilter(
-                    IBaseRepository<UserEntities> repo,
+                    IBaseRepository<UserEntity> repo,
                     CancellationToken ct = default);
         }
     

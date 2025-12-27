@@ -1,10 +1,12 @@
 ﻿using Asp.Versioning;
+using Core.Common.Types.HashId;
 using Core.Interfaces.Service;
 using Core.Model.TargetDTO.Common.input;
 using Core.Model.TargetDTO.Review.input;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using testApi.WebUtils.JwtClaimUtil;
 
 namespace testApi.EndPoints
 {
@@ -15,17 +17,22 @@ namespace testApi.EndPoints
     public class ReviewController : ControllerBase
     {
         private readonly IReviewService _reviewService;
+
+        private readonly JwtClaimUtil _claims;
+
         public ReviewController(
-            IReviewService reviewService
+            IReviewService reviewService,
+            JwtClaimUtil claims
             )
         {
+            _claims = claims;
             _reviewService = reviewService;
         }
 
         
         [HttpGet("{courseid}")]
         public async Task<IActionResult> GetReviews(
-            int courseid,
+            [FromRoute] Hashid courseid,
             [FromQuery] SortingAndPaginationDTO sort,
             CancellationToken ct
             )
@@ -41,7 +48,7 @@ namespace testApi.EndPoints
          [FromQuery] SortingAndPaginationDTO sort,
          CancellationToken ct)
         {
-            var result = await _reviewService.GetReviewsByUserId(Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), sort, ct);
+            var result = await _reviewService.GetReviewsByUserId(_claims.UserId, sort, ct);
             return await EntityResultExtensions.ToActionResult(result, this);
         }
 
@@ -51,11 +58,11 @@ namespace testApi.EndPoints
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> PostReviews(
-            int courseid,
+            [FromRoute] Hashid courseid,
             [FromBody]ReviewICreateDTO reviewInputDTO,
             CancellationToken ct)
         {
-            var result = await _reviewService.PostReview(reviewInputDTO, Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), ct);
+            var result = await _reviewService.PostReview(reviewInputDTO, _claims.UserId, ct);
             return await EntityResultExtensions.ToActionResult(result, this);
         }
 
@@ -63,11 +70,11 @@ namespace testApi.EndPoints
         [HttpDelete("{reviewid}")]
         [Authorize]
         public async Task<IActionResult> DeleteReview(
-            int reviewid,
+            [FromRoute] Hashid reviewid,
             CancellationToken ct
             )
         {
-            var result = await _reviewService.DeleteReview(reviewid, Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), ct);
+            var result = await _reviewService.DeleteReview(reviewid, _claims.UserId, ct);
             return await EntityResultExtensions.ToActionResult(result, this);
         }
 
@@ -79,7 +86,7 @@ namespace testApi.EndPoints
         CancellationToken ct
     )
         {
-            var result = await _reviewService.UpdateReview(review, Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), ct);
+            var result = await _reviewService.UpdateReview(review, _claims.UserId, ct);
             return await EntityResultExtensions.ToActionResult(result, this);
         }
 

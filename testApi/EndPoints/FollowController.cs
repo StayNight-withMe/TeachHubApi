@@ -1,11 +1,12 @@
 ﻿using Asp.Versioning;
 using Core.Interfaces.Service;
-using Core.Interfaces.Utils;
+using testApi.WebUtils.JwtClaimUtil;
 using Core.Model.TargetDTO.Common.input;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
 using System.Security.Claims;
+using Core.Common.Types.HashId;
 
 namespace testApi.EndPoints
 {
@@ -16,18 +17,25 @@ namespace testApi.EndPoints
     public class FollowController : ControllerBase
     {
         private readonly ISubscriptionService _followService;
+
+        private readonly JwtClaimUtil _claims;
+
         public FollowController(
-            ISubscriptionService subscriptionService
+            ISubscriptionService subscriptionService,
+            JwtClaimUtil claims
             )
         {
             _followService = subscriptionService;
+            _claims = claims;
         }
 
         [Authorize]
         [HttpPost("{userid}")]
-        public async Task<IActionResult> Addfollowing(int userid)
+        public async Task<IActionResult> Addfollowing(
+            [FromRoute] Hashid userid
+            )
         {
-            var result = await _followService.CreateSubscription(Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), userid);
+            var result = await _followService.CreateSubscription(_claims.UserId, userid);
             return await EntityResultExtensions.ToActionResult(result, this);
         }
 
@@ -35,7 +43,7 @@ namespace testApi.EndPoints
         [HttpGet("{userid}")]
         [OutputCache(PolicyName = "10min")]
         public async Task<IActionResult> GetUserFollowing(
-          int userid, 
+          [FromRoute] Hashid userid, 
           [FromQuery] SortingAndPaginationDTO userSortingRequest)
         {
             var result = await _followService.GetUserFollowing(userid, userSortingRequest);
@@ -44,7 +52,7 @@ namespace testApi.EndPoints
 
         [HttpGet("{userid}/followers")]
         public async Task<IActionResult> GetUserFollowers(
-        int userid,
+        [FromRoute] Hashid userid,
         [FromQuery] SortingAndPaginationDTO userSortingRequest)
         {
             var result = await _followService.GetUserFollowers(userid, userSortingRequest);
@@ -59,7 +67,7 @@ namespace testApi.EndPoints
         public async Task<IActionResult> GetMyFollowing(
         [FromQuery] SortingAndPaginationDTO userSortingRequest)
         {
-            var result = await _followService.GetUserFollowing(Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), userSortingRequest);
+            var result = await _followService.GetUserFollowing(_claims.UserId, userSortingRequest);
             return await EntityResultExtensions.ToActionResult(result, this);
         }
 
@@ -70,15 +78,15 @@ namespace testApi.EndPoints
         public async Task<IActionResult> GetMyFollower(
             [FromQuery] SortingAndPaginationDTO userSortingRequest)
         {
-            var result = await _followService.GetUserFollowers(Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), userSortingRequest);
+            var result = await _followService.GetUserFollowers(_claims.UserId, userSortingRequest);
             return await EntityResultExtensions.ToActionResult(result, this);
         }
 
         [Authorize]
         [HttpDelete("{following}")]
-        public async Task<IActionResult> Deletefollowing(int following)
+        public async Task<IActionResult> Deletefollowing([FromRoute] Hashid following)
         {
-            var result = await _followService.DeleteSubscription(Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), following);
+            var result = await _followService.DeleteSubscription(_claims.UserId, following);
             return await EntityResultExtensions.ToActionResult(result, this);
         }
 

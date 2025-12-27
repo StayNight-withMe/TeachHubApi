@@ -37,8 +37,6 @@ namespace infrastructure.Utils.PasswodHashService
 
             stopwatch.Stop();
 
-            Console.WriteLine($"Хеш занял: {stopwatch.ElapsedMilliseconds} мс");
-
             return Convert.ToBase64String(salt) + ":" + Convert.ToBase64String(hashByte);
 
         }
@@ -67,7 +65,6 @@ namespace infrastructure.Utils.PasswodHashService
             }
             catch(Exception ex)
             {
-                Console.WriteLine(ex.Message);
                 return false;
             }
 

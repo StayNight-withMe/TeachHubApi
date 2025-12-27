@@ -1,11 +1,13 @@
 ﻿using Amazon.Util.Internal;
 using Asp.Versioning;
+using Core.Common.Types.HashId;
 using Core.Interfaces.Service;
 using Core.Model.TargetDTO.Common.input;
 using Core.Model.TargetDTO.LessonFile.input;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using testApi.WebUtils.JwtClaimUtil;
 
 namespace testApi.EndPoints
 {
@@ -16,9 +18,16 @@ namespace testApi.EndPoints
     public class LessonfileController : ControllerBase
     {
         private readonly ILessonStorageService _lessonStorageService;
-        public LessonfileController(ILessonStorageService lessonStorageService)
+
+        private readonly JwtClaimUtil _claims;
+
+        public LessonfileController(
+            ILessonStorageService lessonStorageService,
+            JwtClaimUtil claim
+            )
         {
             _lessonStorageService = lessonStorageService;
+            _claims = claim;
         }
 
         [RequestSizeLimit(11 * 1024 * 1024)]
@@ -33,7 +42,7 @@ namespace testApi.EndPoints
             Stream stream = file.OpenReadStream();
             var result = await _lessonStorageService.UploadFile(
                 stream,
-                Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)),
+                _claims.UserId,
                 metaData,
                 file.ContentType,
                 ct
@@ -47,7 +56,7 @@ namespace testApi.EndPoints
          [HttpGet("{lessonid}")]
          public async Task<IActionResult> GetLessonFile(
          [FromQuery] PaginationDTO pagination,
-         int lessonid,
+         [FromRoute] Hashid lessonid,
          CancellationToken ct
      )
         {
@@ -58,11 +67,11 @@ namespace testApi.EndPoints
 
         [HttpDelete("{fileid}")]
         public async Task<IActionResult> DeleteLessonFile(
-           int fileid,
+           [FromRoute] Hashid fileid,
            CancellationToken ct
        )
         {
-            var result = await _lessonStorageService.DeleteLessonUrlFile(fileid, Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), ct);
+            var result = await _lessonStorageService.DeleteLessonUrlFile(fileid, _claims.UserId, ct);
             return await EntityResultExtensions.ToActionResult(result, this);
         }
 

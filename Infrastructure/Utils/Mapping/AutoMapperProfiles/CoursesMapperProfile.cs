@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Core.Model.TargetDTO.Courses.output;
-using infrastructure.Entitiеs;
+using infrastructure.DataBase.Entitiеs;
 using infrastructure.Utils.Mapping.MapperDTO;
 using System;
 using System.Collections.Generic;
@@ -16,7 +16,7 @@ namespace infrastructure.Utils.Mapping.AutoMapperProfiles
         public CoursesMapperProfile()
         {
 
-            CreateMap<CourcesMappingSource, CourseEntities>()
+            CreateMap<CourcesMappingSource, CourseEntity>()
 
                 .ForMember(
                 c => c.name,
@@ -38,7 +38,7 @@ namespace infrastructure.Utils.Mapping.AutoMapperProfiles
             opt => opt.Ignore());
 
 
-            CreateMap<CourseEntities, CourseOutputDTO>();
+            CreateMap<CourseEntity, CourseOutputDTO>();
 
         }
 

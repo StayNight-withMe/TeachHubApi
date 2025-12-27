@@ -11,15 +11,16 @@ using Applcation.Service.ReviewReactionService;
 using Applcation.Service.ReviewService;
 using Applcation.Service.SubscriptionService;
 using Applcation.Service.UserService;
+using Core.Common.Types.HashId;
 using Core.Interfaces.Repository;
 using Core.Interfaces.Service;
 using Core.Interfaces.UoW;
 using Core.Interfaces.Utils;
 using Core.Model.Options;
 using infrastructure.BackgroundService;
-using infrastructure.Context;
-using infrastructure.Entitiеs;
-using infrastructure.Repository.Base;
+using infrastructure.DataBase.Context;
+using infrastructure.DataBase.Entitiеs;
+using infrastructure.DataBase.Repository.Base;
 using infrastructure.Storage;
 using infrastructure.Storage.Implementation;
 using infrastructure.UoW.implementation;
@@ -40,6 +41,7 @@ using testApi.Middleware.Exeption;
 using testApi.Middleware.RateLimit;
 using testApi.Middleware.Новая_папка;
 using testApi.WebUtils.HashIdConverter;
+using testApi.WebUtils.JwtClaimUtil;
 
 
 
@@ -58,7 +60,22 @@ builder.Services.AddControllers(options =>
     
     options.JsonSerializerOptions.Converters.Add(new HashidJsonConverter());
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+})
+.ConfigureApiBehaviorOptions(options =>
+{
+    // Указываем, что Hashid — это не сложный объект для Body
+    // Теперь он по умолчанию будет искаться в Route или Query
+    options.SuppressInferBindingSourcesForParameters = false;
 });
+
+builder.Services.AddMvc(options =>
+{
+    
+    options.ModelMetadataDetailsProviders.Add(new Microsoft.AspNetCore.Mvc.ModelBinding.Metadata.ExcludeBindingMetadataProvider(typeof(Hashid)));
+});
+
+
+
 
 builder.Services.AddSwaggerGen(c =>
 {
@@ -71,29 +88,21 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 var dataSourceBuilder = new NpgsqlDataSourceBuilder(conntionString);
+
+
+dataSourceBuilder.EnableDynamicJson();
+
 var dataSource = dataSourceBuilder.Build();
 
 // залупа1
 builder.Services.AddHostedService<BloomRebuildService>();
 builder.Services.AddDbContext<CourceDbContext>(options => options.UseNpgsql(dataSource));
 
-
+builder.Services.AddScoped<JwtClaimUtil>();
 
 //репозитории
-builder.Services.AddScoped<IBaseRepository<UserEntities>, BaseRepository<UserEntities>>();
-builder.Services.AddScoped<IBaseRepository<UserRoleEntities>, BaseRepository<UserRoleEntities>>();
-builder.Services.AddScoped<IBaseRepository<RoleEntities>, BaseRepository<RoleEntities>>();
-builder.Services.AddScoped<IBaseRepository<CourseEntities>, BaseRepository<CourseEntities>>();
-builder.Services.AddScoped<IBaseRepository<ChapterEntity>, BaseRepository<ChapterEntity>>();
-builder.Services.AddScoped<IBaseRepository<LessonEntities>, BaseRepository<LessonEntities>>();
-builder.Services.AddScoped<IBaseRepository<LessonEntities>, BaseRepository<LessonEntities>>();
-builder.Services.AddScoped<IBaseRepository<SubscriptionEntites>, BaseRepository<SubscriptionEntites>>();
-builder.Services.AddScoped<IBaseRepository<FavoritEntities>, BaseRepository<FavoritEntities>>();
-builder.Services.AddScoped<IBaseRepository<LessonfilesEntities>, BaseRepository<LessonfilesEntities>>();
-builder.Services.AddScoped<IBaseRepository<CategoriesEntities>, BaseRepository<CategoriesEntities>>();
-builder.Services.AddScoped<IBaseRepository<Course_CategoriesEntities>, BaseRepository<Course_CategoriesEntities>>();
-builder.Services.AddScoped<IBaseRepository<ReviewEntities>, BaseRepository<ReviewEntities>>();
-builder.Services.AddScoped<IBaseRepository<ReviewreactionEntities>, BaseRepository<ReviewreactionEntities>>(); 
+
+builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 //сервисы
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IUsersService ,UserService>();
@@ -242,6 +251,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<ExeptionMiddleware>();
+
 app.UseHttpsRedirection();
 
 //app.UseRouting();
@@ -250,7 +261,7 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 app.UseMiddleware<IpValidateMidlleware>();
-app.UseMiddleware<ExeptionMiddleware>();
+
 
 
 app.MapControllers();

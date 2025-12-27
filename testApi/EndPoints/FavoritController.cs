@@ -1,10 +1,11 @@
 ﻿using Asp.Versioning;
+using Core.Common.Types.HashId;
 using Core.Interfaces.Service;
 using Core.Model.TargetDTO.Common.input;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using System.Threading.Tasks;
+using testApi.WebUtils.JwtClaimUtil;
 
 namespace testApi.EndPoints
 {
@@ -17,9 +18,15 @@ namespace testApi.EndPoints
     public class FavoritController : ControllerBase
     {
         private readonly IFavoritService _favoritService;
-        public FavoritController(IFavoritService favoritService) 
+
+        private readonly JwtClaimUtil _jwtClaimUtil;
+        public FavoritController(
+            IFavoritService favoritService,
+            JwtClaimUtil jwtClaimUtil
+            ) 
         {
             _favoritService = favoritService;
+            _jwtClaimUtil = jwtClaimUtil;
         }
 
 
@@ -27,21 +34,21 @@ namespace testApi.EndPoints
         public async Task<IActionResult> Get(
             [FromQuery] SortingAndPaginationDTO userSortingRequest )
         {
-            var result = await _favoritService.GetFavorite(Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), userSortingRequest);
+            var result = await _favoritService.GetFavorite(_jwtClaimUtil.UserId, userSortingRequest);
             return await EntityResultExtensions.ToActionResult(result, this);
         }
 
         [HttpPost("{courseid}")]
-        public async Task<IActionResult> Create(int courseid)
+        public async Task<IActionResult> Create([FromRoute] Hashid courseid)
         {
-            var result = await _favoritService.CreateFavorite(Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), courseid);
+            var result = await _favoritService.CreateFavorite(_jwtClaimUtil.UserId, courseid);
             return await EntityResultExtensions.ToActionResult(result, this); 
         }
 
         [HttpDelete("{courseid}")]
-        public async Task<IActionResult> Delete(int courseid)
+        public async Task<IActionResult> Delete([FromRoute] Hashid courseid)
         {
-            var result = await _favoritService.DeleteFavorit(Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), courseid);
+            var result = await _favoritService.DeleteFavorit(_jwtClaimUtil.UserId, courseid);
             return await EntityResultExtensions.ToActionResult(result, this);
         }
 

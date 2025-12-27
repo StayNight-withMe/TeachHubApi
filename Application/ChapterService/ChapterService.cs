@@ -7,7 +7,7 @@ using Core.Model.TargetDTO.Chapter.input;
 using Core.Model.TargetDTO.Chapter.output;
 using Core.Model.TargetDTO.Common.input;
 using Core.Model.TargetDTO.Common.output;
-using infrastructure.Entitiеs;
+using infrastructure.DataBase.Entitiеs;
 using infrastructure.Extensions;
 using infrastructure.Utils.Mapping.MapperDTO;
 using infrastructure.Utils.PageService;
@@ -23,7 +23,7 @@ namespace Applcation.Service.chapterService
 
         private readonly IBaseRepository<ChapterEntity> _chapterRepository;
 
-        private readonly IBaseRepository<CourseEntities> _coursesRepository;
+        private readonly IBaseRepository<CourseEntity> _coursesRepository;
 
         private readonly IUnitOfWork _unitOfWork;
 
@@ -34,7 +34,7 @@ namespace Applcation.Service.chapterService
         public ChapterService(ILogger<ChapterService> logger,
             IUnitOfWork unitOfWork,
             IBaseRepository<ChapterEntity> chapterRepository,
-            IBaseRepository<CourseEntities> coursesRepository,
+            IBaseRepository<CourseEntity> coursesRepository,
             IMapper mapper
             )
         {
@@ -51,7 +51,7 @@ namespace Applcation.Service.chapterService
             int userid,
             CancellationToken ct = default)
         {
-            CourseEntities? course = await _coursesRepository.GetAll().AsNoTracking().
+            CourseEntity? course = await _coursesRepository.GetAll().AsNoTracking().
                 Where(c => c.creatorid == userid && c.id == chapter.courseid).
                 FirstOrDefaultAsync();
 

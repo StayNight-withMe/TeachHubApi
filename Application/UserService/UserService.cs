@@ -10,7 +10,7 @@ using Core.Model.ReturnEntity;
 using Core.Model.TargetDTO.Auth.input;
 using Core.Model.TargetDTO.Users.input;
 using Core.Model.TargetDTO.Users.output;
-using infrastructure.Entitiеs;
+using infrastructure.DataBase.Entitiеs;
 using infrastructure.Utils.BloomFilter.interfaces;
 using infrastructure.Utils.Mapping.MapperDTO;
 using infrastructure.Utils.PasswodHashService;
@@ -19,17 +19,20 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Security.Authentication;
 
+
 namespace Applcation.Service.UserService
 {
     public class UserService : IUsersService
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        private readonly IBaseRepository<UserEntities> _userRepository;
+        private readonly IBaseRepository<UserEntity> _userRepository;
 
-        private readonly IBaseRepository<RoleEntities> _roleRepository;
+        //private readonly IBaseRepository<RoleEntity> _roleRepository;
 
-        private readonly IBaseRepository<UserRoleEntities> _userRoleRepository;
+        private readonly IBaseRepository<UserRoleEntity> _userRoleRepository;
+
+        private readonly IBaseRepository<ProfileEntity> _profileRepository;
 
         private readonly ILogger<IUsersService> _logger;
 
@@ -40,9 +43,10 @@ namespace Applcation.Service.UserService
 
 
         public UserService(
-            IBaseRepository<UserEntities> repository, 
-            IBaseRepository<RoleEntities> RoleRepository,
-            IBaseRepository<UserRoleEntities> userRoleRepository,
+            IBaseRepository<UserEntity> repository, 
+            //IBaseRepository<RoleEntity> RoleRepository,
+            IBaseRepository<UserRoleEntity> userRoleRepository,
+            IBaseRepository<ProfileEntity> profileRepository,
             IEmailChecker emailChecker,
             IUnitOfWork transaction, 
             IMapper mapper, 
@@ -51,8 +55,9 @@ namespace Applcation.Service.UserService
         {
             _unitOfWork = transaction;
             _userRepository = repository;
-            _roleRepository = RoleRepository;
+            //_roleRepository = RoleRepository;
             _userRoleRepository = userRoleRepository;
+            _profileRepository = profileRepository;
             _emailChecker = emailChecker;
             _mapper = mapper;
             _logger = logger;
@@ -82,9 +87,10 @@ namespace Applcation.Service.UserService
             }
 
             registrationUserDto.password = PasswordHashService.PasswordHashing(registrationUserDto.password);
-            UserEntities userEntities = _mapper.Map<UserEntities>(registrationUserDto);
+            UserEntity userEntities = _mapper.Map<UserEntity>(registrationUserDto);
 
             await _userRepository.Create(userEntities);
+            await _profileRepository.Create(new ProfileEntity { user = userEntities, sociallinks = new Dictionary<string, string>() });
 
 
             var roleSource = new UserRoleMappingSource
@@ -94,7 +100,7 @@ namespace Applcation.Service.UserService
             };
            
             await _userRoleRepository.Create(
-                            _mapper.Map<UserRoleEntities>(roleSource));
+                            _mapper.Map<UserRoleEntity>(roleSource));
 
 
             var authSource = new UserAuthMappingSource
@@ -117,7 +123,12 @@ namespace Applcation.Service.UserService
             {
                 _logger.LogError(ex.Message);
                 return TResult<UserAuthDto>.FailedOperation(errorCode.UnknownError);
-            }      
+            }
+            catch(Exception ex)
+            {
+                _logger.LogCriticalError(ex);
+                return TResult<UserAuthDto>.FailedOperation(errorCode.UnknownError);
+            }
         }
 
 
@@ -162,7 +173,7 @@ namespace Applcation.Service.UserService
             int id,
             CancellationToken ct = default)
         {
-            UserEntities? user = await _userRepository.GetByIdAsync(ct, id);
+            UserEntity? user = await _userRepository.GetByIdAsync(ct, id);
             if (user == null)
             {
                 _logger.LogRemoveUserNotFound(id);

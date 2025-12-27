@@ -3,9 +3,8 @@ using BloomFilter;
 using BloomFilter.Configurations;
 using Core.Interfaces.Repository;
 using Core.Model.Options;
-using infrastructure.Entitiеs;
-using infrastructure.Entitiеs;
-using infrastructure.Repository.Base;
+using infrastructure.DataBase.Entitiеs;
+//using infrastructure.Repository.Base;
 using infrastructure.Utils.BloomFilter.interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -67,7 +66,7 @@ namespace infrastructure.Utils.BloomFilter.implementation
         }
 
         public async Task RebuildFilter(
-                IBaseRepository<UserEntities> repo, 
+                IBaseRepository<UserEntity> repo, 
                 CancellationToken ct = default)
         {
           

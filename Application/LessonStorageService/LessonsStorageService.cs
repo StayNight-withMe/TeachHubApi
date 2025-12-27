@@ -9,7 +9,7 @@ using Core.Model.TargetDTO.Common.input;
 using Core.Model.TargetDTO.Common.output;
 using Core.Model.TargetDTO.LessonFile.input;
 using Core.Model.TargetDTO.LessonFile.output;
-using infrastructure.Entitiеs;
+using infrastructure.DataBase.Entitiеs;
 using infrastructure.Extensions;
 using infrastructure.Utils.PageService;
 using Logger;
@@ -28,7 +28,7 @@ namespace Applcation.Service.LessonStorageService
     {
         private readonly IBaseRepository<LessonfilesEntities> _lessonFileRepository;
 
-        private readonly IBaseRepository<LessonEntities> _lessonRepository;
+        private readonly IBaseRepository<LessonEntity> _lessonRepository;
 
         private readonly IUnitOfWork _unitOfWork;
 
@@ -38,7 +38,7 @@ namespace Applcation.Service.LessonStorageService
 
         public LessonsStorageService(
             IBaseRepository<LessonfilesEntities> lessonFileRepository,
-            IBaseRepository<LessonEntities> lessonRepository,
+            IBaseRepository<LessonEntity> lessonRepository,
             ILogger<LessonsStorageService>  logger,
             IFileStorageService fileStorageService,
             ILessonFileService fileService,

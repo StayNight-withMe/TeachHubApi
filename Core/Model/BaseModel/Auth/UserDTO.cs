@@ -1,5 +1,5 @@
-﻿using HashidsNet;
-using infrastructure.Utils.HashIdConverter;
+﻿using Core.Common.Types.HashId;
+using HashidsNet;
 
 namespace Core.Model.BaseModel.Auth
 {

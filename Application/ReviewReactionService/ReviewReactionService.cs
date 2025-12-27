@@ -5,7 +5,7 @@ using Core.Interfaces.Service;
 using Core.Interfaces.UoW;
 using Core.Model.ReturnEntity;
 using Core.Model.TargetDTO.ReviewReaction;
-using infrastructure.Entitiеs;
+using infrastructure.DataBase.Entitiеs;
 using Logger;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -19,7 +19,7 @@ namespace Applcation.Service.ReviewReactionService
 {
     public class ReviewReactionService : IReviewReactionService
     {
-        private readonly IBaseRepository<ReviewreactionEntities> _reviewReactionRepository;
+        private readonly IBaseRepository<ReviewreactionEntity> _reviewReactionRepository;
 
         private readonly ILogger<ReviewReactionService> _logger;
 
@@ -28,7 +28,7 @@ namespace Applcation.Service.ReviewReactionService
         private readonly IMapper _mapper;
 
         public ReviewReactionService(
-            IBaseRepository<ReviewreactionEntities> reviewReactionRepository,
+            IBaseRepository<ReviewreactionEntity> reviewReactionRepository,
             ILogger<ReviewReactionService> logger,
             IUnitOfWork unitOfWork,
             IMapper mapper
@@ -57,7 +57,7 @@ namespace Applcation.Service.ReviewReactionService
             {
                 if (reactionDTO.reactiontype != reaction_type.None)
                 {
-                    var entity = _mapper.Map<ReviewreactionEntities>(reactionDTO);
+                    var entity = _mapper.Map<ReviewreactionEntity>(reactionDTO);
                     entity.userid = userId;
                     await _reviewReactionRepository.Create(entity);
                 }

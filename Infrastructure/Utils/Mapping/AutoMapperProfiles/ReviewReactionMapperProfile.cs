@@ -1,4 +1,5 @@
-﻿using System;
+﻿using infrastructure.DataBase.Entitiеs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ namespace infrastructure.Utils.Mapping.AutoMapperProfiles
     {
         public ReviewReactionMapperProfile()
         {
-            CreateMap<Core.Model.TargetDTO.ReviewReaction.ReviewReactionInputDTO, infrastructure.Entitiеs.ReviewreactionEntities>();
+            CreateMap<Core.Model.TargetDTO.ReviewReaction.ReviewReactionInputDTO, ReviewreactionEntity>();
         }
     }
 }

@@ -1,12 +1,13 @@
 ﻿using Asp.Versioning;
 using Core.Interfaces.Service;
-using Core.Model.ReturnEntity;
+using testApi.WebUtils.JwtClaimUtil;
 using Core.Model.TargetDTO.Chapter.input;
 using Core.Model.TargetDTO.Common.input;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
 using System.Security.Claims;
+using Core.Common.Types.HashId;
 
 
 namespace testApi.EndPoints
@@ -20,8 +21,14 @@ namespace testApi.EndPoints
 
         private readonly IChapterService _chapterService;
 
-        public ChapterController(IChapterService chapterService) 
+        private readonly JwtClaimUtil _claims;
+
+        public ChapterController(
+            IChapterService chapterService,
+            JwtClaimUtil claims
+            ) 
         {
+         _claims = claims;
          _chapterService = chapterService;
         }
 
@@ -29,7 +36,7 @@ namespace testApi.EndPoints
         [HttpGet("{courseId}")]
         public async Task<IActionResult> GetChapter(
         [FromQuery] SortingAndPaginationDTO request,
-        int courseId
+        [FromRoute] Hashid courseId
         )
         {
             var result = await _chapterService.GetChaptersByCourseId(courseId, request);
@@ -43,7 +50,7 @@ namespace testApi.EndPoints
         [HttpPost]
         public async Task<IActionResult> CreateChapter([FromBody] CreateChapterDTO createChapterDTO)
         {
-            var result = await _chapterService.Create(createChapterDTO, Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)));
+            var result = await _chapterService.Create(createChapterDTO, _claims.UserId);
             return await EntityResultExtensions.ToActionResult(result, this);
         }
 
@@ -53,7 +60,7 @@ namespace testApi.EndPoints
         [Authorize]
         public async Task<IActionResult> UpdateChapter( [FromBody] ChapterUpdateDTO chapterUpdateDTO )
         {
-            var result = await _chapterService.UpdateChapter(chapterUpdateDTO, Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)));
+            var result = await _chapterService.UpdateChapter(chapterUpdateDTO, _claims.UserId);
             return await EntityResultExtensions.ToActionResult(result, this);
 
         }
@@ -65,7 +72,7 @@ namespace testApi.EndPoints
         //int courseId
         //)
         //{
-        //    var result = await _chapterService.GetChaptersByCourseIdAndUserId(courseId, Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), request);
+            //var result = await _chapterService.GetChaptersByCourseIdAndUserId(courseId, Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), request);
 
         //    if (result.IsCompleted)
         //    {
@@ -78,9 +85,9 @@ namespace testApi.EndPoints
 
         [Authorize]
         [HttpDelete("{chapterid}")]
-        public async Task<IActionResult> DeleteChapter(int chapterid)
+        public async Task<IActionResult> DeleteChapter([FromRoute] Hashid chapterid)
         {
-           var result = await _chapterService.DeleteChapter(chapterid, Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)));
+           var result = await _chapterService.DeleteChapter(chapterid, _claims.UserId);
 
             if (result.IsCompleted)
             {
@@ -94,8 +101,8 @@ namespace testApi.EndPoints
         [HttpDelete("admin/{chapterid}/{userid}")]
         [Authorize(Roles="admin")]
         public async Task<IActionResult> DeleteChapter(
-             int chapterid,
-             int userid
+             [FromRoute] Hashid chapterid,
+             [FromRoute] Hashid userid
             )
         {
             var result = await _chapterService.DeleteChapter(chapterid, userid);

@@ -2,7 +2,7 @@
 using AutoMapper;
 using Core.Model.TargetDTO.Review.input;
 using Core.Model.TargetDTO.Review.output;
-using infrastructure.Entitiеs;
+using infrastructure.DataBase.Entitiеs;
 using System;
 using System.Collections.Generic;
 using System.Linq;

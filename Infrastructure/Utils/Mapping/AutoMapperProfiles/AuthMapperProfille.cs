@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using Core.Common.Types.HashId;
 using Core.Model.TargetDTO.Users.input;
-using infrastructure.Utils.HashIdConverter;
 using infrastructure.Utils.Mapping.MapperDTO;
 using System;
 using System.Collections.Generic;
@@ -17,7 +17,9 @@ namespace infrastructure.Utils.Mapping.AutoMapperProfiles
         public AuthMapperProfile() 
         {
 
-            
+            // Глобально для всего профиля:
+
+            CreateMap<int?, Hashid?>().ConvertUsing(src => src.HasValue ? new Hashid(src.Value) : null);
             CreateMap<int, Hashid>().ConvertUsing(src => new Hashid(src));
 
             CreateMap<UserAuthMappingSource, UserAuthDto>()

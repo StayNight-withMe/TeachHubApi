@@ -1,5 +1,5 @@
-﻿using Core.Model.BaseModel.User;
-using infrastructure.Utils.HashIdConverter;
+﻿using Core.Common.Types.HashId;
+using Core.Model.BaseModel.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;

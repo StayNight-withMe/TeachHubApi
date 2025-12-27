@@ -1,6 +1,6 @@
 ﻿using Core.Interfaces.Repository;
 using Core.Model.Options;
-using infrastructure.Entitiеs;
+using infrastructure.DataBase.Entitiеs;
 using infrastructure.Utils.BloomFilter.interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -59,7 +59,7 @@ namespace infrastructure.BackgroundService
                 {
                     using(var scope =  _serviceProvider.CreateAsyncScope())
                     {
-                        var _userRepository = scope.ServiceProvider.GetRequiredService<IBaseRepository<UserEntities>>();
+                        var _userRepository = scope.ServiceProvider.GetRequiredService<IBaseRepository<UserEntity>>();
                         await _emailChecker.RebuildFilter(_userRepository, ct);
                     }
                    

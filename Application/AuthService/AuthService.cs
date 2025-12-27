@@ -6,7 +6,6 @@ using System.Runtime.CompilerServices;
 using AutoMapper;
 using infrastructure.Utils.Mapping.MapperDTO;
 using Core.Interfaces.Repository;
-using infrastructure.Entitiеs;
 using Microsoft.AspNetCore.Http;
 using infrastructure.Utils.HeadersService;
 using Core.Model.TargetDTO.Auth.input;
@@ -14,6 +13,7 @@ using Core.Model.TargetDTO.Users.input;
 using infrastructure.Utils.PasswodHashService;
 using Microsoft.EntityFrameworkCore;
 using Core.Common.EnumS;
+using infrastructure.DataBase.Entitiеs;
 
 
 namespace Applcation.Service.AuthService
@@ -22,19 +22,19 @@ namespace Applcation.Service.AuthService
     {
         private readonly IJwtService _jwtService;
 
-        private readonly IBaseRepository<UserEntities> _userRepository;
+        private readonly IBaseRepository<UserEntity> _userRepository;
 
-        private readonly IBaseRepository<RoleEntities> _roleRepository;
+        private readonly IBaseRepository<RoleEntity> _roleRepository;
 
-        private readonly IBaseRepository<UserRoleEntities> _userRolesRepository;
+        private readonly IBaseRepository<UserRoleEntity> _userRolesRepository;
         
         private readonly ILogger<AuthService> _logger;
 
         private readonly IMapper _mapper;
         public AuthService(IJwtService jwtService, 
-            IBaseRepository<UserEntities> userRepository,  
-            IBaseRepository<RoleEntities> roleRepository,
-            IBaseRepository<UserRoleEntities> userRoleRepository,
+            IBaseRepository<UserEntity> userRepository,  
+            IBaseRepository<RoleEntity> roleRepository,
+            IBaseRepository<UserRoleEntity> userRoleRepository,
             ILogger<AuthService> logger,
             IMapper mapper
             )
@@ -70,7 +70,7 @@ namespace Applcation.Service.AuthService
                 }
 
 
-                UserRoleEntities? userRole = await _userRolesRepository.GetByIdAsync(ct, user.id, (int)loginUserDTO.role);
+                UserRoleEntity? userRole = await _userRolesRepository.GetByIdAsync(ct, user.id, (int)loginUserDTO.role);
                 if (userRole != null)
                 {
                    // Console.WriteLine($" IDROLE {userRole.roleid}, USERID {userRole.user.id}");

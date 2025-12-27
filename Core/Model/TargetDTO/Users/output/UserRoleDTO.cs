@@ -1,4 +1,4 @@
-﻿using infrastructure.Utils.HashIdConverter;
+﻿using Core.Common.Types.HashId;
 
 namespace Core.Model.TargetDTO.Users.output
 {

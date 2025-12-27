@@ -1,4 +1,4 @@
-﻿using infrastructure.Entitiеs;
+﻿using infrastructure.DataBase.Entitiеs;
 using System;
 using System.Collections.Generic;
 using System.Linq;

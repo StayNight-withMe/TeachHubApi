@@ -3,7 +3,9 @@ using Core.Interfaces.Service;
 using Core.Model.TargetDTO.ReviewReaction;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.JsonWebTokens;
 using System.Security.Claims;
+using testApi.WebUtils.JwtClaimUtil;
 
 namespace testApi.EndPoints
 {
@@ -14,11 +16,16 @@ namespace testApi.EndPoints
     [ApiVersion("1.0")]
     public class ReviewReactionController : ControllerBase
     {
-        private readonly IReviewReactionService _reviewReactionService;   
+        private readonly IReviewReactionService _reviewReactionService;  
+        
+        private readonly JwtClaimUtil _claims;
+
         public ReviewReactionController(
-            IReviewReactionService reviewReactionService
+            IReviewReactionService reviewReactionService,
+            JwtClaimUtil claims
             )
         {
+            _claims = claims;
             _reviewReactionService = reviewReactionService;
         }
 
@@ -30,7 +37,7 @@ namespace testApi.EndPoints
         {
             var result = await _reviewReactionService.PutReaction(
                 reactionDTO,
-                Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)),
+                _claims.UserId,
                 ct);
             return await EntityResultExtensions.ToActionResult(result, this);
         }

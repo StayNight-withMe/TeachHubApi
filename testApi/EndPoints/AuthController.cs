@@ -6,7 +6,7 @@ using Core.Model.TargetDTO.Courses.output;
 using infrastructure.Utils.HashIdConverter;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
-
+using Core.Common.Types.HashId;
 
 namespace testApi.EndPoints
 {
@@ -55,7 +55,10 @@ namespace testApi.EndPoints
         [HttpPost("login")]
         public async Task<IActionResult> LoginUser([FromBody]LoginUserDTO loginUserDTO)
         {
-            var result = await _authService.LoginUser(loginUserDTO, _headerService.GetIp(), _headerService.GetUserAgent());
+            var result = await _authService.LoginUser(
+                loginUserDTO, 
+                _headerService.GetIp(), 
+                _headerService.GetUserAgent());
             if (result.IsCompleted)
             {
                 var token = _jwtService.GenerateJwt(result.Value);

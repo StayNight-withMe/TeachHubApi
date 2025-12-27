@@ -5,7 +5,7 @@ using Core.Model.ReturnEntity;
 using Core.Model.TargetDTO.Category.input;
 using Core.Model.TargetDTO.Common.input;
 using Core.Model.TargetDTO.Common.output;
-using infrastructure.Entitiеs;
+using infrastructure.DataBase.Entitiеs;
 using infrastructure.Extensions;
 using infrastructure.Utils.PageService;
 using Microsoft.EntityFrameworkCore;

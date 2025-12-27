@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using infrastructure.Utils.Mapping.MapperDTO;
-using infrastructure.Entitiеs;
+using infrastructure.DataBase.Entitiеs;
 
 namespace infrastructure.Utils.Mapping.AutoMapperProfiles
 {
@@ -10,7 +10,7 @@ namespace infrastructure.Utils.Mapping.AutoMapperProfiles
         public RoleMapperProfile()
         {
 
-            CreateMap<UserRoleMappingSource, UserRoleEntities>()
+            CreateMap<UserRoleMappingSource, UserRoleEntity>()
 
 
              .ForMember(

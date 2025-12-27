@@ -1,6 +1,7 @@
 ﻿using Applcation.Service.chapterService;
 using Asp.Versioning;
 using Core.Common.EnumS;
+using Core.Common.Types.HashId;
 using Core.Interfaces.Service;
 using Core.Model.TargetDTO.Chapter.input;
 using Core.Model.TargetDTO.Common.input;
@@ -12,6 +13,7 @@ using Microsoft.AspNetCore.OutputCaching;
 using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using testApi.WebUtils.JwtClaimUtil;
 
 namespace testApi.EndPoints
 {
@@ -24,9 +26,15 @@ namespace testApi.EndPoints
     {
         private readonly ICourseService _courseService;
 
-        public CoursesController(ICourseService courseService) 
+        private readonly JwtClaimUtil _claims;
+
+        public CoursesController(
+            ICourseService courseService,
+            JwtClaimUtil claims
+            ) 
         {
-            _courseService = courseService;        
+            _courseService = courseService;
+            _claims = claims;
         }
 
         [HttpPatch]
@@ -36,7 +44,7 @@ namespace testApi.EndPoints
             CancellationToken ct
             )
         {
-            var result = await _courseService.UpdateCourse(course, Convert.ToInt32(User.FindFirst("id").Value),ct);
+            var result = await _courseService.UpdateCourse(course, _claims.UserId, ct);
             return await EntityResultExtensions.ToActionResult(result, this);
 
         }
@@ -44,12 +52,12 @@ namespace testApi.EndPoints
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> CreateCourse([
-            FromBody] CreateCourseDTO courceDTO, 
+        public async Task<IActionResult> CreateCourse(
+            [FromBody] CreateCourseDTO courceDTO, 
             CancellationToken ct
             )
         {
-            var result = await _courseService.CreateCourse(courceDTO, Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), ct);
+            var result = await _courseService.CreateCourse(courceDTO, _claims.UserId, ct);
             return await EntityResultExtensions.ToActionResult(result, this);    
         }
 
@@ -68,16 +76,16 @@ namespace testApi.EndPoints
                 return BadRequest();
             }
 
-            int userid = default;
+            int UserId = _claims.UserId;
 
-            if((Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), User.FindFirstValue(ClaimTypes.Name)) != default)
-            {
-                userid = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            }
+            //if((Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), User.FindFirstValue(ClaimTypes.Name)) != default)
+            //{
+            //    userid = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            //}
 
-            Console.WriteLine(userid);
+            Console.WriteLine(UserId);
 
-            var result1 = await _courseService.SearchCourse(searchText, userSortingRequest, userid, ct);
+            var result1 = await _courseService.SearchCourse(searchText, userSortingRequest, UserId, ct);
             return await EntityResultExtensions.ToActionResult(result1, this);
         }
 
@@ -92,7 +100,7 @@ namespace testApi.EndPoints
             )
         {
 
-         
+            
 
             var allowedTypes = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
             {
@@ -102,8 +110,6 @@ namespace testApi.EndPoints
                 "image/webp",
                 "image/bmp"
             };
-
-        
 
 
             Stream? stream = null;
@@ -128,27 +134,25 @@ namespace testApi.EndPoints
 
             var result = await _courseService.SetImgFile(
                 stream,
-                Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)),
+                _claims.UserId,
                 setImageDTO,
                 ContentType,
                 ct
                 );
 
-            Console.WriteLine(result.IsCompleted);
-
-
             return await EntityResultExtensions.ToActionResult(result, this);
+
         }
 
 
 
-      
+
 
 
         [HttpDelete("{id}")]
         [Authorize]
         public async Task<IActionResult> Remove(
-            int id,
+            [FromRoute] Hashid id,
             CancellationToken ct
             )
         {
@@ -158,14 +162,28 @@ namespace testApi.EndPoints
 
 
         [Authorize]
+        [HttpGet("${courseid}")]
+        [OutputCache(PolicyName = "10min")]
+        public async Task<IActionResult> GetUserCourses(
+        [FromQuery] SortingAndPaginationDTO userSortingRequest,
+        CancellationToken ct,
+        [FromRoute] Hashid courseid
+    )
+        {
+            var result = await _courseService.GetUserCourses(courseid, userSortingRequest, ct);
+            return await EntityResultExtensions.ToActionResult(result, this);
+        }
+
+
+        [Authorize]
         [HttpGet("my")]
         [OutputCache(PolicyName = "10min")]
-        public async Task<IActionResult> GetUserCourses([
-            FromQuery] SortingAndPaginationDTO userSortingRequest,
+        public async Task<IActionResult> GetMyCourses(
+            [FromQuery] SortingAndPaginationDTO userSortingRequest,
             CancellationToken ct
             )
         {
-            var result = await _courseService.GetUserCourses(Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)), User.FindFirstValue(ClaimTypes.Name), userSortingRequest, ct);
+            var result = await _courseService.GetUserCourses(_claims.UserId, userSortingRequest, ct);
             return await EntityResultExtensions.ToActionResult(result, this);   
         }
 

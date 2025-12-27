@@ -2,6 +2,7 @@
 using Amazon.S3;
 using AutoMapper;
 using Core.Common.EnumS;
+using Core.Common.Types.HashId;
 using Core.Interfaces.Repository;
 using Core.Interfaces.Service;
 using Core.Interfaces.UoW;
@@ -11,9 +12,8 @@ using Core.Model.TargetDTO.Common.input;
 using Core.Model.TargetDTO.Common.output;
 using Core.Model.TargetDTO.Courses.input;
 using Core.Model.TargetDTO.Courses.output;
-using infrastructure.Entitiеs;
+using infrastructure.DataBase.Entitiеs;
 using infrastructure.Extensions;
-using infrastructure.Utils.HashIdConverter;
 using infrastructure.Utils.Mapping.MapperDTO;
 using infrastructure.Utils.PageService;
 using Logger;
@@ -28,7 +28,7 @@ namespace Applcation.Service.CourceService
     public class CourcesService : ICourseService
     {
         
-        private readonly IBaseRepository<CourseEntities> _courceRepository;
+        private readonly IBaseRepository<CourseEntity> _courceRepository;
         
         private readonly IBaseRepository<Course_CategoriesEntities> _course_CategoriesRepository;
 
@@ -43,9 +43,9 @@ namespace Applcation.Service.CourceService
         private readonly IUnitOfWork _unitOfWork;
 
         public CourcesService(
-            IBaseRepository<CourseEntities> baseRepository,
+            IBaseRepository<CourseEntity> baseRepository,
             IBaseRepository<FavoritEntities> favoritRepository,
-            IBaseRepository<UserEntities> userRepository,
+            IBaseRepository<UserEntity> userRepository,
             IBaseRepository<Course_CategoriesEntities> course_CategoriesRepository,
             ILogger<CourcesService> logger,
             ICourseImageService courseFileService,
@@ -91,7 +91,7 @@ namespace Applcation.Service.CourceService
                 field = courceDTO.field
             };
 
-            CourseEntities courseEntities = _mapper.Map<CourseEntities>(source);
+            CourseEntity courseEntities = _mapper.Map<CourseEntity>(source);
 
             await _courceRepository.Create(courseEntities);
 
@@ -125,9 +125,6 @@ namespace Applcation.Service.CourceService
                 .GetAllWithoutTracking()
                 .Where(c => c.searchvector
                 .Matches(search));
-                
-
-           
 
 
             var list = await listqw
@@ -140,7 +137,7 @@ namespace Applcation.Service.CourceService
 
 
         private async Task<List<CourseOutputDTO>> MapList(
-            List<CourseEntities> courseEntities,
+            List<CourseEntity> courseEntities,
             int userid = default
             )
         {
@@ -262,14 +259,13 @@ namespace Applcation.Service.CourceService
 
         public async Task<TResult<PagedResponseDTO<CourseOutputDTO>>> GetUserCourses(
             int userid, 
-            string name, 
             SortingAndPaginationDTO userSortingRequest,
             CancellationToken ct = default
             )
         {
 
           
-            List<CourseEntities> courseEntites = await _courceRepository.GetAllWithoutTracking()
+            List<CourseEntity> courseEntites = await _courceRepository.GetAllWithoutTracking()
                 .Include(c => c.user)
                 .GetWithPaginationAndSorting(userSortingRequest, "courseid", "creatorid", "description")
                 .Where(c => c.creatorid == userid)
@@ -343,7 +339,7 @@ namespace Applcation.Service.CourceService
             }
         }
 
-        public async Task<TResult> SetImgFile(
+        public async Task<TResult<SetImageOutPutDTO>> SetImgFile(
             Stream? stream, 
             int userid, 
             CourseSetImageDTO courseSetImageDTO,
@@ -362,14 +358,14 @@ namespace Applcation.Service.CourceService
                     {
                         if(stream == null)
                         {
-                            return TResult.FailedOperation(errorCode.InvalidDataFormat);
+                            return TResult<SetImageOutPutDTO>.FailedOperation(errorCode.InvalidDataFormat);
                         }
 
 
                         _logger.LogInformation("Upload");
                         if (course == null)
                         {
-                            return TResult.FailedOperation(errorCode.CoursesNotFoud);
+                            return TResult<SetImageOutPutDTO>.FailedOperation(errorCode.CoursesNotFoud);
                         }
 
 
@@ -388,12 +384,12 @@ namespace Applcation.Service.CourceService
                             catch (AmazonS3Exception ex)
                             {
                                 _logger.LogError(ex);
-                                return TResult.FailedOperation(errorCode.CloudError);
+                                return TResult<SetImageOutPutDTO>.FailedOperation(errorCode.CloudError);
                             }
                             catch (Exception ex)
                             {
                                 _logger.LogError(ex);
-                                return TResult.FailedOperation(errorCode.UnknownError);
+                                return TResult<SetImageOutPutDTO>.FailedOperation(errorCode.UnknownError);
                             }
 
                         }
@@ -409,17 +405,19 @@ namespace Applcation.Service.CourceService
                         try
                         {
                             await _unitOfWork.CommitAsync(ct);
-                            return TResult.CompletedOperation();
+                            return TResult<SetImageOutPutDTO>.CompletedOperation(
+                                 new SetImageOutPutDTO{ iconusrl = _courseFileService.GetPresignedUrl(fileKey, 60*24) }
+                                );
                         }
                         catch (DbUpdateException ex)
                         {
                             _logger.LogDBError(ex);
-                            return TResult.FailedOperation(errorCode.DatabaseError);
+                            return TResult<SetImageOutPutDTO>.FailedOperation(errorCode.DatabaseError);
                         }
                         catch (Exception ex)
                         {
                             _logger.LogError(ex);
-                            return TResult.FailedOperation(errorCode.UnknownError);
+                            return TResult<SetImageOutPutDTO>.FailedOperation(errorCode.UnknownError);
                         }
                     }
 
@@ -439,24 +437,24 @@ namespace Applcation.Service.CourceService
                             var count = await _unitOfWork.CommitAsync(ct);
                             if(count == 0)
                             {
-                                return TResult.FailedOperation(errorCode.NotFound);
+                                return TResult<SetImageOutPutDTO>.FailedOperation(errorCode.NotFound);
                             }
-                            return TResult.CompletedOperation();
+                            return TResult<SetImageOutPutDTO>.CompletedOperation(new SetImageOutPutDTO());
                         }
                         catch (DbUpdateException ex)
                         {
                             _logger.LogDBError(ex);
-                            return TResult.FailedOperation(errorCode.DatabaseError);
+                            return TResult<SetImageOutPutDTO>.FailedOperation(errorCode.DatabaseError);
                         }
                         catch (Exception ex)
                         {
                             _logger.LogError(ex);
-                            return TResult.FailedOperation(errorCode.UnknownError);
+                            return TResult<SetImageOutPutDTO>.FailedOperation(errorCode.UnknownError);
                         }
                     }
 
                 default:
-                    return TResult.FailedOperation(errorCode.InvalidDataFormat);
+                    return TResult<SetImageOutPutDTO>.FailedOperation(errorCode.InvalidDataFormat);
                         
 
                     }

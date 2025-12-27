@@ -1,5 +1,5 @@
 ﻿using Core.Common.EnumS;
-using infrastructure.Utils.HashIdConverter;
+using Core.Common.Types.HashId;
 using System;
 using System.Collections.Generic;
 using System.Linq;

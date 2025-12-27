@@ -11,6 +11,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using testApi.WebUtils.JwtClaimUtil;
+using Core.Common.Types;
+using Core.Common.Types.HashId;
+
 
 namespace testApi.EndPoints
 {
@@ -27,12 +31,18 @@ namespace testApi.EndPoints
         private readonly IHeaderService _headerService;
 
         private readonly IOutputCacheStore _outputCacheStore;
-        public UserController( IUsersService usersService,
+
+        private readonly JwtClaimUtil _claims;
+
+        public UserController( 
+            IUsersService usersService,
             IJwtService jwtService,
             IHeaderService headerService, 
-            IOutputCacheStore outputCacheStore
+            IOutputCacheStore outputCacheStore,
+            JwtClaimUtil claims
             )
         {
+            _claims = claims;
             _usersService = usersService;
             _jwtService = jwtService;
             _headerService = headerService;
@@ -87,7 +97,7 @@ namespace testApi.EndPoints
         [HttpDelete("admin/{id}/soft")]
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> AdminAgressiveDelete(
-            int id,
+            [FromRoute] Hashid id,
             CancellationToken ct
             )
         {
@@ -109,7 +119,7 @@ namespace testApi.EndPoints
         [HttpDelete("admin/{id}/hard")]
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> AdminSoftDelete(
-            int id,
+            [FromRoute] Hashid id,
             CancellationToken ct 
             )
         {
@@ -128,7 +138,7 @@ namespace testApi.EndPoints
             CancellationToken ct
             )
         {
-            var result = await _usersService.SoftDelete(Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier)));
+            var result = await _usersService.SoftDelete(_claims.UserId);
             return await EntityResultExtensions.ToActionResult(result, this, 
                 opt:  async () =>
             {

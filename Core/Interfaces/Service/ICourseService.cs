@@ -19,7 +19,6 @@ namespace Core.Interfaces.Service
             CancellationToken ct = default);
         public Task<TResult<PagedResponseDTO<CourseOutputDTO>>> GetUserCourses(
             int id, 
-            string name, 
             SortingAndPaginationDTO userSortingRequest,
             CancellationToken ct = default
             );
@@ -39,7 +38,7 @@ namespace Core.Interfaces.Service
             ClaimsPrincipal user, 
             CancellationToken ct = default);
 
-        Task<TResult> SetImgFile(
+        Task<TResult<SetImageOutPutDTO>> SetImgFile(
             Stream? stream,
             int userid,
             CourseSetImageDTO courseSetImageDTO,  

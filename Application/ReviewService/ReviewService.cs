@@ -7,7 +7,7 @@ using Core.Model.TargetDTO.Common.input;
 using Core.Model.TargetDTO.Common.output;
 using Core.Model.TargetDTO.Review.input;
 using Core.Model.TargetDTO.Review.output;
-using infrastructure.Entitiеs;
+using infrastructure.DataBase.Entitiеs;
 using infrastructure.Extensions;
 using infrastructure.Utils.PageService;
 using Logger;
@@ -26,7 +26,7 @@ namespace Applcation.Service.ReviewService
     {
         private readonly IBaseRepository<ReviewEntities> _reviewRepository;
 
-        private readonly IBaseRepository<CourseEntities> _courseRepository;
+        private readonly IBaseRepository<CourseEntity> _courseRepository;
 
         private readonly IUnitOfWork _unitOfWork;
 
@@ -37,7 +37,7 @@ namespace Applcation.Service.ReviewService
         public ReviewService(
         IMapper mapper,
         IBaseRepository<ReviewEntities> reviewRepository,
-        IBaseRepository<CourseEntities> courseRepository,
+        IBaseRepository<CourseEntity> courseRepository,
         IUnitOfWork unitOfWork,
         ILogger<ReviewService> logger
             ) 
