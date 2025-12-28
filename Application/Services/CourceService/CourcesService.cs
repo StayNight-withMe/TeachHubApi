@@ -1,17 +1,18 @@
 ﻿
 using Amazon.S3;
+using Applcation.Abstractions.Service;
+using Applcation.Abstractions.UoW;
 using AutoMapper;
 using Core.Common.EnumS;
 using Core.Common.Types.HashId;
 using Core.Interfaces.Repository;
 using Core.Interfaces.Service;
-using Core.Interfaces.UoW;
-using Core.Interfaces.Utils;
 using Core.Model.ReturnEntity;
 using Core.Model.TargetDTO.Common.input;
 using Core.Model.TargetDTO.Common.output;
 using Core.Model.TargetDTO.Courses.input;
 using Core.Model.TargetDTO.Courses.output;
+using Core.Specification.CourseSpecification;
 using infrastructure.DataBase.Entitiеs;
 using infrastructure.Extensions;
 using infrastructure.Utils.Mapping.MapperDTO;
@@ -23,7 +24,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 
 
-namespace Applcation.Service.CourceService
+namespace Applcation.Services.CourceService
 {
     public class CourcesService : ICourseService
     {
@@ -38,7 +39,7 @@ namespace Applcation.Service.CourceService
 
         private readonly ICourseImageService _courseFileService;
 
-        private readonly IMapper _mapper;
+        //private readonly IMapper _mapper;
 
         private readonly IUnitOfWork _unitOfWork;
 
@@ -50,7 +51,7 @@ namespace Applcation.Service.CourceService
             ILogger<CourcesService> logger,
             ICourseImageService courseFileService,
             IUnitOfWork unitOfWork,
-            IMapper mapper
+            //IMapper mapper
             
             )
         {
@@ -70,16 +71,13 @@ namespace Applcation.Service.CourceService
             int id,
             CancellationToken ct = default)
         {
-            Console.WriteLine($"courseid : {id}");
-         
+           
 
-            bool cource = await _courceRepository
-                .GetAllWithoutTracking()
-                .Where(c => c.creatorid == id && 
-                       c.name == courceDTO.name)
-                .AnyAsync(ct);
 
-            if(cource)
+            bool exists = await _courceRepository
+                .AnyAsync(new ExistsSpecification(id, courceDTO.name));
+
+            if(exists)
             {
                 return TResult.FailedOperation(errorCode.CourseTitleAlreadyExists);
             }
@@ -297,7 +295,8 @@ namespace Applcation.Service.CourceService
             if(userClaim.IsInRole(Enum.GetName(AllRole.user)))
             {
 
-                var cource = await _courceRepository.GetAllWithoutTracking()
+                var cource = await _courceRepository
+                            .GetAllWithoutTracking()
                              .Include(c => c.user)
                              .Where(
                              c => c.id == courseid &&  
@@ -331,7 +330,7 @@ namespace Applcation.Service.CourceService
                 await _unitOfWork.CommitAsync(ct);
                 return TResult.CompletedOperation();
             }
-            catch(DbUpdateException ex)
+            catch(Exception ex)
             {
                 _logger.LogError(ex);
                 return TResult.FailedOperation(errorCode.DatabaseError);
@@ -440,11 +439,6 @@ namespace Applcation.Service.CourceService
                                 return TResult<SetImageOutPutDTO>.FailedOperation(errorCode.NotFound);
                             }
                             return TResult<SetImageOutPutDTO>.CompletedOperation(new SetImageOutPutDTO());
-                        }
-                        catch (DbUpdateException ex)
-                        {
-                            _logger.LogDBError(ex);
-                            return TResult<SetImageOutPutDTO>.FailedOperation(errorCode.DatabaseError);
                         }
                         catch (Exception ex)
                         {
