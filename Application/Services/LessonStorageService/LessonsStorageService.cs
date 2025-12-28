@@ -1,9 +1,9 @@
 ﻿using Amazon.Runtime;
 using Amazon.S3;
+using Applcation.Abstractions.Service;
+using Applcation.Abstractions.UoW;
 using Core.Interfaces.Repository;
 using Core.Interfaces.Service;
-using Core.Interfaces.UoW;
-using Core.Interfaces.Utils;
 using Core.Model.ReturnEntity;
 using Core.Model.TargetDTO.Common.input;
 using Core.Model.TargetDTO.Common.output;
@@ -22,7 +22,7 @@ using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Applcation.Service.LessonStorageService
+namespace Applcation.Services.LessonStorageService
 {
     public class LessonsStorageService : ILessonStorageService
     {
