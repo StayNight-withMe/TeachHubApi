@@ -1,65 +1,65 @@
 ﻿
-using Amazon.S3;
-using Applcation.Abstractions.Service;
-using Applcation.Abstractions.UoW;
+using Application.Abstractions.Repository.Base;
+using Application.Abstractions.Repository.Custom;
+using Application.Abstractions.Service;
+using Application.Abstractions.UoW;
+using Application.Abstractions.Utils;
+using Application.Mapping.MapperDTO;
+using Application.Utils.PageService;
+using Ardalis.Specification;
 using AutoMapper;
 using Core.Common.EnumS;
+using Core.Common.Exeptions;
 using Core.Common.Types.HashId;
-using Core.Interfaces.Repository;
-using Core.Interfaces.Service;
 using Core.Model.ReturnEntity;
 using Core.Model.TargetDTO.Common.input;
 using Core.Model.TargetDTO.Common.output;
 using Core.Model.TargetDTO.Courses.input;
 using Core.Model.TargetDTO.Courses.output;
+using Core.Specification.Common;
 using Core.Specification.CourseSpecification;
+using Core.Specification.FavoriteSpec;
 using infrastructure.DataBase.Entitiеs;
-using infrastructure.Extensions;
-using infrastructure.Utils.Mapping.MapperDTO;
-using infrastructure.Utils.PageService;
 using Logger;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
 using System.Security.Claims;
 
-
-namespace Applcation.Services.CourceService
+namespace Application.Services.CourceService
 {
     public class CourcesService : ICourseService
     {
         
-        private readonly IBaseRepository<CourseEntity> _courceRepository;
+        private readonly ICourseRepository _courceRepository;
         
-        private readonly IBaseRepository<Course_CategoriesEntities> _course_CategoriesRepository;
+        private readonly ICategoryRepository _course_CategoriesRepository;
 
-        private readonly IBaseRepository<FavoritEntities> _favoriteRepository;
+        private readonly IBaseRepository<FavoritEntity> _favoriteRepository;
 
         private readonly ILogger<CourcesService> _logger;
 
-        private readonly ICourseImageService _courseFileService;
+        private readonly ICourseImageService _courseFileUtil;
 
-        //private readonly IMapper _mapper;
+        private readonly IMapper _mapper;
 
         private readonly IUnitOfWork _unitOfWork;
 
         public CourcesService(
-            IBaseRepository<CourseEntity> baseRepository,
-            IBaseRepository<FavoritEntities> favoritRepository,
+            ICourseRepository baseRepository,
+            IBaseRepository<FavoritEntity> favoritRepository,
             IBaseRepository<UserEntity> userRepository,
-            IBaseRepository<Course_CategoriesEntities> course_CategoriesRepository,
+            ICategoryRepository course_CategoriesRepository,
             ILogger<CourcesService> logger,
             ICourseImageService courseFileService,
             IUnitOfWork unitOfWork,
-            //IMapper mapper
-            
+            IMapper mapper
+
             )
         {
             _courceRepository = baseRepository;
             _favoriteRepository = favoritRepository;
             _course_CategoriesRepository = course_CategoriesRepository;
             _logger = logger;
-            _courseFileService = courseFileService;
+            _courseFileUtil = courseFileService;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
@@ -75,7 +75,7 @@ namespace Applcation.Services.CourceService
 
 
             bool exists = await _courceRepository
-                .AnyAsync(new ExistsSpecification(id, courceDTO.name));
+                .AnyAsync(new ExistsCourseSpecification(id, courceDTO.name));
 
             if(exists)
             {
@@ -119,18 +119,21 @@ namespace Applcation.Services.CourceService
             int userid = default,
             CancellationToken ct = default)
         {
-            var listqw = _courceRepository
-                .GetAllWithoutTracking()
-                .Where(c => c.searchvector
-                .Matches(search));
+            var listqw = await _courceRepository.SearchCourse(
+                search, 
+                new AnySpecification<CourseEntity>(),  
+                userSortingRequest,
+                ct);
 
+            var count = await _courceRepository.CountofSearchCourse(
+                search,
+                new AnySpecification<CourseEntity>(),
+                ct);
 
-            var list = await listqw
-                .GetWithPaginationAndSorting(userSortingRequest)
-                .Include(c => c.user)
-                .ToListAsync(ct);
-
-            return PageService.CreatePage(await MapList(list, userid), userSortingRequest, await listqw.CountAsync(ct));
+            return PageService.CreatePage(
+                await MapList(listqw, userid), 
+                userSortingRequest, 
+                count);
         }
 
 
@@ -140,61 +143,52 @@ namespace Applcation.Services.CourceService
             )
         {
 
-            Dictionary<Hashid, Dictionary<Hashid, string>> categoryNames = new();
-
-            foreach (var i in courseEntities)
-            {
-                // Получаем данные из БД (там int)
-                var dbResult = await _course_CategoriesRepository
-                    .GetAllWithoutTracking()
-                    .Where(c => c.courseid == i.id)
-                    .Include(c => c.categories)
-                    .GroupBy(c => c.courseid)
-                    .ToDictionaryAsync(
-                        g => (Hashid)g.Key, // Преобразуем ID курса в Hashid
-                        g => g.Select(c => c.categories)
-                              .ToDictionary(cat => (Hashid)cat.id, cat => cat.name) // Преобразуем ID категории в Hashid
-                    );
-
-                // Добавляем в общий словарь
-                foreach (var entry in dbResult)
-                {
-                    categoryNames[entry.Key] = entry.Value;
-                }
-            }
+            //Dictionary<Hashid, Dictionary<Hashid, string>> categoryNames = new();
 
 
+            var courseIds = courseEntities.Select(c => c.id).ToList();
 
+            var dbResult = await _course_CategoriesRepository
+                    .GetCategoryNamesForCourses(courseIds);
 
+                    //.GetAllWithoutTracking()
+                    //.Where(c => c.courseid == i.id)
+                    //.Include(c => c.categories)
+                    //.GroupBy(c => c.courseid)
+                    //.ToDictionaryAsync(
+                    //    g => (Hashid)g.Key, 
+                    //    g => g.Select(c => c.categories)
+                    //          .ToDictionary(cat => (Hashid)cat.id, cat => cat.name) 
+                    //);
 
-            Dictionary<int, bool> favorietdict = new();
+            Dictionary<int, bool> favorietDict = new();
 
             if (userid != default)
             {
-                var userCourseId =  courseEntities
-                .Where(c => c.creatorid == userid)
-                .Select(c => c.id)
-                .FirstOrDefault();
-
-                favorietdict = await _favoriteRepository
-                    .GetAllWithoutTracking()
-                    .Where(c => c.userid == userid && c.courseid == userCourseId)
-                    .ToDictionaryAsync(c => c.courseid, c => true);
+                var favSpec = new FavoriteCoursesSpec(userid, courseIds);
+                favorietDict = (await _favoriteRepository.ListAsync(favSpec))
+                    .ToDictionary(f => f.courseid, _ => true);
 
             }
 
 
-
+            var categoryNames = dbResult.ToDictionary(
+            courseEntry => (Hashid)courseEntry.Key, 
+            courseEntry => courseEntry.Value.ToDictionary(
+                catEntry => (Hashid)catEntry.Key,    
+                catEntry => catEntry.Value           
+    )
+);
 
             return courseEntities
                .Select(c => new CourseOutputDTO
                {
                    categorynames = categoryNames.ContainsKey(c.id) ? categoryNames[c.id] : new Dictionary<Hashid, string>(),
-                   iconurl = c.imgfilekey == null ? null : _courseFileService.GetPresignedUrl(c.imgfilekey, 10080),
+                   iconurl = c.imgfilekey == null ? null : _courseFileUtil.GetPresignedUrl(c.imgfilekey, 10080),
                    field = c.field,
                    description = c.description,
                    creatorid = c.user.id,
-                   favorite = favorietdict.TryGetValue(c.id, out var value),
+                   favorite = favorietDict.TryGetValue(c.id, out var value),
                    id = c.id,
                    name = c.name,
                    creatorname = c.user.name ?? "удаленный аккаунт",
@@ -209,9 +203,10 @@ namespace Applcation.Services.CourceService
             CancellationToken ct = default
             )
         {
-            var courses = await _courceRepository.GetAllWithoutTracking()
+            var courses = await _courceRepository
+                .GetAllWithoutTracking()
                 .Include(c => c.user)
-                .GetWithPaginationAndSorting(userSortingRequest, "courseid", "creatorid", "description")
+                .GetWithPaginationAndSorting(userSortingRequest, "courseid", "creatorid", "description", "field")
                 .ToListAsync(ct);
        
             return PageService.CreatePage(
@@ -230,7 +225,8 @@ namespace Applcation.Services.CourceService
             CancellationToken ct = default)
         {
             var cousrse = await _courceRepository.GetAllWithoutTracking()
-                .Where(c => c.id == updateCourseDTO.id && c.creatorid == userid)
+                .Where(c => c.id == updateCourseDTO.id && 
+                c.creatorid == userid)
                 .FirstOrDefaultAsync(ct);
 
             if(cousrse == null)
@@ -375,7 +371,7 @@ namespace Applcation.Services.CourceService
                             try
                             {
 
-                                await _courseFileService.DeleteFileAsync(
+                                await _courseFileUtil.DeleteFileAsync(
                               course.imgfilekey,
                               ct);
 
@@ -393,7 +389,7 @@ namespace Applcation.Services.CourceService
 
                         }
 
-                        string fileKey = await _courseFileService.UploadFileAsync(
+                        string fileKey = await _courseFileUtil.UploadFileAsync(
                             stream,
                             course.id,
                             ContentType,
@@ -405,7 +401,7 @@ namespace Applcation.Services.CourceService
                         {
                             await _unitOfWork.CommitAsync(ct);
                             return TResult<SetImageOutPutDTO>.CompletedOperation(
-                                 new SetImageOutPutDTO{ iconusrl = _courseFileService.GetPresignedUrl(fileKey, 60*24) }
+                                 new SetImageOutPutDTO{ iconusrl = _courseFileUtil.GetPresignedUrl(fileKey, 60*24) }
                                 );
                         }
                         catch (DbUpdateException ex)

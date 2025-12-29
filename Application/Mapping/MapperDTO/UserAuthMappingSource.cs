@@ -1,6 +1,6 @@
 ﻿using infrastructure.DataBase.Entitiеs;
 
-namespace infrastructure.Utils.Mapping.MapperDTO
+namespace Application.Mapping.MapperDTO
 {
     public class UserAuthMappingSource
     {

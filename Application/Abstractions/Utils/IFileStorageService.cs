@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Applcation.Abstractions.Service
+namespace Application.Abstractions.Utils
 {
     public interface IFileStorageService
     {

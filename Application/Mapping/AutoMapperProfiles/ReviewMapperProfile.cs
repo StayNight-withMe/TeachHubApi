@@ -1,5 +1,4 @@
-﻿
-using AutoMapper;
+﻿using AutoMapper;
 using Core.Model.TargetDTO.Review.input;
 using Core.Model.TargetDTO.Review.output;
 using infrastructure.DataBase.Entitiеs;
@@ -9,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace infrastructure.Utils.Mapping.AutoMapperProfiles
+namespace Application.Mapping.AutoMapperProfiles
 {
     public class ReviewMapperProfile : Profile
     {

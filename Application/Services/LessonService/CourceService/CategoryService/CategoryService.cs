@@ -1,18 +1,18 @@
-﻿using Applcation.Abstractions.Repository.Base;
+﻿using Application.Abstractions.Repository.Base;
+using Application.Abstractions.Service;
+using Application.Utils.PageService;
 using AutoMapper;
-using Core.Interfaces.Service;
 using Core.Model.ReturnEntity;
 using Core.Model.TargetDTO.Category.input;
 using Core.Model.TargetDTO.Common.input;
 using Core.Model.TargetDTO.Common.output;
 using infrastructure.DataBase.Entitiеs;
 using infrastructure.Extensions;
-using infrastructure.Utils.PageService;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 
-namespace Applcation.Services.LessonService.CourceService.CategoryService
+namespace Application.Services.LessonService.CourceService.CategoryService
 {
     public class CategoryService : ICategoryService
     {

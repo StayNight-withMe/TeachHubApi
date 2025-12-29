@@ -1,12 +1,13 @@
 ﻿
 using Amazon.S3;
-using Applcation.Abstractions.Repository.Base;
-using Applcation.Abstractions.Service;
-using Applcation.Abstractions.UoW;
+using Application.Abstractions.Repository.Base;
+using Application.Abstractions.Service;
+using Application.Abstractions.UoW;
+using Application.Abstractions.Utils;
+using Application.Utils.PageService;
 using AutoMapper;
 using Core.Common.EnumS;
 using Core.Common.Types.HashId;
-using Core.Interfaces.Service;
 using Core.Model.ReturnEntity;
 using Core.Model.TargetDTO.Common.input;
 using Core.Model.TargetDTO.Common.output;
@@ -15,7 +16,6 @@ using Core.Model.TargetDTO.Courses.output;
 using infrastructure.DataBase.Entitiеs;
 using infrastructure.Extensions;
 using infrastructure.Utils.Mapping.MapperDTO;
-using infrastructure.Utils.PageService;
 using Logger;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -23,7 +23,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 
 
-namespace Applcation.Services.LessonService.CourceService
+namespace Application.Services.LessonService.CourceService
 {
     public class CourcesService : ICourseService
     {
@@ -32,7 +32,7 @@ namespace Applcation.Services.LessonService.CourceService
         
         private readonly IBaseRepository<Course_CategoriesEntities> _course_CategoriesRepository;
 
-        private readonly IBaseRepository<FavoritEntities> _favoriteRepository;
+        private readonly IBaseRepository<FavoritEntity> _favoriteRepository;
 
         private readonly ILogger<CourcesService> _logger;
 
@@ -44,7 +44,7 @@ namespace Applcation.Services.LessonService.CourceService
 
         public CourcesService(
             IBaseRepository<CourseEntity> baseRepository,
-            IBaseRepository<FavoritEntities> favoritRepository,
+            IBaseRepository<FavoritEntity> favoritRepository,
             IBaseRepository<UserEntity> userRepository,
             IBaseRepository<Course_CategoriesEntities> course_CategoriesRepository,
             ILogger<CourcesService> logger,

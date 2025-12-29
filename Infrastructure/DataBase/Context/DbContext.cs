@@ -10,7 +10,7 @@ namespace infrastructure.DataBase.Context
     {
         public DbSet<UserRoleEntity> usersroles { get; set; }
         public DbSet<UserEntity> users { get; set; }
-        public DbSet<FavoritEntities> favorit { get; set; }
+        public DbSet<FavoritEntity> favorit { get; set; }
         public DbSet<RoleEntity> roles { get; set; }
         public DbSet<ReviewEntities> reviews { get; set; }
         public DbSet<LessonEntity> lesson { get; set; }
@@ -55,7 +55,7 @@ namespace infrastructure.DataBase.Context
             modelBuilder.Entity<SubscriptionEntites>()
                 .HasKey(s => new { s.followingid, s.followerid });
 
-            modelBuilder.Entity<FavoritEntities>()
+            modelBuilder.Entity<FavoritEntity>()
                .HasKey(s => new { s.courseid, s.userid });
 
             modelBuilder.Entity<Course_CategoriesEntities>()

@@ -7,7 +7,7 @@ using Core.Model.TargetDTO.Common.output;
 using Core.Model.TargetDTO.Lesson.input;
 using Core.Model.TargetDTO.Lesson.output;
 
-namespace Core.Interfaces.Service
+namespace Application.Abstractions.Service
 {
     public interface ILessonService
     {

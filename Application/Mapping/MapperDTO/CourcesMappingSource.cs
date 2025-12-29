@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace infrastructure.Utils.Mapping.MapperDTO
+namespace Application.Mapping.MapperDTO
 {
     public class CourcesMappingSource
     {

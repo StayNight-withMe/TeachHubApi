@@ -1,9 +1,10 @@
 ﻿using Amazon.Runtime;
 using Amazon.S3;
-using Applcation.Abstractions.Repository.Base;
-using Applcation.Abstractions.Service;
-using Applcation.Abstractions.UoW;
-using Core.Interfaces.Service;
+using Application.Abstractions.Repository.Base;
+using Application.Abstractions.Service;
+using Application.Abstractions.UoW;
+using Application.Abstractions.Utils;
+using Application.Utils.PageService;
 using Core.Model.ReturnEntity;
 using Core.Model.TargetDTO.Common.input;
 using Core.Model.TargetDTO.Common.output;
@@ -11,7 +12,6 @@ using Core.Model.TargetDTO.LessonFile.input;
 using Core.Model.TargetDTO.LessonFile.output;
 using Core.Specification.Extensions.Other;
 using infrastructure.DataBase.Entitiеs;
-using infrastructure.Utils.PageService;
 using Logger;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -22,7 +22,7 @@ using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Applcation.Services.LessonStorageService
+namespace Application.Services.LessonStorageService
 {
     public class LessonsStorageService : ILessonStorageService
     {

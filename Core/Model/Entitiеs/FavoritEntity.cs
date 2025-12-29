@@ -2,7 +2,7 @@
 
 namespace infrastructure.DataBase.Entitiеs
 {
-    public class FavoritEntities
+    public class FavoritEntity
     {
         public int userid { get; set; }
         public int courseid { get; set; }

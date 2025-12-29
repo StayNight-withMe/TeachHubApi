@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace infrastructure.Utils.Mapping.AutoMapperProfiles
+namespace Application.Mapping.AutoMapperProfiles
 {
     public class ReviewReactionMapperProfile : AutoMapper.Profile
     {

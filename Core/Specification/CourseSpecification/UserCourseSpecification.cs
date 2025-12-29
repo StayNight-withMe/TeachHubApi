@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Abstractions.Utils
+namespace Core.Specification.CourseSpecification
 {
-    public interface ICourseImageService : IFileService
+    internal class UserCourseSpecification
     {
     }
 }

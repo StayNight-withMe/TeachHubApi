@@ -1,14 +1,13 @@
 ﻿using Core.Model.ReturnEntity;
 using Core.Model.TargetDTO.Common.input;
 using Core.Model.TargetDTO.Common.output;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace infrastructure.Utils.PageService
+namespace Applcation.Utils.PageService
 {
     public static class PageService
     {

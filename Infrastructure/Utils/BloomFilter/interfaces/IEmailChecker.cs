@@ -1,4 +1,4 @@
-﻿using Applcation.Abstractions.Repository.Base;
+﻿using Application.Abstractions.Repository.Base;
 using infrastructure.DataBase.Entitiеs;
 using System;
 using System.Collections.Generic;

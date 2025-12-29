@@ -9,7 +9,7 @@ using infrastructure.DataBase.Entitiеs;
 using infrastructure.Utils.HashIdConverter;
 
 
-namespace infrastructure.Utils.Mapping.AutoMapperProfiles
+namespace Application.Mapping.AutoMapperProfiles
 {
     public class UsersMapperProfile : Profile
     {

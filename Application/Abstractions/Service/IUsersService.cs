@@ -6,7 +6,7 @@ using Core.Model.TargetDTO.Auth.input;
 using Core.Model.TargetDTO.Users.input;
 using Core.Model.TargetDTO.Users.output;
 
-namespace Core.Interfaces.Service
+namespace Application.Abstractions.Service
 {
     public interface IUsersService
     {

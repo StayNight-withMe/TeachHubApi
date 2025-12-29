@@ -1,7 +1,8 @@
-﻿using Applcation.Abstractions.Repository.Base;
-using Applcation.Abstractions.UoW;
+﻿using Application.Abstractions.Repository.Base;
+using Application.Abstractions.Service;
+using Application.Abstractions.UoW;
+using Application.Utils.PageService;
 using AutoMapper;
-using Core.Interfaces.Service;
 using Core.Model.ReturnEntity;
 using Core.Model.TargetDTO.Chapter.input;
 using Core.Model.TargetDTO.Chapter.output;
@@ -10,13 +11,12 @@ using Core.Model.TargetDTO.Common.output;
 using infrastructure.DataBase.Entitiеs;
 using infrastructure.Extensions;
 using infrastructure.Utils.Mapping.MapperDTO;
-using infrastructure.Utils.PageService;
 using Logger;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 
-namespace Applcation.Services.LessonService.ChapterService
+namespace Application.Services.LessonService.ChapterService
 {
     public class ChapterService : IChapterService
     {

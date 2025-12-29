@@ -1,5 +1,4 @@
 ﻿using Core.Model.ReturnEntity;
-using Core.Interfaces.Service;
 using Microsoft.Extensions.Logging;
 using AutoMapper;
 using System.Runtime.CompilerServices;
@@ -13,10 +12,11 @@ using infrastructure.Utils.PasswodHashService;
 using Microsoft.EntityFrameworkCore;
 using Core.Common.EnumS;
 using infrastructure.DataBase.Entitiеs;
-using Applcation.Abstractions.Repository.Base;
+using Application.Abstractions.Repository.Base;
+using Application.Abstractions.Service;
 
 
-namespace Applcation.Services.LessonService.CourceService.AuthService
+namespace Application.Services.LessonService.CourceService.AuthService
 {
     public class AuthService : IAuthService
     {

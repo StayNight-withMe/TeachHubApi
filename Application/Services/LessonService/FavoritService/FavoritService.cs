@@ -1,11 +1,9 @@
-﻿using Core.Interfaces.Service;
-using Core.Model.ReturnEntity;
+﻿using Core.Model.ReturnEntity;
 using Core.Model.TargetDTO.Common.input;
 using Core.Model.TargetDTO.Common.output;
 using Core.Model.TargetDTO.Favorit.output;
 using infrastructure.Extensions;
 //using infrastructure.Repository.Base;
-using infrastructure.Utils.PageService;
 using Logger;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -15,22 +13,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using infrastructure.DataBase.Entitiеs;
-using Applcation.Abstractions.UoW;
-using Applcation.Abstractions.Repository.Base;
+using Application.Abstractions.UoW;
+using Application.Abstractions.Repository.Base;
+using Application.Abstractions.Service;
+using Application.Utils.PageService;
 
-namespace Applcation.Services.LessonService.FavoritService
+namespace Application.Services.LessonService.FavoritService
 {
     public class FavoritService : IFavoritService
     {
         private readonly ILogger<FavoritService> _logger;
 
-        private readonly IBaseRepository<FavoritEntities> _favoritrepo;
+        private readonly IBaseRepository<FavoritEntity> _favoritrepo;
 
         private readonly IUnitOfWork _unitOfWork;
 
         public FavoritService(
             ILogger<FavoritService> logger,
-            IBaseRepository<FavoritEntities> favoritrepo,
+            IBaseRepository<FavoritEntity> favoritrepo,
             IUnitOfWork unitOfWork
             ) 
         {
@@ -45,7 +45,7 @@ namespace Applcation.Services.LessonService.FavoritService
             CancellationToken ct = default)
         {
             
-            await _favoritrepo.Create(new FavoritEntities { userid = userid, courseid = courseid });
+            await _favoritrepo.Create(new FavoritEntity { userid = userid, courseid = courseid });
 
             try
             {

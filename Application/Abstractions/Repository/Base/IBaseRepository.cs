@@ -1,6 +1,6 @@
 ﻿using Ardalis.Specification;
 
-namespace Applcation.Abstractions.Repository.Base
+namespace Application.Abstractions.Repository.Base
 {
     public interface IBaseRepository<T> : IRepositoryBase<T> where T : class
     {

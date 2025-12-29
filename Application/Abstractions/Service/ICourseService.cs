@@ -6,7 +6,7 @@ using Core.Model.TargetDTO.Courses.output;
 using Core.Model.TargetDTO.LessonFile.input;
 using System.Security.Claims;
 
-namespace Core.Interfaces.Service
+namespace Application.Abstractions.Service
 {
     public interface ICourseService
     {

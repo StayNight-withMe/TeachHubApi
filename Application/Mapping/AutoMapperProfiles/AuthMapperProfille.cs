@@ -1,7 +1,7 @@
-﻿using AutoMapper;
+﻿using Application.Mapping.MapperDTO;
+using AutoMapper;
 using Core.Common.Types.HashId;
 using Core.Model.TargetDTO.Users.input;
-using infrastructure.Utils.Mapping.MapperDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace infrastructure.Utils.Mapping.AutoMapperProfiles
+namespace Application.Mapping.AutoMapperProfiles
 {
     public class AuthMapperProfile : Profile
     {

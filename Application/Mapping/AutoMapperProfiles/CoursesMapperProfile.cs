@@ -1,14 +1,14 @@
-﻿using AutoMapper;
+﻿using Application.Mapping.MapperDTO;
+using AutoMapper;
 using Core.Model.TargetDTO.Courses.output;
 using infrastructure.DataBase.Entitiеs;
-using infrastructure.Utils.Mapping.MapperDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace infrastructure.Utils.Mapping.AutoMapperProfiles
+namespace Application.Mapping.AutoMapperProfiles
 {
     public class CoursesMapperProfile : Profile
     {

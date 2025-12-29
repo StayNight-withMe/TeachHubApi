@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using infrastructure.Utils.Mapping.MapperDTO;
 using infrastructure.DataBase.Entitiеs;
+using Application.Mapping.MapperDTO;
 
-namespace infrastructure.Utils.Mapping.AutoMapperProfiles
+namespace Application.Mapping.AutoMapperProfiles
 {
     public class RoleMapperProfile : Profile
     {

@@ -5,7 +5,7 @@ using Core.Model.TargetDTO.Review.input;
 using Core.Model.TargetDTO.Review.output;
 
 
-namespace Core.Interfaces.Service
+namespace Application.Abstractions.Service
 {
     public interface IReviewService
     {
