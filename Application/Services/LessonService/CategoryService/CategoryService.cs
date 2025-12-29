@@ -1,5 +1,5 @@
-﻿using AutoMapper;
-using Core.Interfaces.Repository;
+﻿using Applcation.Abstractions.Repository.Base;
+using AutoMapper;
 using Core.Interfaces.Service;
 using Core.Model.ReturnEntity;
 using Core.Model.TargetDTO.Category.input;

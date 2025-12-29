@@ -1,4 +1,4 @@
-﻿using Core.Interfaces.Repository;
+﻿using Applcation.Abstractions.Repository.Base;
 using infrastructure.DataBase.Entitiеs;
 using System;
 using System.Collections.Generic;

@@ -1,7 +1,7 @@
 ﻿using Core.Model.TargetDTO.Common.input;
 using System.Linq.Dynamic.Core;
 
-namespace infrastructure.Extensions
+namespace infrastructure.DataBase.Extensions
 {
     public static class QueryableExtensions
     {
@@ -31,7 +31,7 @@ namespace infrastructure.Extensions
                 {
                     foreach (var item in userSortingRequest.ThenBy)
                     {
-                        query = ((IOrderedQueryable<T>)query).ThenBy($"{item} {der}".Trim());
+                        query = query.ThenBy($"{item} {der}".Trim());
                     }
                 }
                 var finnaly = query.Skip(userSortingRequest.PageSize * (userSortingRequest.PageNumber - 1))
@@ -78,7 +78,7 @@ namespace infrastructure.Extensions
                 {
                     foreach (var item in userSortingRequest.ThenBy)
                     {
-                        query = ((IOrderedQueryable<T>)query).ThenBy($"{item} {der}".Trim());
+                        query = query.ThenBy($"{item} {der}".Trim());
                     }
                 }
 

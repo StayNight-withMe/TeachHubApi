@@ -1,16 +1,18 @@
-﻿using Core.Interfaces.Repository;
+﻿using Applcation.Abstractions.Repository.Base;
+using Ardalis.Specification;
+using Ardalis.Specification.EntityFrameworkCore;
 using infrastructure.DataBase.Context;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
 namespace infrastructure.DataBase.Repository.Base
 {
-    public class BaseRepository<T> : IBaseRepository<T> where T : class
+    public class BaseRepository<T> : RepositoryBase<T>, IBaseRepository<T> where T : class
     {
         protected readonly CourceDbContext _db;
 
         protected readonly DbSet<T> _dbSet;
-        public BaseRepository(CourceDbContext courceDbContext) 
+        public BaseRepository(CourceDbContext courceDbContext) : base(courceDbContext)
         {
             
             _db = courceDbContext;
@@ -56,7 +58,7 @@ namespace infrastructure.DataBase.Repository.Base
                 _dbSet.Remove(value);
                 return;
             }
-            throw new DbUpdateException();
+            throw new DbUpdateException("Not Found");
             
         }
 

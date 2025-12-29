@@ -14,9 +14,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Core.Interfaces.Repository;
 using infrastructure.DataBase.Entitiеs;
 using Applcation.Abstractions.UoW;
+using Applcation.Abstractions.Repository.Base;
 
 namespace Applcation.Services.LessonService.FavoritService
 {

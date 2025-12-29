@@ -11,7 +11,6 @@ namespace Core.Common.Types.HashId
     [TypeConverter(typeof(Hashid))]
     public struct Hashid
     {
-
         public int Value { get; }
         public Hashid(int value) => Value = value;
 

@@ -1,6 +1,8 @@
-﻿namespace Core.Interfaces.Repository
+﻿using Ardalis.Specification;
+
+namespace Applcation.Abstractions.Repository.Base
 {
-    public interface IBaseRepository<T> where T : class
+    public interface IBaseRepository<T> : IRepositoryBase<T> where T : class
     {
         public Task<T?> GetByIdAsync(CancellationToken ct = default, params object[] id);
         public Task Update(T value);

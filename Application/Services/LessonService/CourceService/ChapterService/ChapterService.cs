@@ -1,6 +1,6 @@
-﻿using Applcation.Abstractions.UoW;
+﻿using Applcation.Abstractions.Repository.Base;
+using Applcation.Abstractions.UoW;
 using AutoMapper;
-using Core.Interfaces.Repository;
 using Core.Interfaces.Service;
 using Core.Model.ReturnEntity;
 using Core.Model.TargetDTO.Chapter.input;

@@ -1,11 +1,11 @@
 ﻿
 using Amazon.S3;
+using Applcation.Abstractions.Repository.Base;
 using Applcation.Abstractions.Service;
 using Applcation.Abstractions.UoW;
 using AutoMapper;
 using Core.Common.EnumS;
 using Core.Common.Types.HashId;
-using Core.Interfaces.Repository;
 using Core.Interfaces.Service;
 using Core.Model.ReturnEntity;
 using Core.Model.TargetDTO.Common.input;

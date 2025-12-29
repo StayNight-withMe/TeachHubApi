@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Specification.CourseSpecification
+namespace infrastructure.DataBase.Repository.Custom
 {
-    internal class SearchCourseSpecification
+    internal class CategoryRepository
     {
     }
 }

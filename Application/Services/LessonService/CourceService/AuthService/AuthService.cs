@@ -5,7 +5,6 @@ using AutoMapper;
 using System.Runtime.CompilerServices;
 using AutoMapper;
 using infrastructure.Utils.Mapping.MapperDTO;
-using Core.Interfaces.Repository;
 using Microsoft.AspNetCore.Http;
 using infrastructure.Utils.HeadersService;
 using Core.Model.TargetDTO.Auth.input;
@@ -14,6 +13,7 @@ using infrastructure.Utils.PasswodHashService;
 using Microsoft.EntityFrameworkCore;
 using Core.Common.EnumS;
 using infrastructure.DataBase.Entitiеs;
+using Applcation.Abstractions.Repository.Base;
 
 
 namespace Applcation.Services.LessonService.CourceService.AuthService
