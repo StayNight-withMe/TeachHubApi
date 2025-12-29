@@ -258,7 +258,7 @@ namespace Application.Services.CourceService
         {
 
 
-            List<CourseEntity> courseEntites = await _courceRepository.GetUserCourse(
+            var courseEntites = await _courceRepository.GetUserCourseId(
                 userId,
                 userSortingRequest,
                 new AnySpecification<CourseEntity>(),
@@ -268,7 +268,8 @@ namespace Application.Services.CourceService
 
             if(courseEntites == null)
             {
-                return TResult<PagedResponseDTO <CourseOutputDTO>>.FailedOperation(errorCode.CoursesNotFoud, "у вас нету своих курсов");
+                return TResult<PagedResponseDTO <CourseOutputDTO>>
+                    .FailedOperation(errorCode.CoursesNotFoud);
             }
 
             List<CourseOutputDTO> courseDTOs = await MapList(courseEntites);
@@ -276,41 +277,35 @@ namespace Application.Services.CourceService
             return PageService
                 .CreatePage(courseDTOs, 
                 userSortingRequest, 
-                await _courceRepository.CountAsync(new UserCourseSpecification(userId));
+                await _courceRepository.CountAsync(new UserCourseSpecification(userId)));
 
         }
 
 
         public async Task<TResult> RemoveCourse(
-            int courseid, 
-            ClaimsPrincipal userClaim,
+            int courseid,
+            int userId,
+            AllRole role,
             CancellationToken ct = default
             )
         {
-            if(userClaim.IsInRole(Enum.GetName(AllRole.user)))
+            if (role == AllRole.user)
             {
 
-                var cource = await _courceRepository
-                            .GetAllWithoutTracking()
-                             .Include(c => c.user)
-                             .Where(
-                             c => c.id == courseid &&  
-                             c.user.email == userClaim.FindFirst(ClaimTypes.Email).Value.ToString())
-                             .FirstOrDefaultAsync(ct);
+                var courceid = await _courceRepository
+                    .FirstOrDefaultAsync(new UserCourseIdSpecification(userId, courseid));
 
-                //UserEntities? user = await _userRepository.GetAll()
-                //    .Where(c => c.email == )
-                //    .FirstOrDefaultAsync();
-             
-                if(cource == null)
+                if (courceid == default ||
+                    courceid == 0 
+                    )
                 {
-                    return TResult.FailedOperation(errorCode.CoursesNotFoud, "курс для удаление не найден");
+                    return TResult.FailedOperation(errorCode.CoursesNotFoud);
                 }
 
-                await _courceRepository.DeleteById(ct, cource.id);
+                await _courceRepository.DeleteById(ct, courceid);
 
             }
-            else if (userClaim.IsInRole(Enum.GetName(AllRole.admin)))
+            else if (role == AllRole.admin )
             {
 
                 var course =  await _courceRepository.GetByIdAsync(ct, courseid);
@@ -340,11 +335,8 @@ namespace Application.Services.CourceService
             string? ContentType,
             CancellationToken ct = default)
         {
-            var course = await _courceRepository
-                .GetAll()
-                .Where(c => c.id == courseSetImageDTO.courseid && 
-                       c.creatorid == userid)
-                .FirstOrDefaultAsync(ct);
+            var course = await _courceRepository.FirstOrDefaultAsync(
+                new UserCourseSpecification(userid, courseSetImageDTO.courseid, true));
 
             switch(courseSetImageDTO.setstatus)
             {
@@ -361,9 +353,6 @@ namespace Application.Services.CourceService
                         {
                             return TResult<SetImageOutPutDTO>.FailedOperation(errorCode.CoursesNotFoud);
                         }
-
-
-
 
                         if (!string.IsNullOrEmpty(course.imgfilekey))
                         {
@@ -413,12 +402,7 @@ namespace Application.Services.CourceService
                 case SetImageStatus.Remove:
                     {
                         _logger.LogInformation("Remove");
-                        var course1 = await _courceRepository
-                         .GetAll()
-                         .Where(c => c.id == courseSetImageDTO.courseid &&
-                                c.creatorid == userid)
-                         .FirstOrDefaultAsync(ct);
-
+                       
                         course.imgfilekey = null;
 
                         try

@@ -1,21 +1,20 @@
-﻿using infrastructure.DataBase.Entitiеs;
-using System;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Ardalis.Specification;
+using infrastructure.DataBase.Entitiеs;
 
 namespace Core.Specification.CourseSpecification
 {
-    public class UserCourseSpecification : Specification<CourseEntity>
+    public class UserCourseIdSpecification : Specification<CourseEntity, int>
     {
-        public UserCourseSpecification(int userid, int courseid = default, bool tracking = false) 
+        public UserCourseIdSpecification(int userid, int courseid = default)
         {
-            if(!tracking)
-            {
-                Query.AsNoTracking();
-            }
+            Query.Select(c => c.id);
+
             if (courseid != default)
             {
                 Query.Where(c => c.id == courseid &&
@@ -26,8 +25,8 @@ namespace Core.Specification.CourseSpecification
                 Query.Where(c => c.id == userid);
             }
 
-            
-          
-        }    
+
+
+        }
     }
 }

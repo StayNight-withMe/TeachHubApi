@@ -3,13 +3,8 @@ using Microsoft.Extensions.Logging;
 using AutoMapper;
 using System.Runtime.CompilerServices;
 using AutoMapper;
-using infrastructure.Utils.Mapping.MapperDTO;
-using Microsoft.AspNetCore.Http;
-using infrastructure.Utils.HeadersService;
 using Core.Model.TargetDTO.Auth.input;
 using Core.Model.TargetDTO.Users.input;
-using infrastructure.Utils.PasswodHashService;
-using Microsoft.EntityFrameworkCore;
 using Core.Common.EnumS;
 using infrastructure.DataBase.Entitiеs;
 using Application.Abstractions.Repository.Base;
@@ -56,12 +51,15 @@ namespace Application.Services.AuthService
             
             if (ip == string.Empty)
             {
-                return TResult<UserAuthDto>.FailedOperation(errorCode.IpNotFound, "ошибка аутентификации, ip неизвествен");
+                return TResult<UserAuthDto>.FailedOperation(errorCode.IpNotFound);
             }
             var user = await _userRepository
                 .GetAll()
-                .Where(c => c.email == loginUserDTO.email && c.isdelete == false)
+                .Where(c => c.email == loginUserDTO.email && 
+                c.isdelete == false)
                 .FirstOrDefaultAsync(ct);
+
+
             if(user != null)
             {
                 if(!PasswordHashService.VerifyPassword(loginUserDTO.password, user.password))

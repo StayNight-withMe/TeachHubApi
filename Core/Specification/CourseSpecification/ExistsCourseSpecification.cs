@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Core.Specification.CourseSpecification
 {
-    public class ExistsCourseSpecification : Specification<CourseEntity, bool>
+    public class ExistsCourseSpecification : Specification<CourseEntity>
     {
         public ExistsCourseSpecification(int id, string courseName)
         {

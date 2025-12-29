@@ -31,23 +31,28 @@ namespace Application.Abstractions.Repository.Custom
             );
 
 
-        public Task<List<CourseEntity>> GetAllCourse(
+        public Task<List<CourseEntity>> GetAllCourse( 
             SortingAndPaginationDTO dto,
             Specification<CourseEntity> spec,
-            string[] noToSort,
+            string[]? noToSort,
             CancellationToken ct = default
             );
 
-        public Task<List<CourseEntity>> GetUserCourse(
+        public Task<List<CourseEntity>> GetUserCourses(
             int userId,
-            SortingAndPaginationDTO dto,
+            SortingAndPaginationDTO? dto,
             Specification<CourseEntity> spec,
-            string[] noToSort,
+            string[]? noToSort,
             CancellationToken ct = default);
 
-        public Task<int> GetCourseIdByUserEmailAndId(
-            
-            );
+
+        public Task<List<CourseEntity>> GetUserCourseId(
+        int userId,
+        SortingAndPaginationDTO? dto,
+        Specification<CourseEntity> spec,
+        string[]? noToSort,
+        CancellationToken ct = default);
+
 
     }
 }
