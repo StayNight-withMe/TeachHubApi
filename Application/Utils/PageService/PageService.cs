@@ -27,7 +27,10 @@ namespace Application.Utils.PageService
 
     
 
-        public static TResult<PagedResponseDTO<T>> CreatePage<T>(List<T> list,SortingAndPaginationDTO userSortingRequest, int totalCount)
+        public static TResult<PagedResponseDTO<T>> CreatePage<T>(
+            List<T> list,
+            SortingAndPaginationDTO userSortingRequest, 
+            int totalCount)
         {
 
              bool validate = PageValidate(userSortingRequest.PageSize, userSortingRequest.PageNumber);

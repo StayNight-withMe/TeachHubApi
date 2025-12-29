@@ -73,8 +73,6 @@ namespace Application.Services.CourceService
             CancellationToken ct = default)
         {
            
-
-
             bool exists = await _courceRepository
                 .AnyAsync(new ExistsCourseSpecification(id, courceDTO.name));
 

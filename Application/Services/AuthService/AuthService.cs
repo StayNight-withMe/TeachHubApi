@@ -55,8 +55,7 @@ namespace Application.Services.AuthService
             }
             var user = await _userRepository
                 .GetAll()
-                .Where(c => c.email == loginUserDTO.email && 
-                c.isdelete == false)
+
                 .FirstOrDefaultAsync(ct);
 
 
@@ -71,7 +70,6 @@ namespace Application.Services.AuthService
                 UserRoleEntity? userRole = await _userRolesRepository.GetByIdAsync(ct, user.id, (int)loginUserDTO.role);
                 if (userRole != null)
                 {
-                   // Console.WriteLine($" IDROLE {userRole.roleid}, USERID {userRole.user.id}");
                     AllRole role = (AllRole)userRole.roleid;
                     var userAuthSource = new UserAuthMappingSource
                     {
