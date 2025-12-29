@@ -1,5 +1,5 @@
-﻿using Asp.Versioning;
-using Core.Interfaces.Service;  
+﻿using Application.Abstractions.Service;
+using Asp.Versioning;
 using Core.Model.TargetDTO.Common.input;
 using Microsoft.AspNetCore.Mvc;
 

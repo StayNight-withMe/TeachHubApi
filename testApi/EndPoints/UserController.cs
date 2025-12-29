@@ -1,7 +1,6 @@
 ﻿using Asp.Versioning;
 using AutoMapper;
 using Core.Common.EnumS;
-using Core.Interfaces.Service;
 using Core.Interfaces.Utils;
 using Core.Model.ReturnEntity;
 using Core.Model.TargetDTO.Users.input;
@@ -14,6 +13,7 @@ using System.Threading.Tasks;
 using testApi.WebUtils.JwtClaimUtil;
 using Core.Common.Types;
 using Core.Common.Types.HashId;
+using Application.Abstractions.Service;
 
 
 namespace testApi.EndPoints

@@ -1,8 +1,8 @@
 ﻿using Applcation.Service.chapterService;
+using Application.Abstractions.Service;
 using Asp.Versioning;
 using Core.Common.EnumS;
 using Core.Common.Types.HashId;
-using Core.Interfaces.Service;
 using Core.Model.TargetDTO.Chapter.input;
 using Core.Model.TargetDTO.Common.input;
 using Core.Model.TargetDTO.Common.output;

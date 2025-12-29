@@ -14,7 +14,8 @@ namespace Core.Specification.FavoriteSpec
         public FavoriteCoursesSpec(int userId, List<int> courseIds)
         {
             Query.AsNoTracking()
-                 .Where(f => f.userid == userId && courseIds.Contains(f.courseid));
+                 .Where(f => f.userid == userId && 
+                 courseIds.Contains(f.courseid));
         }
     }
 }

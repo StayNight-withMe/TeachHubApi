@@ -22,6 +22,7 @@ using Core.Specification.FavoriteSpec;
 using infrastructure.DataBase.Entitiеs;
 using Logger;
 using Microsoft.Extensions.Logging;
+using System.Net.Http.Headers;
 using System.Security.Claims;
 
 namespace Application.Services.CourceService
@@ -139,7 +140,8 @@ namespace Application.Services.CourceService
 
         private async Task<List<CourseOutputDTO>> MapList(
             List<CourseEntity> courseEntities,
-            int userid = default
+            int userid = default,
+            CancellationToken ct = default
             )
         {
 
@@ -149,7 +151,7 @@ namespace Application.Services.CourceService
             var courseIds = courseEntities.Select(c => c.id).ToList();
 
             var dbResult = await _course_CategoriesRepository
-                    .GetCategoryNamesForCourses(courseIds);
+                    .GetCategoryNamesForCourses(courseIds, ct);
 
                     //.GetAllWithoutTracking()
                     //.Where(c => c.courseid == i.id)
@@ -177,8 +179,8 @@ namespace Application.Services.CourceService
             courseEntry => courseEntry.Value.ToDictionary(
                 catEntry => (Hashid)catEntry.Key,    
                 catEntry => catEntry.Value           
-    )
-);
+                )
+            );
 
             return courseEntities
                .Select(c => new CourseOutputDTO
@@ -203,17 +205,16 @@ namespace Application.Services.CourceService
             CancellationToken ct = default
             )
         {
-            var courses = await _courceRepository
-                .GetAllWithoutTracking()
-                .Include(c => c.user)
-                .GetWithPaginationAndSorting(userSortingRequest, "courseid", "creatorid", "description", "field")
-                .ToListAsync(ct);
-       
+            var courses = await _courceRepository.GetAllCourse(userSortingRequest,
+                new AnySpecification<CourseEntity>(),
+                [ "userSortingRequest", "courseid", "creatorid", "description", "field" ],
+                ct);
+
+
             return PageService.CreatePage(
-                await MapList(courses), 
-                userSortingRequest, 
-                await _courceRepository.GetAll()
-                    .CountAsync(ct));
+                await MapList(courses),
+                userSortingRequest,
+                await _courceRepository.CountAsync(new AnySpecification<CourseEntity>(), ct) );
 
         }
 
@@ -224,10 +225,8 @@ namespace Application.Services.CourceService
             int userid,
             CancellationToken ct = default)
         {
-            var cousrse = await _courceRepository.GetAllWithoutTracking()
-                .Where(c => c.id == updateCourseDTO.id && 
-                c.creatorid == userid)
-                .FirstOrDefaultAsync(ct);
+            var cousrse = await _courceRepository
+                .FirstOrDefaultAsync(new UserCourseSpecification(userid, updateCourseDTO.id), ct);
 
             if(cousrse == null)
             {
@@ -252,18 +251,20 @@ namespace Application.Services.CourceService
 
 
         public async Task<TResult<PagedResponseDTO<CourseOutputDTO>>> GetUserCourses(
-            int userid, 
+            int userId, 
             SortingAndPaginationDTO userSortingRequest,
             CancellationToken ct = default
             )
         {
 
-          
-            List<CourseEntity> courseEntites = await _courceRepository.GetAllWithoutTracking()
-                .Include(c => c.user)
-                .GetWithPaginationAndSorting(userSortingRequest, "courseid", "creatorid", "description")
-                .Where(c => c.creatorid == userid)
-                .ToListAsync(ct);
+
+            List<CourseEntity> courseEntites = await _courceRepository.GetUserCourse(
+                userId,
+                userSortingRequest,
+                new AnySpecification<CourseEntity>(),
+                ["userSortingRequest", "courseid", "creatorid", "description"], 
+                ct );
+
 
             if(courseEntites == null)
             {
@@ -275,9 +276,7 @@ namespace Application.Services.CourceService
             return PageService
                 .CreatePage(courseDTOs, 
                 userSortingRequest, 
-                await _courceRepository.GetAll()
-                    .Where(c => c.creatorid == userid)
-                    .CountAsync(ct));
+                await _courceRepository.CountAsync(new UserCourseSpecification(userId));
 
         }
 
@@ -375,11 +374,6 @@ namespace Application.Services.CourceService
                               course.imgfilekey,
                               ct);
 
-                            }
-                            catch (AmazonS3Exception ex)
-                            {
-                                _logger.LogError(ex);
-                                return TResult<SetImageOutPutDTO>.FailedOperation(errorCode.CloudError);
                             }
                             catch (Exception ex)
                             {

@@ -1,7 +1,7 @@
 ﻿//using Amazon.S3.Model;
+using Application.Abstractions.Repository.Base;
 using BloomFilter;
 using BloomFilter.Configurations;
-using Core.Interfaces.Repository;
 using Core.Model.Options;
 using infrastructure.DataBase.Entitiеs;
 //using infrastructure.Repository.Base;

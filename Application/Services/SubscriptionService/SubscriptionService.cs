@@ -1,20 +1,17 @@
-﻿using Core.Interfaces.Repository;
-using Core.Interfaces.Service;
-using Core.Interfaces.UoW;
-using Core.Model.ReturnEntity;
+﻿using Core.Model.ReturnEntity;
 using Core.Model.TargetDTO.Common.input;
 using Core.Model.TargetDTO.Common.output;
 using Core.Model.TargetDTO.Subscription.output;
 using infrastructure.DataBase.Entitiеs;
-using infrastructure.Extensions;
-using infrastructure.Utils.PageService;
+using Core.Common.Exeptions;
 using Logger;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Npgsql;
 using System.Threading.Tasks;
+using Application.Abstractions.UoW;
+using Application.Abstractions.Repository.Base;
+using Application.Abstractions.Service;
 
-namespace Applcation.Service.SubscriptionService
+namespace Application.Services.SubscriptionService
 {
     public class SubscriptionService : ISubscriptionService
     {
@@ -46,6 +43,7 @@ namespace Applcation.Service.SubscriptionService
             CancellationToken ct = default
             )
         {
+
             await _suubscriptionRepository.Create(new SubscriptionEntites { followerid = followerid, followingid = followingid });
         
             try
@@ -54,13 +52,13 @@ namespace Applcation.Service.SubscriptionService
                 return TResult.CompletedOperation();
             }
    
-            catch(DbUpdateException ex) when (ex.InnerException is PostgresException pgEx)
+            catch(DbUpdateException ex) 
             {
                 _logger.LogDBError(ex);
-                if (pgEx.SqlState == 23505.ToString() || pgEx.SqlState == 23514.ToString())
+                if (ex.ErrorCode == 23505.ToString() || ex.ErrorCode == 23514.ToString())
                     return TResult.FailedOperation(errorCode.FollowingError);
 
-                if(pgEx.SqlState == 23503.ToString())
+                if(ex.ErrorCode == 23503.ToString())
                     return TResult.FailedOperation(errorCode.UserNotFound);
 
                 return TResult.FailedOperation(errorCode.DatabaseError);
@@ -85,10 +83,10 @@ namespace Applcation.Service.SubscriptionService
                 await _unitOfWork.CommitAsync();
                 return TResult.CompletedOperation();
             }
-            catch(DbUpdateException ex) when (ex.InnerException is PostgresException pgEx)
+            catch(DbUpdateException ex) 
             {
 
-                if (pgEx.SqlState == 23503.ToString())
+                if (ex.ErrorCode == 23503.ToString())
                     return TResult.FailedOperation(errorCode.UserNotFound);
 
                 _logger.LogDBError(ex);

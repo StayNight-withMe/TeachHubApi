@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Applcation.Utils.PageService
+namespace Application.Utils.PageService
 {
     public static class PageService
     {

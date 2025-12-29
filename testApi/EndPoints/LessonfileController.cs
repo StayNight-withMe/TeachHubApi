@@ -1,7 +1,7 @@
 ﻿using Amazon.Util.Internal;
+using Application.Abstractions.Service;
 using Asp.Versioning;
 using Core.Common.Types.HashId;
-using Core.Interfaces.Service;
 using Core.Model.TargetDTO.Common.input;
 using Core.Model.TargetDTO.LessonFile.input;
 using Microsoft.AspNetCore.Authorization;

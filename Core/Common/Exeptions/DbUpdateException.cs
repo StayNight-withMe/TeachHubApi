@@ -11,7 +11,7 @@ namespace Core.Common.Exeptions
         public string ErrorCode { get; }
         public DbUpdateException(string message, string errorCode) : base(message)  
         {
-        ErrorCode = errorCode;
+            ErrorCode = errorCode;
         }
     }
 }

@@ -1,7 +1,8 @@
-﻿using AutoMapper;
-using Core.Interfaces.Repository;
-using Core.Interfaces.Service;
-using Core.Interfaces.UoW;
+﻿using Application.Abstractions.Repository.Base;
+using Application.Abstractions.Service;
+using Application.Abstractions.UoW;
+using Application.Utils.PageService;
+using AutoMapper;
 using Core.Model.ReturnEntity;
 using Core.Model.TargetDTO.Common.input;
 using Core.Model.TargetDTO.Common.output;
@@ -9,7 +10,6 @@ using Core.Model.TargetDTO.Review.input;
 using Core.Model.TargetDTO.Review.output;
 using infrastructure.DataBase.Entitiеs;
 using infrastructure.Extensions;
-using infrastructure.Utils.PageService;
 using Logger;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -20,7 +20,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Applcation.Service.ReviewService
+namespace Application.Services.ReviewService
 {
     public class ReviewService : IReviewService
     {

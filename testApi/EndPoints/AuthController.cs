@@ -1,5 +1,4 @@
 ﻿using Asp.Versioning;
-using Core.Interfaces.Service;
 using Core.Interfaces.Utils;
 using Core.Model.TargetDTO.Auth.input;
 using Core.Model.TargetDTO.Courses.output;
@@ -7,6 +6,7 @@ using infrastructure.Utils.HashIdConverter;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using Core.Common.Types.HashId;
+using Application.Abstractions.Service;
 
 namespace testApi.EndPoints
 {

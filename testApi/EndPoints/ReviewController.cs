@@ -1,6 +1,6 @@
-﻿using Asp.Versioning;
+﻿using Application.Abstractions.Service;
+using Asp.Versioning;
 using Core.Common.Types.HashId;
-using Core.Interfaces.Service;
 using Core.Model.TargetDTO.Common.input;
 using Core.Model.TargetDTO.Review.input;
 using Microsoft.AspNetCore.Authorization;

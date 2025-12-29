@@ -1,7 +1,8 @@
-﻿using AutoMapper;
-using Core.Interfaces.Repository;
-using Core.Interfaces.Service;
-using Core.Interfaces.UoW;
+﻿using Application.Abstractions.Repository.Base;
+using Application.Abstractions.Service;
+using Application.Abstractions.UoW;
+using Application.Utils.PageService;
+using AutoMapper;
 using Core.Model.ReturnEntity;
 using Core.Model.TargetDTO.Chapter.input;
 using Core.Model.TargetDTO.Chapter.output;
@@ -10,13 +11,12 @@ using Core.Model.TargetDTO.Common.output;
 using infrastructure.DataBase.Entitiеs;
 using infrastructure.Extensions;
 using infrastructure.Utils.Mapping.MapperDTO;
-using infrastructure.Utils.PageService;
 using Logger;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 
-namespace Applcation.Service.chapterService
+namespace Application.Services.ChapterService
 {
     public class ChapterService : IChapterService
     {
@@ -111,7 +111,7 @@ namespace Applcation.Service.chapterService
                {
                    courseid = courses.id,
 
-                   chapter = chapter
+                   chapter
                }
                );
 

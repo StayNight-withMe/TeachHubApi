@@ -7,11 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="16.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.10" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Infrastructure\infrastructure.csproj" />
     <ProjectReference Include="..\Logger\Logger.csproj" />
     <ProjectReference Include="..\Core\Core.csproj" />
   </ItemGroup>

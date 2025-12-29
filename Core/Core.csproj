@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Ardalis.Specification" Version="9.3.1" />
     <PackageReference Include="Hashids.net" Version="1.7.0" />
   </ItemGroup>
 

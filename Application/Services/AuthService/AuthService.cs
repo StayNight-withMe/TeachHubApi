@@ -1,11 +1,9 @@
 ﻿using Core.Model.ReturnEntity;
-using Core.Interfaces.Service;
 using Microsoft.Extensions.Logging;
 using AutoMapper;
 using System.Runtime.CompilerServices;
 using AutoMapper;
 using infrastructure.Utils.Mapping.MapperDTO;
-using Core.Interfaces.Repository;
 using Microsoft.AspNetCore.Http;
 using infrastructure.Utils.HeadersService;
 using Core.Model.TargetDTO.Auth.input;
@@ -14,9 +12,11 @@ using infrastructure.Utils.PasswodHashService;
 using Microsoft.EntityFrameworkCore;
 using Core.Common.EnumS;
 using infrastructure.DataBase.Entitiеs;
+using Application.Abstractions.Repository.Base;
+using Application.Abstractions.Service;
 
 
-namespace Applcation.Service.AuthService
+namespace Application.Services.AuthService
 {
     public class AuthService : IAuthService
     {

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Applcation.ProfileService
+namespace Application.Services.ProfileService
 {
-    internal class ProfileService
+    public class ProfileService
     {
     }
 }

@@ -1,9 +1,9 @@
-﻿using AutoMapper;
+﻿using Application.Abstractions.Repository.Base;
+using Application.Abstractions.Service;
+using Application.Abstractions.UoW;
+using AutoMapper;
 using AutoMapper;
 using Core.Common.EnumS;
-using Core.Interfaces.Repository;
-using Core.Interfaces.Service;
-using Core.Interfaces.UoW;
 using Core.Model.BaseModel.Auth;
 using Core.Model.BaseModel.User;
 using Core.Model.ReturnEntity;
@@ -20,7 +20,7 @@ using Microsoft.Extensions.Logging;
 using System.Security.Authentication;
 
 
-namespace Applcation.Service.UserService
+namespace Application.Services.UserService
 {
     public class UserService : IUsersService
     {

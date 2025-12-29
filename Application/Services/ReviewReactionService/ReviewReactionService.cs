@@ -1,8 +1,8 @@
-﻿using AutoMapper;
+﻿using Application.Abstractions.Repository.Base;
+using Application.Abstractions.Service;
+using Application.Abstractions.UoW;
+using AutoMapper;
 using Core.Common.EnumS;
-using Core.Interfaces.Repository;
-using Core.Interfaces.Service;
-using Core.Interfaces.UoW;
 using Core.Model.ReturnEntity;
 using Core.Model.TargetDTO.ReviewReaction;
 using infrastructure.DataBase.Entitiеs;
@@ -15,7 +15,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Applcation.Service.ReviewReactionService
+namespace Application.Services.ReviewReactionService
 {
     public class ReviewReactionService : IReviewReactionService
     {

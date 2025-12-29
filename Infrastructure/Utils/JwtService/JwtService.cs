@@ -1,4 +1,4 @@
-﻿using Core.Interfaces.Service;
+﻿using Application.Abstractions.Service;
 using Core.Model.TargetDTO.Users.input;
 using infrastructure.Utils.HashIdConverter;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

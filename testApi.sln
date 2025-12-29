@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "testApi", "testApi\testApi.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logger", "Logger\Logger.csproj", "{FB746B69-30A5-41DD-AD21-F68B40801786}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Applcation", "Application\Applcation.csproj", "{B80CF00E-70B5-8FA7-5B16-F18D3CCA5948}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{B80CF00E-70B5-8FA7-5B16-F18D3CCA5948}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "infrastructure", "Infrastructure\infrastructure.csproj", "{5872AEB3-BAA3-FE31-B0EB-0FB6DBEDCF83}"
 EndProject

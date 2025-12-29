@@ -1,7 +1,9 @@
-﻿using Applcation.Abstractions.Repository.Base;
+﻿using Application.Abstractions.Repository.Base;
 using Ardalis.Specification;
 using Ardalis.Specification.EntityFrameworkCore;
+using Core.Model.TargetDTO.Common.input;
 using infrastructure.DataBase.Context;
+using infrastructure.DataBase.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
@@ -80,6 +82,24 @@ namespace infrastructure.DataBase.Repository.Base
         {
             return _dbSet.AsQueryable().AsNoTracking();
         }
+
+
+        protected IQueryable<T> GetWithPaginationAndSorting(IQueryable<T> qwery, SortingAndPaginationDTO dto)
+        {
+            return qwery.GetWithPaginationAndSorting(dto);
+        }
+
+        protected IQueryable<T> GetWithPagination(IQueryable<T> qwery, PaginationDTO dto)
+        {
+            return qwery.GetWithPagination(dto);
+        }
+
+        protected IQueryable<T> GetWithSorting(IQueryable<T> qwery, SortingDTO dto)
+        {
+            return qwery.GetWithSorting(dto);
+        }
+
+       
 
 
         /// <summary>

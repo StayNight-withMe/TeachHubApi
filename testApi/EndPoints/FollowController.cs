@@ -1,5 +1,4 @@
 ﻿using Asp.Versioning;
-using Core.Interfaces.Service;
 using testApi.WebUtils.JwtClaimUtil;
 using Core.Model.TargetDTO.Common.input;
 using Microsoft.AspNetCore.Authorization;
@@ -7,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
 using System.Security.Claims;
 using Core.Common.Types.HashId;
+using Application.Abstractions.Service;
 
 namespace testApi.EndPoints
 {

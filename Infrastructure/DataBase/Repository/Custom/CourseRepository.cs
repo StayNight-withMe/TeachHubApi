@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace infrastructure.DataBase.Repository.Custom
 {
-    internal class CourseRepository
+    public class CourseRepository
     {
     }
 }
