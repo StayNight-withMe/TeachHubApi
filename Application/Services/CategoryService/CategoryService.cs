@@ -7,19 +7,19 @@ using Core.Model.TargetDTO.Common.input;
 using Core.Model.TargetDTO.Common.output;
 using infrastructure.DataBase.Entitiеs;
 using Microsoft.Extensions.Logging;
-
+using Application.Abstractions.Repository.Custom;
 
 namespace Application.Services.CategoryService
 {
     public class CategoryService : ICategoryService
     {
-        private readonly IBaseRepository<CategoriesEntities> _categoryRepository;
+        private readonly ICategoryRepository _categoryRepository;
 
         private readonly ILogger<CategoryService> _logger;
 
 
-        public CategoryService( 
-            IBaseRepository<CategoriesEntities>  categoryRepository, 
+        public CategoryService(
+            ICategoryRepository categoryRepository, 
             ILogger<CategoryService> logger
             ) 
         {
@@ -31,17 +31,14 @@ namespace Application.Services.CategoryService
         public async Task<TResult<PagedResponseDTO<CategoryResponseDTO>>> SearchCategory(
             string searchText, 
             PaginationDTO pagination,
-            CancellationToken cancellationToken = default
+            CancellationToken ct = default
             )
         {
-            var qwery = _categoryRepository
-                .GetAllWithoutTracking()
-                .Where(c => EF.Functions.ILike(c.name, $"%{searchText}%"));
+            var categoryEntities = _categoryRepository.SearchCategory(
+                searchText, 
+                pagination, 
+                ct);
 
-            var resultEntities =  await qwery.GetWithPagination(pagination)
-                .OrderBy(c => c.parentid)
-                .OrderBy(c => c.name)
-                .ToListAsync();
 
             var resultDTo = resultEntities.Select(c =>
             new CategoryResponseDTO
@@ -56,7 +53,7 @@ namespace Application.Services.CategoryService
             return PageService.CreatePage(
                 resultDTo, 
                 pagination, 
-                await qwery.CountAsync()
+                await categoryEntities.CountAsync()
                 );
 
 

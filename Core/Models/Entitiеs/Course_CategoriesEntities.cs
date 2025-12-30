@@ -13,7 +13,7 @@ namespace infrastructure.DataBase.Entitiеs
         public int categoryid { get; set; }
 
         [ForeignKey(nameof(categoryid))]
-        public CategoriesEntities categories { get; set; }
+        public CategoryEntity categories { get; set; }
 
         [ForeignKey(nameof(courseid))]
         public CourseEntity course { get; set; }

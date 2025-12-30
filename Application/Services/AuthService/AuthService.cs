@@ -53,25 +53,25 @@ namespace Application.Services.AuthService
             {
                 return TResult<UserAuthDto>.FailedOperation(errorCode.IpNotFound);
             }
-            var pasword = await _userRepository.FirstOrDefaultAsync(new UserAuthSpec(loginUserDTO.email));
+            var user = await _userRepository.FirstOrDefaultAsync(new UserAuthSpec(loginUserDTO.email));
 
 
-            if(pasword != null)
+            if(user != null)
             {
-                if(!PasswordHashService.VerifyPassword(loginUserDTO.password, pasword))
+                if(!PasswordHashService.VerifyPassword(loginUserDTO.password, user.password))
                 {
                     return TResult<UserAuthDto>.FailedOperation(errorCode.PasswordDontMatch);
                 }
 
 
-                UserRoleEntity? userRole = await _userRolesRepository.GetByIdAsync(ct, pasword.id, (int)loginUserDTO.role);
+                UserRoleEntity? userRole = await _userRolesRepository.GetByIdAsync(ct, user.id, (int)loginUserDTO.role);
                 if (userRole != null)
                 {
                     AllRole role = (AllRole)userRole.roleid;
                     var userAuthSource = new UserAuthMappingSource
                     {
                         role =  Enum.GetName(role),
-                        user = pasword,
+                        user = user,
                         ip = ip,
                         UserAgent = userAgent,
                     };

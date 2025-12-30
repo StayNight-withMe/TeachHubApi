@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace infrastructure.DataBase.Entitiеs
 {
-    public class CategoriesEntities
+    public class CategoryEntity
     {
         public int id { get; set; }
         public string name { get; set; }
         public int parentid { get; set; }
 
         [ForeignKey(nameof(parentid))]
-        public CategoriesEntities categories { get; set; }
+        public CategoryEntity categories { get; set; }
     }
 }

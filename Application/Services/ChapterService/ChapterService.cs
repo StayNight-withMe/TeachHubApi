@@ -9,10 +9,8 @@ using Core.Model.TargetDTO.Chapter.output;
 using Core.Model.TargetDTO.Common.input;
 using Core.Model.TargetDTO.Common.output;
 using infrastructure.DataBase.Entitiеs;
-using infrastructure.Extensions;
-using infrastructure.Utils.Mapping.MapperDTO;
+using Application.Mapping.MapperDTO;
 using Logger;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 

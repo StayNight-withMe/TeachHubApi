@@ -16,13 +16,13 @@ namespace Application.Services.LessonService.CourceService.CategoryService
 {
     public class CategoryService : ICategoryService
     {
-        private readonly IBaseRepository<CategoriesEntities> _categoryRepository;
+        private readonly IBaseRepository<CategoryEntity> _categoryRepository;
 
         private readonly ILogger<CategoryService> _logger;
 
 
         public CategoryService( 
-            IBaseRepository<CategoriesEntities>  categoryRepository, 
+            IBaseRepository<CategoryEntity>  categoryRepository, 
             ILogger<CategoryService> logger
             ) 
         {

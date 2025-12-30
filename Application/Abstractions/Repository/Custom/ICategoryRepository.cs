@@ -15,7 +15,7 @@ namespace Application.Abstractions.Repository.Custom
             CancellationToken ct = default);
             
         
-
+        public Task<List<CategoryEntity>>
 
     }
 }
