@@ -1,6 +1,7 @@
 ﻿using Application.Abstractions.Repository.Base;
 using Application.Abstractions.Service;
 using Application.Abstractions.UoW;
+using Application.Utils.PasswodHashService;
 using AutoMapper;
 using AutoMapper;
 using Core.Common.EnumS;
@@ -13,7 +14,6 @@ using Core.Model.TargetDTO.Users.output;
 using infrastructure.DataBase.Entitiеs;
 using infrastructure.Utils.BloomFilter.interfaces;
 using infrastructure.Utils.Mapping.MapperDTO;
-using infrastructure.Utils.PasswodHashService;
 using Logger;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;

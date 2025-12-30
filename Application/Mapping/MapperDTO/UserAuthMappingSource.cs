@@ -1,11 +1,12 @@
-﻿using infrastructure.DataBase.Entitiеs;
+﻿using Core.Model.Projections.AuthService;
+using infrastructure.DataBase.Entitiеs;
 
 namespace Application.Mapping.MapperDTO
 {
     public class UserAuthMappingSource
     {
         public int id { get; set; }
-        public UserEntity user { get; set; }
+        public UserAuthData user { get; set; }
         public string role { get; set; }
         public string ip {  get; set; }
         public string UserAgent { get; set; }

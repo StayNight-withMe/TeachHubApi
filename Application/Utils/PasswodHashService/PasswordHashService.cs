@@ -9,7 +9,7 @@ using System.Text;
 using System.Text.Unicode;
 using System.Threading.Tasks;
 
-namespace infrastructure.Utils.PasswodHashService
+namespace Application.Utils.PasswodHashService
 {
     public static class PasswordHashService
     {

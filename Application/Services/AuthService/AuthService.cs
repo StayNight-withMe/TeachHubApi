@@ -1,15 +1,15 @@
 ﻿using Core.Model.ReturnEntity;
 using Microsoft.Extensions.Logging;
 using AutoMapper;
-using System.Runtime.CompilerServices;
-using AutoMapper;
+using Application.Mapping.MapperDTO;
 using Core.Model.TargetDTO.Auth.input;
 using Core.Model.TargetDTO.Users.input;
 using Core.Common.EnumS;
 using infrastructure.DataBase.Entitiеs;
 using Application.Abstractions.Repository.Base;
 using Application.Abstractions.Service;
-
+using Core.Specification.AuthSpec;
+using Application.Utils.PasswodHashService;
 
 namespace Application.Services.AuthService
 {
@@ -53,28 +53,25 @@ namespace Application.Services.AuthService
             {
                 return TResult<UserAuthDto>.FailedOperation(errorCode.IpNotFound);
             }
-            var user = await _userRepository
-                .GetAll()
-
-                .FirstOrDefaultAsync(ct);
+            var pasword = await _userRepository.FirstOrDefaultAsync(new UserAuthSpec(loginUserDTO.email));
 
 
-            if(user != null)
+            if(pasword != null)
             {
-                if(!PasswordHashService.VerifyPassword(loginUserDTO.password, user.password))
+                if(!PasswordHashService.VerifyPassword(loginUserDTO.password, pasword))
                 {
                     return TResult<UserAuthDto>.FailedOperation(errorCode.PasswordDontMatch);
                 }
 
 
-                UserRoleEntity? userRole = await _userRolesRepository.GetByIdAsync(ct, user.id, (int)loginUserDTO.role);
+                UserRoleEntity? userRole = await _userRolesRepository.GetByIdAsync(ct, pasword.id, (int)loginUserDTO.role);
                 if (userRole != null)
                 {
                     AllRole role = (AllRole)userRole.roleid;
                     var userAuthSource = new UserAuthMappingSource
                     {
                         role =  Enum.GetName(role),
-                        user = user,
+                        user = pasword,
                         ip = ip,
                         UserAgent = userAgent,
                     };

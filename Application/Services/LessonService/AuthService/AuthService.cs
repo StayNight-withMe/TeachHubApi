@@ -8,12 +8,12 @@ using Microsoft.AspNetCore.Http;
 using infrastructure.Utils.HeadersService;
 using Core.Model.TargetDTO.Auth.input;
 using Core.Model.TargetDTO.Users.input;
-using infrastructure.Utils.PasswodHashService;
 using Microsoft.EntityFrameworkCore;
 using Core.Common.EnumS;
 using infrastructure.DataBase.Entitiеs;
 using Application.Abstractions.Repository.Base;
 using Application.Abstractions.Service;
+using Application.Utils.PasswodHashService;
 
 
 namespace Application.Services.LessonService.AuthService
