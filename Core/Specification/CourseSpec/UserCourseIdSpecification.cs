@@ -13,7 +13,8 @@ namespace Core.Specification.CourseSpecification
     {
         public UserCourseIdSpecification(int userid, int courseid = default)
         {
-            Query.Select(c => c.id);
+            Query.AsNoTracking()
+                .Select(c => c.id);
 
             if (courseid != default)
             {

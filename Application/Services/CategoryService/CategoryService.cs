@@ -34,13 +34,13 @@ namespace Application.Services.CategoryService
             CancellationToken ct = default
             )
         {
-            var categoryEntities = _categoryRepository.SearchCategory(
+            var categoryEntities =  await _categoryRepository.SearchCategory(
                 searchText, 
                 pagination, 
                 ct);
 
 
-            var resultDTo = resultEntities.Select(c =>
+            var resultDTo = categoryEntities.Select(c =>
             new CategoryResponseDTO
             {
                 id = c.id,
@@ -51,9 +51,9 @@ namespace Application.Services.CategoryService
 
 
             return PageService.CreatePage(
-                resultDTo, 
-                pagination, 
-                await categoryEntities.CountAsync()
+                resultDTo,
+                pagination,
+                await _categoryRepository.CountBySearch(searchText)
                 );
 
 

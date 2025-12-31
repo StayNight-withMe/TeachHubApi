@@ -1,10 +1,6 @@
 ﻿using Application.Abstractions.Repository.Base;
+using Core.Model.TargetDTO.Common.input;
 using infrastructure.DataBase.Entitiеs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Abstractions.Repository.Custom
 {
@@ -15,7 +11,20 @@ namespace Application.Abstractions.Repository.Custom
             CancellationToken ct = default);
             
         
-        public Task<List<CategoryEntity>>
+        public Task<List<CategoryEntity>> SearchCategory(
+            string searchText, 
+            PaginationDTO pagination,
+            CancellationToken ct = default);
+
+        public Task<int> CountBySearch(string searchText);
+
+            //            .GetAllWithoutTracking()
+            //    .Where(c => EF.Functions.ILike(c.name, $"%{searchText}%"));
+
+            //var resultEntities = await qwery.GetWithPagination(pagination)
+            //    .OrderBy(c => c.parentid)
+            //    .OrderBy(c => c.name)
+            //    .ToListAsync();
 
     }
 }

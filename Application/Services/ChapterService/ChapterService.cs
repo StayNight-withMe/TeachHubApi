@@ -49,7 +49,7 @@ namespace Application.Services.ChapterService
             int userid,
             CancellationToken ct = default)
         {
-            CourseEntity? course = await _coursesRepository.GetAll().AsNoTracking().
+            CourseEntity? course = await _coursesRepository.GetAll().
                 Where(c => c.creatorid == userid && c.id == chapter.courseid).
                 FirstOrDefaultAsync();
 
@@ -84,7 +84,6 @@ namespace Application.Services.ChapterService
         //    var chapter = await _chapterRepository.GetById(id);
         //    if (chapter == null)
         //    {
-        //
         //  return TResult<ChapterOutDTO>.FailedOperaion(errorCode.ChapterNotFound);
         //    }
         //    return TResult<ChapterOutDTO>.CompletedOperation(_mapper.Map<ChapterOutDTO>(chapter));

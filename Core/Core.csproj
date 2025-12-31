@@ -12,11 +12,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Model\BaseModel\Role\" />
-    <Folder Include="Model\TargetDTO\Auth\output\" />
-    <Folder Include="Model\TargetDTO\Category\output\" />
-    <Folder Include="Model\TargetDTO\Favorit\input\" />
-    <Folder Include="Model\TargetDTO\Subscription\input\" />
+    <Folder Include="Models\BaseModel\Role\" />
+    <Folder Include="Models\TargetDTO\Auth\output\" />
+    <Folder Include="Models\TargetDTO\Category\output\" />
+    <Folder Include="Models\TargetDTO\Favorit\input\" />
+    <Folder Include="Models\TargetDTO\Subscription\input\" />
   </ItemGroup>
 
 </Project>
