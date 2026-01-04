@@ -84,7 +84,6 @@ namespace Application.Services.ChapterService
         //    var chapter = await _chapterRepository.GetById(id);
         //    if (chapter == null)
         //    {
-
         //  return TResult<ChapterOutDTO>.FailedOperaion(errorCode.ChapterNotFound);
         //    }
         //    return TResult<ChapterOutDTO>.CompletedOperation(_mapper.Map<ChapterOutDTO>(chapter));
