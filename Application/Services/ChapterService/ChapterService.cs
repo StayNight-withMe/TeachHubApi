@@ -50,7 +50,8 @@ namespace Application.Services.ChapterService
             CancellationToken ct = default)
         {
             CourseEntity? course = await _coursesRepository.GetAll().
-                Where(c => c.creatorid == userid && c.id == chapter.courseid).
+                Where(c => c.creatorid == userid 
+                && c.id == chapter.courseid).
                 FirstOrDefaultAsync();
 
             if(course == null)
