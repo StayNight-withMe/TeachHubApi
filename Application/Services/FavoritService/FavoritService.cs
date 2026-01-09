@@ -2,21 +2,15 @@
 using Core.Model.TargetDTO.Common.input;
 using Core.Model.TargetDTO.Common.output;
 using Core.Model.TargetDTO.Favorit.output;
-using infrastructure.Extensions;
-//using infrastructure.Repository.Base;
+using Core.Common.Exeptions;
 using Logger;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using infrastructure.DataBase.Entitiеs;
 using Application.Abstractions.UoW;
 using Application.Abstractions.Repository.Base;
 using Application.Abstractions.Service;
 using Application.Utils.PageService;
+using Core.Specification.FavoriteSpec;
 
 namespace Application.Services.FavoritService
 {
@@ -65,14 +59,27 @@ namespace Application.Services.FavoritService
 
         }
 
-        public async Task<TResult> DeleteFavorit(int userid, int courseid,
+        public async Task<TResult> DeleteFavorit(
+            int userid, 
+            int courseid,
             CancellationToken ct = default)
         {
+
+            var entity = await _favoritrepo.AnyAsync(new UsersFavoriteSpec(courseid, userid), ct);
+
+            if (!entity)
+            {
+                return TResult.FailedOperation(errorCode.NotFound);
+            }
+
+            await _favoritrepo.DeleteById(
+            ct,
+            userid,
+            courseid);
+
             try
             {
-                await _favoritrepo.GetAll()
-                    .Where(c => c.courseid == courseid && c.userid == userid)
-                    .ExecuteDeleteAsync();
+                await _unitOfWork.CommitAsync();
                 return TResult.CompletedOperation();
             }
             catch (DbUpdateException ex)
@@ -93,10 +100,10 @@ namespace Application.Services.FavoritService
             CancellationToken ct = default
             )
         {
-            var entitiesList = await _favoritrepo.GetAllWithoutTracking().GetWithPaginationAndSorting(sort)
-               .Include(c => c.course)
-               .Include(c => c.user)
-               .Where(c => c.userid == userid).ToListAsync();
+            var entitiesList = await
+                _favoritrepo.(new UserFavoriteWithUserAndCourseSpec(userid));
+            //.GetAllWithoutTracking().GetWithPaginationAndSorting(sort)
+
 
             var dtoList = entitiesList
                 .Select(c =>

@@ -35,6 +35,7 @@ namespace infrastructure.DataBase.Repository.Base
             }
                 _dbSet.Add(value);
                 await Task.CompletedTask;
+            
         }
         /// <summary>
         /// обновление сущности целиком, для применения изменений нужен коммит изменений
