@@ -1,5 +1,5 @@
 ﻿using Ardalis.Specification;
-using infrastructure.DataBase.Entitiеs;
+using Core.Models.Entitiеs;
 using System;
 using System.Collections;
 using System.Collections.Generic;

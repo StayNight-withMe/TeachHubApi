@@ -3,17 +3,18 @@ using Application.Abstractions.Service;
 using Application.Abstractions.UoW;
 using Application.Utils.PageService;
 using AutoMapper;
-using Core.Model.ReturnEntity;
-using Core.Model.TargetDTO.Common.input;
-using Core.Model.TargetDTO.Common.output;
-using Core.Model.TargetDTO.Lesson.input;
-using Core.Model.TargetDTO.Lesson.output;
-using infrastructure.DataBase.Entitiеs;
-using infrastructure.Extensions;
+using Core.Common.Exeptions;
 using Logger;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Data;
+using Core.Specification.LessonSpec;
+using Core.Models.TargetDTO.Lesson.input;
+using Core.Models.TargetDTO.Lesson.output;
+using Core.Models.ReturnEntity;
+using Core.Models.TargetDTO.Common.input;
+using Core.Models.TargetDTO.Common.output;
+using Core.Models.Entitiеs;
+using Core.Specification.CourseSpec;
 
 namespace Application.Services.LessonService
 {
@@ -52,21 +53,18 @@ namespace Application.Services.LessonService
             int userid,
             CancellationToken ct = default)
         {
-             var course = await _courseRepository.GetAllWithoutTracking()
-                .Where(c => c.creatorid == userid && c.id == lesson.courseid)
-                .FirstOrDefaultAsync(ct);
+             var course = await _courseRepository
+                .AnyAsync(new UserCourseIdSpecification(userid, lesson.courseid),ct);
 
 
-            if ( course == null )
+            if (course == false)
             {
                 return TResult.FailedOperation(errorCode.CoursesNotFoud);
             }
 
 
-            bool valid = await _chapterRepository.GetAllWithoutTracking()
-            .Where(c => c.order == lesson.order &&
-                   c.name == lesson.name)
-            .AnyAsync(ct);
+            bool valid = await _chapterRepository
+                .AnyAsync(new ValidLessonForCreate(lesson.order, lesson.name));
 
 
             if(valid)

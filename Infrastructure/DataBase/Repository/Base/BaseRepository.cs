@@ -1,7 +1,7 @@
 ﻿using Application.Abstractions.Repository.Base;
 using Ardalis.Specification;
 using Ardalis.Specification.EntityFrameworkCore;
-using Core.Model.TargetDTO.Common.input;
+using Core.Models.TargetDTO.Common.input;
 using infrastructure.DataBase.Context;
 using infrastructure.DataBase.Extensions;
 using Microsoft.EntityFrameworkCore;

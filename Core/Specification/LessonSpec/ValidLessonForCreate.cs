@@ -1,12 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Core.Models.Entitiеs;
+using Ardalis.Specification;
 
 namespace Core.Specification.LessonSpec
 {
-    internal class ValidLessonForCreate
+    public class ValidLessonForCreate : Specification<ChapterEntity>
     {
+        public ValidLessonForCreate(int order, string lessonName)
+        {
+            Query.AsNoTracking();
+            Query.Where(c => c.order == order &&
+                   c.name == lessonName);
+        }
     }
 }

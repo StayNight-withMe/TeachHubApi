@@ -1,5 +1,5 @@
-﻿using infrastructure.DataBase.Entitiеs;
-using Ardalis.Specification;
+﻿using Ardalis.Specification;
+using Core.Models.Entitiеs;
 
 namespace Core.Specification.FavoriteSpec
 {

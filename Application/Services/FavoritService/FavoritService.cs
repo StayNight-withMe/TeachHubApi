@@ -1,16 +1,16 @@
-﻿using Core.Model.ReturnEntity;
-using Core.Model.TargetDTO.Common.input;
-using Core.Model.TargetDTO.Common.output;
-using Core.Model.TargetDTO.Favorit.output;
-using Core.Common.Exeptions;
+﻿using Core.Common.Exeptions;
 using Logger;
 using Microsoft.Extensions.Logging;
-using infrastructure.DataBase.Entitiеs;
 using Application.Abstractions.UoW;
 using Application.Abstractions.Repository.Base;
 using Application.Abstractions.Service;
 using Application.Utils.PageService;
 using Core.Specification.FavoriteSpec;
+using Core.Models.TargetDTO.Favorit.output;
+using Core.Models.ReturnEntity;
+using Core.Models.TargetDTO.Common.input;
+using Core.Models.TargetDTO.Common.output;
+using Core.Models.Entitiеs;
 
 namespace Application.Services.FavoritService
 {
