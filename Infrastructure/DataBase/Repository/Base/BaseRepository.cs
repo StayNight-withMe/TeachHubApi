@@ -113,24 +113,6 @@ namespace infrastructure.DataBase.Repository.Base
             return await _dbSet.FindAsync(id, ct);
         }
 
-
-        //пока что незнаю надо ли мне
-        //public virtual Task<T?> GetByIdAsync<TId>(TId key)
-        //where TId : notnull
-        //{
-        //   return _dbSet.FindAsync(key).AsTask();
-        //}
-    
-
-        //public virtual Task<T?> GetByIdAsync<TId1, TId2>((TId1, TId2) key)
-        //    where TId1 : notnull
-        //    where TId2 : notnull
-        //{
-        //   return _dbSet.FindAsync(key.Item2!, key.Item2!).AsTask();
-        //}
-
-
-
         /// <summary>
         /// частичное обновление, можно передавать не прикрепленные сущности, с primary key
         /// </summary>
