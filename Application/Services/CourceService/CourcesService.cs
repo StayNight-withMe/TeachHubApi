@@ -165,7 +165,7 @@ namespace Application.Services.CourceService
 
             if (userid != default)
             {
-                var favSpec = new FavoriteCoursesSpec(userid, courseIds);
+                var favSpec = new FavoriteCoursesCountainSpec(userid, courseIds);
                 favorietDict = (await _favoriteRepository.ListAsync(favSpec))
                     .ToDictionary(f => f.courseid, _ => true);
 

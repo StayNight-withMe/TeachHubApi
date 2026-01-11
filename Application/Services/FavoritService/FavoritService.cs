@@ -101,7 +101,7 @@ namespace Application.Services.FavoritService
             )
         {
             var entitiesList = await
-                _favoritrepo.(new UserFavoriteWithUserAndCourseSpec(userid));
+                _favoritrepo.ListAsync(new UserFavorite(userid, true));
             //.GetAllWithoutTracking().GetWithPaginationAndSorting(sort)
 
 
@@ -116,7 +116,10 @@ namespace Application.Services.FavoritService
                 }
                 ).ToList();
 
-             return PageService.CreatePage(dtoList, sort, await _favoritrepo.GetAllWithoutTracking().Where(c => c.userid == userid).CountAsync());
+             return PageService.CreatePage(
+                 dtoList, 
+                 sort, 
+                 await _favoritrepo.CountAsync(new UserFavorite(userid, false)));
             
 
         }

@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace Core.Specification.FavoriteSpec
 {
-    public class FavoriteCoursesSpec : Specification<FavoritEntity>
+    public class FavoriteCoursesCountainSpec : Specification<FavoritEntity>
     {
-        public FavoriteCoursesSpec(int userId, List<int> courseIds)
+        public FavoriteCoursesCountainSpec(int userId, List<int> courseIds)
         {
             Query.AsNoTracking()
                  .Where(f => f.userid == userId && 
