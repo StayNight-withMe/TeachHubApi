@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Model.BaseModel.Course
+namespace Core.Models.BaseModel.Course
 {
     public class BaseCourse
     {

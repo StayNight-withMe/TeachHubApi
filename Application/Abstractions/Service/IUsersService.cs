@@ -1,10 +1,10 @@
 ﻿using Core.Common;
 using Core.Model.BaseModel.Auth;
 using Core.Model.BaseModel.User;
-using Core.Model.ReturnEntity;
 using Core.Model.TargetDTO.Auth.input;
-using Core.Model.TargetDTO.Users.input;
-using Core.Model.TargetDTO.Users.output;
+using Core.Models.ReturnEntity;
+using Core.Models.TargetDTO.Users.input;
+using Core.Models.TargetDTO.Users.output;
 
 namespace Application.Abstractions.Service
 {

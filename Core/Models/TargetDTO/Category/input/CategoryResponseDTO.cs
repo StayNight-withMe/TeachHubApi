@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Model.TargetDTO.Category.input
+namespace Core.Models.TargetDTO.Category.input
 {
     public class CategoryResponseDTO
     {

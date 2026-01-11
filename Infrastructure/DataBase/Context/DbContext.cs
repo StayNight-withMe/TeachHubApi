@@ -1,5 +1,5 @@
 ﻿using Core.Common.EnumS;
-using infrastructure.DataBase.Entitiеs;
+using Core.Models.Entitiеs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.ValueGeneration;

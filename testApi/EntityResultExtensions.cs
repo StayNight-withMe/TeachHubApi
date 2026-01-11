@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Core.Model.ReturnEntity;
 using System.Threading.Tasks;
+using Core.Models.ReturnEntity;
 
 namespace testApi
 {

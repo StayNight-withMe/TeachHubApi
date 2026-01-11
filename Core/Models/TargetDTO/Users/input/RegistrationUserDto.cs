@@ -1,6 +1,6 @@
-﻿using Core.Model.BaseModel.User;
+﻿using Core.Models.BaseModel.User;
 
-namespace Core.Model.TargetDTO.Users.input
+namespace Core.Models.TargetDTO.Users.input
 {
     public class RegistrationUserDto : UserDTO
     {

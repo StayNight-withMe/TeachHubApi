@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using Core.Model.TargetDTO.Lesson.input;
-using Core.Model.TargetDTO.Lesson.output;
-using infrastructure.DataBase.Entitiеs;
+using Core.Models.Entitiеs;
+using Core.Models.TargetDTO.Lesson.input;
+using Core.Models.TargetDTO.Lesson.output;
 using System;
 using System.Collections.Generic;
 using System.Linq;

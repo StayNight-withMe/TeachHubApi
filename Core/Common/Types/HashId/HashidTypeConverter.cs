@@ -1,5 +1,4 @@
-﻿using infrastructure.Utils.HashIdConverter;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Globalization;
 
 namespace Core.Common.Types.HashId

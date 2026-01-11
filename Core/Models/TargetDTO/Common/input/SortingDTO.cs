@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Model.TargetDTO.Common.input
+namespace Core.Models.TargetDTO.Common.input
 {
     public class SortingDTO
     {

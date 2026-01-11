@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Model.TargetDTO.Subscription.output
+namespace Core.Models.TargetDTO.Subscription.output
 {
     public class SubscribeOutput
     {

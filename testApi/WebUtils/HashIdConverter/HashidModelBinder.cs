@@ -1,5 +1,4 @@
-﻿using infrastructure.Utils.HashIdConverter;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Core.Common.Types.HashId;
 
 

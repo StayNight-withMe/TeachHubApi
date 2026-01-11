@@ -1,7 +1,7 @@
 ﻿using Ardalis.Specification;
-using Core.Model.Projections.AuthService;
 using Core.Model.TargetDTO.Auth.input;
-using infrastructure.DataBase.Entitiеs;
+using Core.Models.Entitiеs;
+using Core.Models.Projections.AuthService;
 using System;
 using System.Collections.Generic;
 using System.Linq;

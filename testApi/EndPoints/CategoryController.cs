@@ -1,6 +1,6 @@
 ﻿using Application.Abstractions.Service;
 using Asp.Versioning;
-using Core.Model.TargetDTO.Common.input;
+using Core.Models.TargetDTO.Common.input;
 using Microsoft.AspNetCore.Mvc;
 
 namespace testApi.EndPoints

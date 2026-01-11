@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Model.TargetDTO.Chapter.input
+namespace Core.Models.TargetDTO.Chapter.input
 {
     public class ChapterUpdateDTO
     {

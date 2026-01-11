@@ -1,4 +1,4 @@
-﻿using infrastructure.Utils.HashIdConverter;
+﻿using Core.Common.Types.HashId;
 using System.Security.Claims;
 
 namespace testApi.WebUtils.JwtClaimUtil

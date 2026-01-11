@@ -1,4 +1,4 @@
-﻿namespace Core.Model.TargetDTO.Common.output
+﻿namespace Core.Models.TargetDTO.Common.output
 {
     public class PaginationInfo
     {

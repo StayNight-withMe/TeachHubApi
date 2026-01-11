@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace infrastructure.DataBase.Entitiеs
+namespace Core.Models.Entitiеs
 {
     public class ReviewEntities
     {

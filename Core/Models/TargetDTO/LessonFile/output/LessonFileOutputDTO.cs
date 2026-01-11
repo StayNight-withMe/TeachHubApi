@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Model.TargetDTO.LessonFile.output
+namespace Core.Models.TargetDTO.LessonFile.output
 {
     public class LessonFileOutputDTO
     {

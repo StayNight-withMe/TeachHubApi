@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Model.TargetDTO.Users.output
+namespace Core.Models.TargetDTO.Users.output
 {
     public class checkEmailDTO
     {

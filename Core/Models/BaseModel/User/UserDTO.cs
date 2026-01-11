@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Model.BaseModel.User
+namespace Core.Models.BaseModel.User
 {
     public class UserDTO
 

@@ -1,7 +1,7 @@
 ﻿using Core.Common.Types.HashId;
 using HashidsNet;
 
-namespace Core.Model.BaseModel.Auth
+namespace Core.Models.BaseModel.Auth
 {
     public class UserDto
     {

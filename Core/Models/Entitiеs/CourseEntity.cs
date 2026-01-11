@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using NpgsqlTypes;
 
-namespace infrastructure.DataBase.Entitiеs
+namespace Core.Models.Entitiеs
 {
     public class CourseEntity
     {

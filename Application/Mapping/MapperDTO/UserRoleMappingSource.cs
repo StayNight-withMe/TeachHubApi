@@ -1,4 +1,4 @@
-﻿using infrastructure.DataBase.Entitiеs;
+﻿using Core.Models.Entitiеs;
 
 namespace Application.Mapping.MapperDTO
 {

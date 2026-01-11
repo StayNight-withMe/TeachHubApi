@@ -1,6 +1,6 @@
 ﻿using Application.Abstractions.Repository.Base;
-using Core.Model.Options;
-using infrastructure.DataBase.Entitiеs;
+using Core.Models.Entitiеs;
+using Core.Models.Options;
 using infrastructure.Utils.BloomFilter.interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

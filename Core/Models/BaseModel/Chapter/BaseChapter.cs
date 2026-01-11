@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Model.BaseModel.Chapter
+namespace Core.Models.BaseModel.Chapter
 {
     public class BaseChapter
     {

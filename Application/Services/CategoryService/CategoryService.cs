@@ -1,13 +1,13 @@
 ﻿using Application.Abstractions.Repository.Base;
 using Application.Abstractions.Service;
 using Application.Utils.PageService;
-using Core.Model.ReturnEntity;
-using Core.Model.TargetDTO.Category.input;
-using Core.Model.TargetDTO.Common.input;
-using Core.Model.TargetDTO.Common.output;
 using infrastructure.DataBase.Entitiеs;
 using Microsoft.Extensions.Logging;
 using Application.Abstractions.Repository.Custom;
+using Core.Models.TargetDTO.Category.input;
+using Core.Models.ReturnEntity;
+using Core.Models.TargetDTO.Common.output;
+using Core.Models.TargetDTO.Common.input;
 
 namespace Application.Services.CategoryService
 {

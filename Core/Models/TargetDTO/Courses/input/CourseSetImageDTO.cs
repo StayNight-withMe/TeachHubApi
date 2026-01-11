@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Model.TargetDTO.Courses.input
+namespace Core.Models.TargetDTO.Courses.input
 {
     public class CourseSetImageDTO
     {

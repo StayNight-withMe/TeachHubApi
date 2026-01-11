@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Model.TargetDTO.Review.input
+namespace Core.Models.TargetDTO.Review.input
 {
     public class ReviewICreateDTO
     {

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Model.TargetDTO.Lesson.input
+namespace Core.Models.TargetDTO.Lesson.input
 {
     public class LessonUpdateDTO
     {

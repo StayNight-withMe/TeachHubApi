@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Models.Options
+namespace Core.Specification.LessonSpec
 {
-    public class BloomRebuildOptions
+    internal class ValidLessonForCreate
     {
-        public TimeOnly RebuildTime { get; set; }
     }
 }

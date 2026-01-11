@@ -1,4 +1,4 @@
-﻿namespace infrastructure.DataBase.Entitiеs
+﻿namespace Core.Models.Entitiеs
 {
     public class UserEntity
     {

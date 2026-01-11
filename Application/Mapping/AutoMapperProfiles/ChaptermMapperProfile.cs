@@ -1,8 +1,8 @@
 ﻿using Application.Mapping.MapperDTO;
 using AutoMapper;
-using Core.Model.TargetDTO.Chapter.input;
-using Core.Model.TargetDTO.Chapter.output;
-using infrastructure.DataBase.Entitiеs;
+using Core.Models.Entitiеs;
+using Core.Models.TargetDTO.Chapter.input;
+using Core.Models.TargetDTO.Chapter.output;
 using System;
 using System.Collections.Generic;
 using System.Linq;

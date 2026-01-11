@@ -3,7 +3,6 @@ using AutoMapper;
 using Core.Common.EnumS;
 using Core.Interfaces.Utils;
 using Core.Model.ReturnEntity;
-using Core.Model.TargetDTO.Users.input;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +13,7 @@ using testApi.WebUtils.JwtClaimUtil;
 using Core.Common.Types;
 using Core.Common.Types.HashId;
 using Application.Abstractions.Service;
+using Core.Models.TargetDTO.Users.input;
 
 
 namespace testApi.EndPoints

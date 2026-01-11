@@ -1,7 +1,7 @@
-﻿using Core.Model.ReturnEntity;
-using Core.Model.TargetDTO.Common.input;
-using Core.Model.TargetDTO.Common.output;
-using Core.Model.TargetDTO.Favorit.output;
+﻿using Core.Models.ReturnEntity;
+using Core.Models.TargetDTO.Common.input;
+using Core.Models.TargetDTO.Common.output;
+using Core.Models.TargetDTO.Favorit.output;
 using System;
 using System.Collections.Generic;
 using System.Linq;

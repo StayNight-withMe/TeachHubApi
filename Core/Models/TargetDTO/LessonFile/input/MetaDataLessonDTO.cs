@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Model.TargetDTO.LessonFile.input
+namespace Core.Models.TargetDTO.LessonFile.input
 {
     public class MetaDataLessonDTO
     {

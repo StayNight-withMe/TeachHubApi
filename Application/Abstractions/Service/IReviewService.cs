@@ -1,8 +1,8 @@
-﻿using Core.Model.ReturnEntity;
-using Core.Model.TargetDTO.Common.input;
-using Core.Model.TargetDTO.Common.output;
-using Core.Model.TargetDTO.Review.input;
-using Core.Model.TargetDTO.Review.output;
+﻿using Core.Models.ReturnEntity;
+using Core.Models.TargetDTO.Common.input;
+using Core.Models.TargetDTO.Common.output;
+using Core.Models.TargetDTO.Review.input;
+using Core.Models.TargetDTO.Review.output;
 
 
 namespace Application.Abstractions.Service

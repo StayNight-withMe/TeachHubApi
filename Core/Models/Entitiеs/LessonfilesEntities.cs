@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace infrastructure.DataBase.Entitiеs
+namespace Core.Models.Entitiеs
 {
     public class LessonfilesEntities
     {

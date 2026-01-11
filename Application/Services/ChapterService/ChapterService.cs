@@ -3,15 +3,15 @@ using Application.Abstractions.Service;
 using Application.Abstractions.UoW;
 using Application.Utils.PageService;
 using AutoMapper;
-using Core.Model.ReturnEntity;
-using Core.Model.TargetDTO.Chapter.input;
-using Core.Model.TargetDTO.Chapter.output;
-using Core.Model.TargetDTO.Common.input;
-using Core.Model.TargetDTO.Common.output;
-using infrastructure.DataBase.Entitiеs;
 using Application.Mapping.MapperDTO;
 using Logger;
 using Microsoft.Extensions.Logging;
+using Core.Models.TargetDTO.Chapter.input;
+using Core.Models.TargetDTO.Chapter.output;
+using Core.Models.ReturnEntity;
+using Core.Models.TargetDTO.Common.input;
+using Core.Models.TargetDTO.Common.output;
+using Core.Models.Entitiеs;
 
 
 namespace Application.Services.ChapterService

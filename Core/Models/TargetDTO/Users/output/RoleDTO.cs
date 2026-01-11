@@ -1,4 +1,4 @@
-﻿namespace Core.Model.TargetDTO.Users.output
+﻿namespace Core.Models.TargetDTO.Users.output
 {
     public class RoleDto
     {

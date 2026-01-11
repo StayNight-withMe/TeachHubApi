@@ -1,6 +1,6 @@
 ﻿using Application.Abstractions.Service;
 using Asp.Versioning;
-using Core.Model.TargetDTO.ReviewReaction;
+using Core.Models.TargetDTO.ReviewReaction;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.JsonWebTokens;

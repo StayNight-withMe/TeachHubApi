@@ -1,12 +1,12 @@
-﻿using infrastructure.DataBase.Entitiеs;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Ardalis.Specification;
+using Core.Models.Entitiеs;
 
-namespace Core.Specification.CourseSpecification
+namespace Core.Specification.CourseSpec
 {
     public class UserCourseSpecification : Specification<CourseEntity>
     {

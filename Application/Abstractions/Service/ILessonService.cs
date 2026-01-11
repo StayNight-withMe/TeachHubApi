@@ -1,11 +1,11 @@
 ﻿using Core.Model.BaseModel.Lesson;
-using Core.Model.ReturnEntity;
 using Core.Model.TargetDTO.Chapter.input;
 using Core.Model.TargetDTO.Chapter.output;
-using Core.Model.TargetDTO.Common.input;
-using Core.Model.TargetDTO.Common.output;
-using Core.Model.TargetDTO.Lesson.input;
-using Core.Model.TargetDTO.Lesson.output;
+using Core.Models.ReturnEntity;
+using Core.Models.TargetDTO.Common.input;
+using Core.Models.TargetDTO.Common.output;
+using Core.Models.TargetDTO.Lesson.input;
+using Core.Models.TargetDTO.Lesson.output;
 
 namespace Application.Abstractions.Service
 {

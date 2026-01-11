@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace infrastructure.Utils.HashIdConverter
+namespace Core.Common.Types.HashId
 {
     public static class HashidsHelper
     {

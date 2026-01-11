@@ -1,4 +1,4 @@
-﻿using Core.Model.TargetDTO.Courses.input;
+﻿using Core.Models.TargetDTO.Courses.input;
 using System;
 using System.Collections.Generic;
 using System.Linq;

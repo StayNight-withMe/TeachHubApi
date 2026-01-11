@@ -1,12 +1,12 @@
 ﻿using Core.Common.Types.HashId;
-using Core.Model.BaseModel.Course;
+using Core.Models.BaseModel.Course;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Model.TargetDTO.Courses.input
+namespace Core.Models.TargetDTO.Courses.input
 {
     public class CourseInputDTO : BaseCourse
     {

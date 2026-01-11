@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Ardalis.Specification;
-using infrastructure.DataBase.Entitiеs;
+using Core.Models.Entitiеs;
 
-namespace Core.Specification.CourseSpecification
+namespace Core.Specification.CourseSpec
 {
     public class UserCourseIdSpecification : Specification<CourseEntity, int>
     {

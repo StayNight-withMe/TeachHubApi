@@ -1,4 +1,4 @@
-﻿using Core.Model.TargetDTO.Common.input;
+﻿using Core.Models.TargetDTO.Common.input;
 using System.Linq.Dynamic.Core;
 
 namespace infrastructure.DataBase.Extensions

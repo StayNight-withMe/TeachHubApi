@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using infrastructure.DataBase.Entitiеs;
 using Application.Mapping.MapperDTO;
+using Core.Models.Entitiеs;
 
 namespace Application.Mapping.AutoMapperProfiles
 {

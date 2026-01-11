@@ -1,6 +1,6 @@
 ﻿using Core.Common.Types.HashId;
 
-namespace Core.Model.TargetDTO.Users.output
+namespace Core.Models.TargetDTO.Users.output
 {
     public class UserRoleDto
     {

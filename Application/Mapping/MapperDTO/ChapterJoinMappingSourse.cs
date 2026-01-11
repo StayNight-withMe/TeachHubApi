@@ -1,4 +1,4 @@
-﻿using infrastructure.DataBase.Entitiеs;
+﻿using Core.Models.Entitiеs;
 using System;
 using System.Collections.Generic;
 using System.Linq;

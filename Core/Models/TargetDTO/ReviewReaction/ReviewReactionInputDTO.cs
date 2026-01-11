@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Model.TargetDTO.ReviewReaction
+namespace Core.Models.TargetDTO.ReviewReaction
 {
     public class ReviewReactionInputDTO
     {

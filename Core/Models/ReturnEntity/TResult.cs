@@ -1,4 +1,4 @@
-﻿namespace Core.Model.ReturnEntity
+﻿namespace Core.Models.ReturnEntity
 {
 
     public abstract class EntityOfTResult

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Model.TargetDTO.Courses.output
+namespace Core.Models.TargetDTO.Courses.output
 {
     public class SetImageOutPutDTO
     {

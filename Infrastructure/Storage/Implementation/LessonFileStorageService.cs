@@ -2,6 +2,7 @@
 using Amazon.S3;
 using Amazon.S3.Model;
 using Core.Interfaces.Utils;
+using Core.Models.Options;
 using infrastructure.Storage.Base;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;

@@ -1,6 +1,6 @@
 ﻿using Application.Abstractions.Repository.Base;
-using Core.Model.TargetDTO.Common.input;
-using infrastructure.DataBase.Entitiеs;
+using Core.Models.Entitiеs;
+using Core.Models.TargetDTO.Common.input;
 
 namespace Application.Abstractions.Repository.Custom
 {

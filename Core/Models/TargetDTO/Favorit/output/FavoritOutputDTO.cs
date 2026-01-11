@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Model.TargetDTO.Favorit.output
+namespace Core.Models.TargetDTO.Favorit.output
 {
     public class FavoritOutputDTO
     {

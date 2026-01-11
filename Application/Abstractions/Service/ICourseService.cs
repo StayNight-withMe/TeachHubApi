@@ -1,9 +1,9 @@
-﻿using Core.Model.ReturnEntity;
-using Core.Model.TargetDTO.Common.input;
-using Core.Model.TargetDTO.Common.output;
-using Core.Model.TargetDTO.Courses.input;
-using Core.Model.TargetDTO.Courses.output;
-using Core.Model.TargetDTO.LessonFile.input;
+﻿using Core.Model.TargetDTO.LessonFile.input;
+using Core.Models.ReturnEntity;
+using Core.Models.TargetDTO.Common.input;
+using Core.Models.TargetDTO.Common.output;
+using Core.Models.TargetDTO.Courses.input;
+using Core.Models.TargetDTO.Courses.output;
 using System.Security.Claims;
 
 namespace Application.Abstractions.Service

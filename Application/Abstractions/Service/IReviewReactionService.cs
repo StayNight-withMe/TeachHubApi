@@ -1,5 +1,5 @@
-﻿using Core.Model.ReturnEntity;
-using Core.Model.TargetDTO.ReviewReaction;
+﻿using Core.Models.ReturnEntity;
+using Core.Models.TargetDTO.ReviewReaction;
 using System;
 using System.Collections.Generic;
 using System.Linq;

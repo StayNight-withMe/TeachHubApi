@@ -1,7 +1,7 @@
 ﻿using Application.Abstractions.Service;
 using Asp.Versioning;
 using Core.Common.Types.HashId;
-using Core.Model.TargetDTO.Common.input;
+using Core.Models.TargetDTO.Common.input;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;

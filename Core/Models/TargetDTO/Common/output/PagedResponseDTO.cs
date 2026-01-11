@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Model.TargetDTO.Common.output
+namespace Core.Models.TargetDTO.Common.output
 {
     public class PagedResponseDTO<T>
     {

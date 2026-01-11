@@ -1,6 +1,6 @@
 ﻿using Application.Abstractions.Service;
-using Core.Model.TargetDTO.Users.input;
-using infrastructure.Utils.HashIdConverter;
+using Core.Common.Types.HashId;
+using Core.Models.TargetDTO.Users.input;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;

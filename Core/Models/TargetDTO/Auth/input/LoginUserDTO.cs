@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace Core.Model.TargetDTO.Auth.input
+namespace Core.Models.TargetDTO.Auth.input
 {
     public class LoginUserDTO
     {

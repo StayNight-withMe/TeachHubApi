@@ -1,4 +1,4 @@
-﻿using Core.Model.TargetDTO.Users.input;
+﻿using Core.Models.TargetDTO.Users.input;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,8 +1,8 @@
 ﻿using Application.Abstractions.Service;
 using Asp.Versioning;
 using Core.Common.Types.HashId;
-using Core.Model.TargetDTO.Common.input;
-using Core.Model.TargetDTO.Lesson.input;
+using Core.Models.TargetDTO.Common.input;
+using Core.Models.TargetDTO.Lesson.input;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;

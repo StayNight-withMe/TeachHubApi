@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Model.TargetDTO.Review.output
+namespace Core.Models.TargetDTO.Review.output
 {
     public class ReviewOutputDTO
     {

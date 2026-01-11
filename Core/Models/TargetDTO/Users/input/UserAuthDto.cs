@@ -1,12 +1,12 @@
 ﻿using Core.Common.Types.HashId;
-using Core.Model.BaseModel.User;
+using Core.Models.BaseModel.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Model.TargetDTO.Users.input
+namespace Core.Models.TargetDTO.Users.input
 {
     public class UserAuthDto : UserDTO
     {

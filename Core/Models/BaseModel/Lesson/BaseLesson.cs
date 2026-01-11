@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Model.BaseModel.Lesson
+namespace Core.Models.BaseModel.Lesson
 {
     public class BaseLesson
     {

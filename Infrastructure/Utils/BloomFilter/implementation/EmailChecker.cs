@@ -2,8 +2,9 @@
 using Application.Abstractions.Repository.Base;
 using BloomFilter;
 using BloomFilter.Configurations;
-using Core.Model.Options;
-using infrastructure.DataBase.Entitiеs;
+using Core.Models.Entitiеs;
+using Core.Models.Options;
+
 //using infrastructure.Repository.Base;
 using infrastructure.Utils.BloomFilter.interfaces;
 using Microsoft.EntityFrameworkCore;
