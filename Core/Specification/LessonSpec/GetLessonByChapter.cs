@@ -1,12 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Ardalis.Specification;
+using Core.Models.Entitiеs;
 
 namespace Core.Specification.LessonSpec
 {
-    internal class GetLessonByChapter
+    public class GetLessonByChapter : Specification<LessonEntity>
     {
+        public GetLessonByChapter(int chapterid, bool isvisible = true, int userid = 0)
+        {
+            Query
+                .AsNoTracking()
+                .Where(c => c.chapterid == chapterid &&
+                       c.isvisible == isvisible);
+        }
     }
 }

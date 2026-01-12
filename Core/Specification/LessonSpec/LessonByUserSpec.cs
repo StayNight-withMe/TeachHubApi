@@ -10,10 +10,15 @@ namespace Core.Specification.LessonSpec
 {
     public class LessonByUserSpec : Specification<LessonEntity>
     {
-        public LessonByUserSpec(int userid, int lessonid)
+        public LessonByUserSpec(int userid, int lessonid, bool tracking = false)
         {
+
+            if (!tracking)
+            {
+                Query.AsNoTracking();
+            }
+
             Query
-                .AsNoTracking(
                 .Include(lesson => lesson.course)
                 .Where(lesson => lesson.id == lessonid &&
                 lesson.course.creatorid == userid);

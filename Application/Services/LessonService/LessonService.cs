@@ -144,7 +144,12 @@ namespace Application.Services.LessonService
             CancellationToken ct = default
             )
         {
-             var Outlist =  await _lessonRepository.GetLessonByChapterid(chapterid, userSortingRequest, ct);
+             var Outlist =  await _lessonRepository.GetLessonByChapterid<lessonOutputDTO>(
+                 chapterid, 
+                 userSortingRequest, 
+                 new GetLessonByChapter(chapterid), 
+                 ct);
+
             return PageService.CreatePage(
                 Outlist, 
                 userSortingRequest,  
@@ -159,22 +164,16 @@ namespace Application.Services.LessonService
             SortingAndPaginationDTO userSortingRequest,
             CancellationToken ct = default)
         {
-            var qwery = _lessonRepository.GetAllWithoutTracking()
-                .Include(c => c.course)
-                .Where(c => c.chapterid == chapterid && 
-                       c.course.creatorid == userid);
-            var lessons = await qwery.GetWithPaginationAndSorting(userSortingRequest, "isvisible", "chapterid", "id").ToListAsync(ct);
+            var Outlist = await _lessonRepository.GetLessonByChapterid<LessonUserOutputDTO>(
+                 chapterid,
+                 userSortingRequest,
+                 new GetLessonByChapter(chapterid, false, userid),
+                 ct);
 
-            List<LessonUserOutputDTO> Outlist = lessons.Select(c => new LessonUserOutputDTO
-            {
-                name = c.name,
-                id = c.id,
-                order = (int)c.order,
-                isvisible = c.isvisible
-            }
-            ).ToList();
-
-            return PageService.CreatePage(Outlist, userSortingRequest, await qwery.CountAsync(ct));
+            return PageService.CreatePage(
+                Outlist, 
+                userSortingRequest, 
+                await _lessonRepository.CountAsync(new GetLessonByChapter(chapterid, false), ct));
         }
 
 
@@ -185,13 +184,8 @@ namespace Application.Services.LessonService
             CancellationToken ct = default)
         {
             var lesson = await _lessonRepository
-                .GetAll()
-                .Include(c => c.course)
-                .Where(c => c.course.creatorid == userid &&
-                        c.id == lessonid)
-                .FirstOrDefaultAsync(ct);
+                .FirstOrDefaultAsync(new LessonByUserSpec(userid, lessonid, true) ,ct);
 
-            
             if ( lesson == null )
             {
                 return TResult.FailedOperation(errorCode.lessonNotFound);
