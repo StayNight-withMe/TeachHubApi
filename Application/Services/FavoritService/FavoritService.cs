@@ -119,7 +119,7 @@ namespace Application.Services.FavoritService
              return PageService.CreatePage(
                  dtoList, 
                  sort, 
-                 await _favoritrepo.CountAsync(new UserFavorite(userid, false)));
+                 await _favoritrepo.CountAsync(new UserFavorite(userid, false )));
             
 
         }

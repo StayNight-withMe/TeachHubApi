@@ -15,12 +15,13 @@ using Core.Models.TargetDTO.Common.input;
 using Core.Models.TargetDTO.Common.output;
 using Core.Models.Entitiеs;
 using Core.Specification.CourseSpec;
+using Application.Abstractions.Repository.Custom;
 
 namespace Application.Services.LessonService
 {
     public class LessonService : ILessonService
     {
-        private readonly IBaseRepository<LessonEntity> _lessonRepository;
+        private readonly ILessonRepository _lessonRepository;
 
         private readonly IBaseRepository<ChapterEntity> _chapterRepository;
 
@@ -34,8 +35,8 @@ namespace Application.Services.LessonService
 
         public LessonService(ILogger<LessonService> logger, 
             IUnitOfWork unitOfWork, 
-            IBaseRepository<ChapterEntity> chapterRepository, 
-            IBaseRepository<LessonEntity> lessonRepository,
+            IBaseRepository<ChapterEntity> chapterRepository,
+            ILessonRepository lessonRepository,
             IBaseRepository<CourseEntity> courseRepository,
             IMapper mapper
             ) 
@@ -111,13 +112,9 @@ namespace Application.Services.LessonService
             int userid,
             CancellationToken ct = default)
         {
-            var course = await _lessonRepository
-               .GetAllWithoutTracking()
-               .Include(c => c.course)
-               .Where(c => c.course.creatorid == userid)
-               .FirstOrDefaultAsync(); 
+            var exists = await _lessonRepository.AnyAsync(new LessonByUserSpec(userid, lessonid)); 
 
-             if( course == null )
+             if(exists ==  false)
             {
                 return TResult.FailedOperation(errorCode.CoursesNotFoud);
             }
@@ -147,24 +144,11 @@ namespace Application.Services.LessonService
             CancellationToken ct = default
             )
         {
-             var qwery =  _lessonRepository.GetAllWithoutTracking()
-                .Where(c => c.chapterid == chapterid  && 
-                       c.isvisible == true);
-            var lessons = await qwery
-                .GetWithPaginationAndSorting(userSortingRequest, "isvisible", "chapterid", "id")
-                .ToListAsync(ct);
-
-
-            List<lessonOutputDTO> Outlist = lessons.Select(c => new lessonOutputDTO
-            {
-                name = c.name,
-                id = c.id,
-                order = (int)c.order
-            }
-            ).ToList();
-
-             
-            return PageService.CreatePage(Outlist, userSortingRequest,  await qwery.CountAsync(ct));
+             var Outlist =  await _lessonRepository.GetLessonByChapterid(chapterid, userSortingRequest, ct);
+            return PageService.CreatePage(
+                Outlist, 
+                userSortingRequest,  
+                await _lessonRepository.CountAsync(new GetLessonByChapter(chapterid),ct));
 
         }
 

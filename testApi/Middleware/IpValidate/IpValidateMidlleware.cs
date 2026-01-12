@@ -4,7 +4,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace testApi.Middleware.Новая_папка
+namespace testApi.Middleware.IpValidate
 {
     public class IpValidateMidlleware
     {
