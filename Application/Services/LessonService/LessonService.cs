@@ -6,7 +6,6 @@ using AutoMapper;
 using Core.Common.Exeptions;
 using Logger;
 using Microsoft.Extensions.Logging;
-using System.Data;
 using Core.Specification.LessonSpec;
 using Core.Models.TargetDTO.Lesson.input;
 using Core.Models.TargetDTO.Lesson.output;
@@ -217,10 +216,9 @@ namespace Application.Services.LessonService
             )
         {
             var lesson = await _lessonRepository
-                .GetAllWithoutTracking()
-                .Include(c => c.course)
-                .Where(c => c.id == newlesson.id && c.course.creatorid == userid)
-                .FirstOrDefaultAsync(ct);   
+                .FirstOrDefaultAsync(
+                new LessonByUserSpec(userid, newlesson.id), 
+                    ct);   
         
             if( lesson == null )
             {
@@ -233,7 +231,7 @@ namespace Application.Services.LessonService
                 await _unitOfWork.CommitAsync(ct);
                 return TResult<lessonOutputDTO>.CompletedOperation(_mapper.Map<lessonOutputDTO>(lesson));
             }
-            catch( DbUpdateException ex) 
+            catch(DbUpdateException ex) 
             {
                 _logger.LogDBError(ex);
                 return TResult<lessonOutputDTO>.FailedOperation(errorCode.DatabaseError);
