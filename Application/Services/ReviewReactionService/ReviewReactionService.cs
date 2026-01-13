@@ -3,11 +3,12 @@ using Application.Abstractions.Service;
 using Application.Abstractions.UoW;
 using AutoMapper;
 using Core.Common.EnumS;
+using Core.Common.Exeptions; 
 using Core.Models.Entitiеs;
 using Core.Models.ReturnEntity;
 using Core.Models.TargetDTO.ReviewReaction;
+using Core.Specification.ReviewReactionSpec;
 using Logger;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -41,44 +42,49 @@ namespace Application.Services.ReviewReactionService
 
         }
         public async Task<TResult> PutReaction(
-            ReviewReactionInputDTO reactionDTO,
-            int userId,
-            CancellationToken ct = default)
+        ReviewReactionInputDTO reactionDTO,
+        int userId,
+        CancellationToken ct = default)
         {
-            var reaction = await 
-                _reviewReactionRepository
-                .GetAll()
-                .Where(c => c.reviewid == reactionDTO.reviewId &&
-                       c.userid == userId)
-                .FirstOrDefaultAsync(ct);
+  
+            var reaction = await _reviewReactionRepository
+                .FirstOrDefaultAsync(new ReviewReactionSpec(reactionDTO.reviewId, userId), ct);
 
-            
             if (reaction == null)
             {
+    
                 if (reactionDTO.reactiontype != reaction_type.None)
                 {
                     var entity = _mapper.Map<ReviewreactionEntity>(reactionDTO);
                     entity.userid = userId;
-                    await _reviewReactionRepository.Create(entity);
+
+                    await _reviewReactionRepository.AddAsync(entity, ct);
                 }
                 else
                 {
+                 
                     return TResult.CompletedOperation();
                 }
             }
-            else if (reaction.reactiontype == reactionDTO.reactiontype)
-            {
-                return TResult.CompletedOperation();
-            }
-            else if (reactionDTO.reactiontype == reaction_type.None)
-            {
-                await _reviewReactionRepository.DeleteById(ct, reaction.id);
-            }
             else
             {
-                reaction.reactiontype = reactionDTO.reactiontype;
-            }
+              
+                if (reaction.reactiontype == reactionDTO.reactiontype)
+                {
+          
+                    return TResult.CompletedOperation();
+                }
 
+                if (reactionDTO.reactiontype == reaction_type.None)
+                {
+             
+                    await _reviewReactionRepository.DeleteAsync(reaction, ct);
+                }
+                else
+                {
+                    reaction.reactiontype = reactionDTO.reactiontype;
+                }
+            }
 
             try
             {
@@ -95,7 +101,6 @@ namespace Application.Services.ReviewReactionService
                 _logger.LogError(ex);
                 return TResult.FailedOperation(errorCode.UnknownError);
             }
-
         }
     }
 }
