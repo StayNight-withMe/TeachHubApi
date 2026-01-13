@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Core.Models.Entitiеs
 {
-    public class LessonfilesEntities
+    public class LessonfileEntity
     {
         public int id {  get; set; }
         public int lessonid { get; set; }

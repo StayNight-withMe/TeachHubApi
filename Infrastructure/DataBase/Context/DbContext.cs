@@ -16,7 +16,7 @@ namespace infrastructure.DataBase.Context
         public DbSet<LessonEntity> lesson { get; set; }
         public DbSet<CourseEntity> courses { get; set; } 
         public DbSet<ChapterEntity> chapter { get; set; }
-        public DbSet<LessonfilesEntities> lessonfiles { get; set; }
+        public DbSet<LessonfileEntity> lessonfiles { get; set; }
         public DbSet<SubscriptionEntites> subscription { get; set; }
         public DbSet<CategoryEntity> categories { get; set; }
         public DbSet<Course_CategoriesEntities> course_categories { get; set; }
