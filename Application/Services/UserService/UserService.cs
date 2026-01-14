@@ -1,24 +1,20 @@
 ﻿using Application.Abstractions.Repository.Base;
 using Application.Abstractions.Service;
 using Application.Abstractions.UoW;
+using Application.Mapping.MapperDTO;
 using Application.Utils.PasswodHashService;
 using AutoMapper;
-using AutoMapper;
 using Core.Common.EnumS;
-using Core.Model.BaseModel.User;
-using Core.Model.TargetDTO.Auth.input;
+using Core.Common.Exeptions;
 using Core.Models.BaseModel.Auth;
 using Core.Models.Entitiеs;
 using Core.Models.ReturnEntity;
 using Core.Models.TargetDTO.Users.input;
 using Core.Models.TargetDTO.Users.output;
+using Core.Specification.AuthSpec;
 using infrastructure.Utils.BloomFilter.interfaces;
-using infrastructure.Utils.Mapping.MapperDTO;
 using Logger;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Security.Authentication;
-
 
 namespace Application.Services.UserService
 {
@@ -64,67 +60,70 @@ namespace Application.Services.UserService
          
         }
 
-     
+
         public async Task<TResult<UserAuthDto>> RegistrationUser(
-            RegistrationUserDto  registrationUserDto, 
-            PublicRole role, 
-            string ip, 
-            string UA,
-            CancellationToken ct = default
-            )
+        RegistrationUserDto registrationUserDto,
+        PublicRole role,
+        string ip,
+        string UA,
+        CancellationToken ct = default
+     )
         {
-
            
-            int Emailcount =  
-                await _userRepository
-                .GetAllWithoutTracking()
-                .CountAsync(c => c.email == registrationUserDto.email, ct);
+            var isEmailTaken = await _userRepository.AnyAsync(new UserAuthSpec(registrationUserDto.email), ct);
 
-
-            if(Emailcount > 0)
+            if (isEmailTaken)
             {
-                TResult.FailedOperation(errorCode.UserAlreadyExists);
+                return TResult<UserAuthDto>.FailedOperation(errorCode.UserAlreadyExists);
             }
 
             registrationUserDto.password = PasswordHashService.PasswordHashing(registrationUserDto.password);
             UserEntity userEntities = _mapper.Map<UserEntity>(registrationUserDto);
 
-            await _userRepository.Create(userEntities);
-            await _profileRepository.Create(new ProfileEntity { user = userEntities, sociallinks = new Dictionary<string, string>() });
+           
+            await _userRepository.AddAsync(userEntities, ct);
 
+            await _profileRepository.AddAsync(new ProfileEntity
+            {
+                user = userEntities,
+                sociallinks = new Dictionary<string, string>()
+            }, ct);
 
             var roleSource = new UserRoleMappingSource
             {
                 User = userEntities,
                 RoleId = (int)role,
             };
-           
-            await _userRoleRepository.Create(
-                            _mapper.Map<UserRoleEntity>(roleSource));
 
+            await _userRoleRepository.AddAsync(_mapper.Map<UserRoleEntity>(roleSource), ct);
 
             var authSource = new UserAuthMappingSource
             {
-                user = userEntities,
+                user = new UserAuthData(
+                    userEntities.id,
+                    userEntities.password,
+                    userEntities.email,
+                    userEntities.name),
                 role = Enum.GetName(role),
                 ip = ip,
                 UserAgent = UA,
             };
 
-
             try
             {
                 int count = await _unitOfWork.CommitAsync(ct);
+
                 var userAuth = _mapper.Map<UserAuthDto>(authSource);
+
                 _logger.LogAffectedRows(count);
                 return TResult<UserAuthDto>.CompletedOperation(userAuth);
             }
-            catch(DbUpdateException ex) 
+            catch (DbUpdateException ex)
             {
                 _logger.LogError(ex.Message);
-                return TResult<UserAuthDto>.FailedOperation(errorCode.UnknownError);
+                return TResult<UserAuthDto>.FailedOperation(errorCode.DatabaseError);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogCriticalError(ex);
                 return TResult<UserAuthDto>.FailedOperation(errorCode.UnknownError);
