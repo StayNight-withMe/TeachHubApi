@@ -1,30 +1,26 @@
 ﻿using Application.Abstractions.Repository.Base;
+using Application.Abstractions.Repository.Custom;
 using Application.Abstractions.Service;
 using Application.Abstractions.UoW;
 using Application.Utils.PageService;
 using AutoMapper;
+using Core.Common.Exeptions;
 using Core.Models.Entitiеs;
 using Core.Models.ReturnEntity;
 using Core.Models.TargetDTO.Common.input;
 using Core.Models.TargetDTO.Common.output;
 using Core.Models.TargetDTO.Review.input;
 using Core.Models.TargetDTO.Review.output;
-using infrastructure.Extensions;
+using Core.Specification.CourseSpec;
+using Core.Specification.ReviewSpec;
 using Logger;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Npgsql;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Services.ReviewService
 {
     public class ReviewService : IReviewService
     {
-        private readonly IBaseRepository<ReviewEntities> _reviewRepository;
+        private readonly IReviewRepository _reviewRepository;
 
         private readonly IBaseRepository<CourseEntity> _courseRepository;
 
@@ -36,7 +32,7 @@ namespace Application.Services.ReviewService
 
         public ReviewService(
         IMapper mapper,
-        IBaseRepository<ReviewEntities> reviewRepository,
+        IReviewRepository reviewRepository,
         IBaseRepository<CourseEntity> courseRepository,
         IUnitOfWork unitOfWork,
         ILogger<ReviewService> logger
@@ -55,26 +51,23 @@ namespace Application.Services.ReviewService
             CancellationToken ct = default)
         {
             var review = await _reviewRepository
-                .GetAllWithoutTracking()
-                .Where(c => c.userid == userid &&
-                       c.id == changedDTO.reviewid)
-                .FirstOrDefaultAsync(ct);
+          .FirstOrDefaultAsync(new ReviewAuthorSpec(changedDTO.reviewid, userid), ct);
 
-            if (review == null) 
+            if (review == null)
             {
                 return TResult<ReviewOutputDTO>.FailedOperation(errorCode.ReviewNotFound);
             }
 
             review.lastchangedat = DateTime.UtcNow;
-
             await _reviewRepository.PartialUpdateAsync(review, changedDTO);
 
             try
             {
                 await _unitOfWork.CommitAsync(ct);
-                return TResult<ReviewOutputDTO>.CompletedOperation(_mapper.Map<ReviewOutputDTO>(review));
+                return TResult<ReviewOutputDTO>
+                    .CompletedOperation(_mapper.Map<ReviewOutputDTO>(review));
             }
-            catch(DbUpdateException ex)
+            catch (DbUpdateException ex)
             {
                 _logger.LogDBError(ex);
                 return TResult<ReviewOutputDTO>.FailedOperation(errorCode.DatabaseError);
@@ -95,116 +88,111 @@ namespace Application.Services.ReviewService
         {
             try
             {
-                await _reviewRepository.GetAll()
-                    .Where(c => c.id == reviewId && 
-                           c.userid == userId)
-                    .ExecuteDeleteAsync(ct);
+                var spec = new ReviewAuthorSpec(reviewId, userId);
+                await _reviewRepository.ExecuteDeleteBySpecAsync(spec, ct);
+
                 return TResult.CompletedOperation();
             }
-            catch(DbUpdateException ex) 
+            catch (DbUpdateException ex)
             {
-                _logger.LogError(ex, "Ошибка бд при удалении отзыва");
+                _logger.LogError(ex);
                 return TResult.FailedOperation(errorCode.DatabaseError);
-
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                _logger.LogError(ex, "Неизвестная ошибка при удалении отзыва");
+                _logger.LogError(ex);
                 return TResult.FailedOperation(errorCode.UnknownError);
             }
-          
+
         }
 
         public async Task<TResult<PagedResponseDTO<ReviewOutputDTO>>> GetReviewsByCourseId(
-            int courseId, 
-            SortingAndPaginationDTO sortingAndPagination, 
+            int courseId,
+            SortingAndPaginationDTO sortingAndPagination,
             CancellationToken ct = default)
         {
-            var qwery = _reviewRepository
-                .GetAllWithoutTracking()
-                .Where(c => c.courseid == courseId);
+            var spec = new ReviewsByCourseSpec(courseId);
 
-            var entitylist = await qwery.GetWithPaginationAndSorting(sortingAndPagination).ToListAsync(ct);
+            var dtoList = await _reviewRepository.GetPagedReviewsDtoAsync(spec, sortingAndPagination, ct);
 
-            var dtolist = MapEntityListToDTOList(entitylist);
+            var totalCount = await _reviewRepository.CountAsync(spec, ct);
 
-            return PageService.CreatePage(dtolist, sortingAndPagination, await qwery.CountAsync(ct));
-
+            return PageService.CreatePage(dtoList, sortingAndPagination, totalCount);
         }
 
 
-        private List<ReviewOutputDTO> MapEntityListToDTOList(List<ReviewEntities> entities)
-        {
-            var dtolist = entities.Select(c => new ReviewOutputDTO
-            {
-                id = c.id,
-                content = c.content,
-                createdat = c.createdat,
-                courseId = c.courseid,
-                review = c.review,
-                userId = c.userid,
-                dislikecount = c.dislikecount,
-                likecount = c.likecount,
-                lastchangedat = c.lastchangedat,
-            }).ToList();
-            return dtolist;
-        }
+        //private List<ReviewOutputDTO> MapEntityListToDTOList(List<ReviewEntity> entities)
+        //{
+        //    var dtolist = entities.Select(c => new ReviewOutputDTO
+        //    {
+        //        id = c.id,
+        //        content = c.content,
+        //        createdat = c.createdat,
+        //        courseId = c.courseid,
+        //        review = c.review,
+        //        userId = c.userid,
+        //        dislikecount = c.dislikecount,
+        //        likecount = c.likecount,
+        //        lastchangedat = c.lastchangedat,
+        //    }).ToList();
+        //    return dtolist;
+        //}
 
 
 
         public async Task<TResult<PagedResponseDTO<ReviewOutputDTO>>> GetReviewsByUserId(
-            int userid, 
-            SortingAndPaginationDTO sortingAndPagination, 
-            CancellationToken ct = default)
+     int userid,
+     SortingAndPaginationDTO sortingAndPagination,
+     CancellationToken ct = default)
         {
-            var qwery = _reviewRepository
-              .GetAllWithoutTracking()
-              .Where(c => c.userid  == userid);
 
-            var entitylist = await qwery.GetWithPaginationAndSorting(sortingAndPagination).ToListAsync(ct);
+            var spec = new ReviewsByUserSpec(userid);
 
-            var dtolist = MapEntityListToDTOList(entitylist);
+            var dtoList = await _reviewRepository.GetPagedReviewsDtoAsync(spec, sortingAndPagination, ct);
 
-            return PageService.CreatePage(dtolist, sortingAndPagination, await qwery.CountAsync(ct));
+            var totalCount = await _reviewRepository.CountAsync(spec, ct);
+
+            return PageService.CreatePage(dtoList, sortingAndPagination, totalCount);
         }
 
-        public async Task<TResult> PostReview(ReviewICreateDTO review,
-            int userid,
-            CancellationToken ct = default)
+        public async Task<TResult> PostReview(
+      ReviewICreateDTO review,
+      int userid,
+      CancellationToken ct = default)
         {
 
-            var existsFromUser = await _courseRepository
-                .GetAllWithoutTracking()
-                .Where(c => c.id == review.courseid &&
-                       c.creatorid == userid )
-                .AnyAsync(ct);
+            var isCreator = await _courseRepository
+                .AnyAsync(new CourseCreatorSpec(review.courseid, userid), ct);
 
-            if(existsFromUser)
+            if (isCreator)
             {
                 return TResult.FailedOperation(errorCode.CommentYourSelfCourseError);
             }
 
-            var moreThanOneReview = await _reviewRepository
-             .GetAllWithoutTracking()
-             .Where(c => c.userid == userid)
-             .AnyAsync();
+     
+            var hasAlreadyReviewed = await _reviewRepository
+                .AnyAsync(new UserAnyReviewSpec(userid), ct);
 
-            if(moreThanOneReview)
+            if (hasAlreadyReviewed)
             {
                 return TResult.FailedOperation(errorCode.MoreThanOne);
             }
 
-            var entity = _mapper.Map<ReviewEntities>(review);
+    
+            var entity = _mapper.Map<ReviewEntity>(review);
             entity.userid = userid;
-            await _reviewRepository.Create(entity);
+
+   
+            await _reviewRepository.AddAsync(entity, ct);
+
             try
             {
                 await _unitOfWork.CommitAsync(ct);
                 return TResult.CompletedOperation();
             }
-            catch(DbUpdateException ex) when (ex.InnerException is PostgresException pgEx)
+            catch (DbUpdateException ex)
             {
-                if(pgEx.SqlState == 23503.ToString())
+                if (ex.ErrorCode == "23503")
                 {
                     return TResult.FailedOperation(errorCode.CoursesNotFoud);
                 }
@@ -217,7 +205,6 @@ namespace Application.Services.ReviewService
                 _logger.LogError(ex, "Неизвестная ошибка при создании отзыва");
                 return TResult.FailedOperation(errorCode.UnknownError);
             }
-
         }
     }
 }

@@ -12,7 +12,7 @@ namespace infrastructure.DataBase.Context
         public DbSet<UserEntity> users { get; set; }
         public DbSet<FavoritEntity> favorit { get; set; }
         public DbSet<RoleEntity> roles { get; set; }
-        public DbSet<ReviewEntities> reviews { get; set; }
+        public DbSet<ReviewEntity> reviews { get; set; }
         public DbSet<LessonEntity> lesson { get; set; }
         public DbSet<CourseEntity> courses { get; set; } 
         public DbSet<ChapterEntity> chapter { get; set; }

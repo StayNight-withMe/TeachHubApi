@@ -2,7 +2,7 @@
 
 namespace Core.Models.Entitiеs
 {
-    public class ReviewEntities
+    public class ReviewEntity
     {
         public int id { get; set; }
         public int userid { get; set; }

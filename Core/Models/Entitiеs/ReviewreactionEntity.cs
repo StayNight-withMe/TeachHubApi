@@ -18,7 +18,7 @@ namespace Core.Models.Entitiеs
         public reaction_type reactiontype { get; set; }
 
         [ForeignKey(nameof(reviewid))]
-        public ReviewEntities review { get; set; }
+        public ReviewEntity review { get; set; }
 
         [ForeignKey(nameof(userid))]
         public UserEntity user { get; set; }

@@ -15,7 +15,7 @@ namespace Application.Mapping.AutoMapperProfiles
         public ReviewMapperProfile()
         {
 
-            CreateMap<ReviewChangedDTO, ReviewEntities>()
+            CreateMap<ReviewChangedDTO, ReviewEntity>()
                 .ForMember(
                 c => c.courseid,
                 c => c.MapFrom(c => c.reviewid)
@@ -29,9 +29,9 @@ namespace Application.Mapping.AutoMapperProfiles
                 c => c.MapFrom(c => c.review));
 
 
-            CreateMap<ReviewEntities, ReviewOutputDTO>();
+            CreateMap<ReviewEntity, ReviewOutputDTO>();
 
-            CreateMap<ReviewICreateDTO, ReviewEntities>()
+            CreateMap<ReviewICreateDTO, ReviewEntity>()
                 .ForMember(
                 c => c.courseid,
                 c => c.MapFrom(c => c.courseid)
