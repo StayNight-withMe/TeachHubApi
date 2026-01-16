@@ -19,7 +19,7 @@ namespace infrastructure.DataBase.Context
         public DbSet<LessonfileEntity> lessonfiles { get; set; }
         public DbSet<SubscriptionEntites> subscription { get; set; }
         public DbSet<CategoryEntity> categories { get; set; }
-        public DbSet<Course_CategoriesEntities> course_categories { get; set; }
+        public DbSet<Course_CategoriesEntity> course_categories { get; set; }
         public DbSet<ReviewreactionEntity> reviewreaction { get; set; }
         public DbSet<ProfileEntity> profiles { get; set; }
 
@@ -58,7 +58,7 @@ namespace infrastructure.DataBase.Context
             modelBuilder.Entity<FavoritEntity>()
                .HasKey(s => new { s.courseid, s.userid });
 
-            modelBuilder.Entity<Course_CategoriesEntities>()
+            modelBuilder.Entity<Course_CategoriesEntity>()
                .HasKey(s => new { s.courseid, s.categoryid });
 
 

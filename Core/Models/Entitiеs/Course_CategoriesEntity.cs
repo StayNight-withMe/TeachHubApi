@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Core.Models.Entitiеs
 {
-    public class Course_CategoriesEntities
+    public class Course_CategoriesEntity
     {
         public int courseid { get; set; }
         public int categoryid { get; set; }

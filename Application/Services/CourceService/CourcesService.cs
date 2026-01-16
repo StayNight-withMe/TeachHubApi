@@ -94,7 +94,7 @@ namespace Application.Services.CourceService
 
             foreach(var i in courceDTO.categoryid)
             {
-                Course_CategoriesEntities course_CategoriesEntities = new Course_CategoriesEntities { course = courseEntities, categoryid = i };
+                Course_CategoriesEntity course_CategoriesEntities = new Course_CategoriesEntity { course = courseEntities, categoryid = i };
                 await _course_CategoriesRepository.Create(course_CategoriesEntities);
             }
 

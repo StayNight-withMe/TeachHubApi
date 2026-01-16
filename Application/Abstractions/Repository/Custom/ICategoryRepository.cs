@@ -4,7 +4,7 @@ using Core.Models.TargetDTO.Common.input;
 
 namespace Application.Abstractions.Repository.Custom
 {
-    public interface ICategoryRepository : IBaseRepository<Course_CategoriesEntities>
+    public interface ICategoryRepository : IBaseRepository<Course_CategoriesEntity>
     {
         public Task<Dictionary<int, Dictionary<int, string>>> GetCategoryNamesForCourses(
             List<int> courseIds,
