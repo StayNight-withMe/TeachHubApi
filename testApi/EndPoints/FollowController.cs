@@ -3,7 +3,6 @@ using testApi.WebUtils.JwtClaimUtil;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
-using System.Security.Claims;
 using Core.Common.Types.HashId;
 using Application.Abstractions.Service;
 using Core.Models.TargetDTO.Common.input;

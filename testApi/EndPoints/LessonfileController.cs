@@ -1,12 +1,10 @@
-﻿using Amazon.Util.Internal;
-using Application.Abstractions.Service;
+﻿using Application.Abstractions.Service;
 using Asp.Versioning;
 using Core.Common.Types.HashId;
 using Core.Models.TargetDTO.Common.input;
 using Core.Models.TargetDTO.LessonFile.input;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 using testApi.WebUtils.JwtClaimUtil;
 
 namespace testApi.EndPoints

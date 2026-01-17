@@ -3,8 +3,6 @@ using Asp.Versioning;
 using Core.Models.TargetDTO.ReviewReaction;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.JsonWebTokens;
-using System.Security.Claims;
 using testApi.WebUtils.JwtClaimUtil;
 
 namespace testApi.EndPoints

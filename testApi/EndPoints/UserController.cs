@@ -1,16 +1,10 @@
 ﻿using Asp.Versioning;
-using AutoMapper;
 using Core.Common.EnumS;
-using Core.Interfaces.Utils;
-using Core.Model.ReturnEntity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
-using System.Security.Claims;
-using System.Threading.Tasks;
 using testApi.WebUtils.JwtClaimUtil;
-using Core.Common.Types;
 using Core.Common.Types.HashId;
 using Application.Abstractions.Service;
 using Core.Models.TargetDTO.Users.input;

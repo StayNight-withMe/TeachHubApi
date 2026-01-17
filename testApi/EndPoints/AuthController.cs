@@ -1,7 +1,4 @@
 ﻿using Asp.Versioning;
-using Core.Interfaces.Utils;
-using Core.Model.TargetDTO.Courses.output;
-using infrastructure.Utils.HashIdConverter;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using Core.Common.Types.HashId;

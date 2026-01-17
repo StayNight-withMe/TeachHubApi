@@ -4,7 +4,6 @@ using Core.Common.Types.HashId;
 using Core.Models.TargetDTO.Common.input;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 using testApi.WebUtils.JwtClaimUtil;
 
 namespace testApi.EndPoints

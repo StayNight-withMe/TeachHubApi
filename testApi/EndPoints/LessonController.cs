@@ -4,11 +4,8 @@ using Core.Common.Types.HashId;
 using Core.Models.TargetDTO.Common.input;
 using Core.Models.TargetDTO.Lesson.input;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
-using System.Security.Claims;
-using System.Threading.Tasks;
 using testApi.WebUtils.JwtClaimUtil;
 
 namespace testApi.EndPoints

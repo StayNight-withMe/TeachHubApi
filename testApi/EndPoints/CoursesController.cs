@@ -1,18 +1,12 @@
-﻿using Applcation.Service.chapterService;
-using Application.Abstractions.Service;
+﻿using Application.Abstractions.Service;
 using Asp.Versioning;
 using Core.Common.EnumS;
 using Core.Common.Types.HashId;
-using Core.Model.TargetDTO.Chapter.input;
-using Core.Model.TargetDTO.Common.output;
 using Core.Models.TargetDTO.Common.input;
 using Core.Models.TargetDTO.Courses.input;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
-using System;
-using System.Security.Claims;
-using System.Threading.Tasks;
 using testApi.WebUtils.JwtClaimUtil;
 
 namespace testApi.EndPoints
