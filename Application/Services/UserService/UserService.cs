@@ -36,8 +36,6 @@ namespace Application.Services.UserService
 
         private readonly IEmailChecker _emailChecker;
 
-
-
         public UserService(
             IBaseRepository<UserEntity> repository, 
             //IBaseRepository<RoleEntity> RoleRepository,
@@ -130,7 +128,6 @@ namespace Application.Services.UserService
             }
         }
 
-
         private bool IsValidEmail(string email)
         {
             try { return new System.Net.Mail.MailAddress(email).Address == email; } 
@@ -148,8 +145,6 @@ namespace Application.Services.UserService
             return TResult<checkEmailDTO>.CompletedOperation(new checkEmailDTO { reasonCode = "TAKEN", available = isTaken } );
             //return TResult.FailedOperation(errorCode.EmailAlreadyExists);
         }
-
-
 
         public async Task<TResult> AgressiveRemoveUser(
             int id,

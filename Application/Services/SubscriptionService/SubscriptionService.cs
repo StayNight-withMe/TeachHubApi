@@ -24,18 +24,14 @@ namespace Application.Services.SubscriptionService
         
         private readonly IUnitOfWork _unitOfWork;
 
-        ////private readonly IMapper _mapper;
-
         public SubscriptionService(
             ISubscriptionRepository subrepo,
             ILogger<SubscriptionService> logger,
             IUnitOfWork unitOfWork
-            //IMapper mapper
             ) 
         {
 
          _logger = logger;
-         //_mapper = mapper;
          _suubscriptionRepository = subrepo;
          _unitOfWork = unitOfWork;
         }
@@ -101,7 +97,6 @@ namespace Application.Services.SubscriptionService
                 return TResult.FailedOperation(errorCode.UnknownError);
             }
         }
-
 
         //private async Task<TResult<PagedResponseDTO<SubscribeOutput>>> CreatePageOfUser(
         //    IQueryable<SubscriptionEntites> queryable,

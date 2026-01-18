@@ -1,7 +1,6 @@
 ﻿using Asp.Versioning;
 using Core.Common.EnumS;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
 using testApi.WebUtils.JwtClaimUtil;
