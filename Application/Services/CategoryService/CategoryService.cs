@@ -1,7 +1,5 @@
-﻿using Application.Abstractions.Repository.Base;
-using Application.Abstractions.Service;
+﻿using Application.Abstractions.Service;
 using Application.Utils.PageService;
-using infrastructure.DataBase.Entitiеs;
 using Microsoft.Extensions.Logging;
 using Application.Abstractions.Repository.Custom;
 using Core.Models.TargetDTO.Category.input;

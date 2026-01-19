@@ -18,12 +18,10 @@ using Core.Models.TargetDTO.Common.output;
 using Core.Models.TargetDTO.Courses.input;
 using Core.Models.TargetDTO.Courses.output;
 using Core.Specification.Common;
-using Core.Specification.CourseSpecification;
 using Core.Specification.FavoriteSpec;
 using Logger;
 using Microsoft.Extensions.Logging;
-using System.Net.Http.Headers;
-using System.Security.Claims;
+using Core.Specification.CourseSpec;
 
 namespace Application.Services.CourceService
 {
@@ -213,7 +211,6 @@ namespace Application.Services.CourceService
                 await MapList(courses),
                 userSortingRequest,
                 await _courceRepository.CountAsync(new AnySpecification<CourseEntity>(), ct) );
-
         }
 
  
