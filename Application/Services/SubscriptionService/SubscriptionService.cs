@@ -1,5 +1,4 @@
-﻿using Application.Abstractions.Repository.Base;
-using Application.Abstractions.Repository.Custom;
+﻿using Application.Abstractions.Repository.Custom;
 using Application.Abstractions.Service;
 using Application.Abstractions.UoW;
 using Application.Utils.PageService;
@@ -12,7 +11,6 @@ using Core.Models.TargetDTO.Subscription.output;
 using Core.Specification.SubscriptionsSpec;
 using Logger;
 using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
 
 namespace Application.Services.SubscriptionService
 {
@@ -156,8 +154,6 @@ namespace Application.Services.SubscriptionService
 
             return PageService.CreatePage(dtoList, userSortingRequest, totalCount);
         }
-
-
 
     }
 }
