@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Ardalis.Specification;
+using Core.Models.Entitiеs;
 
-namespace Core.Specification.ChapterSpec
+namespace Core.Specification.ChapterSpec;
+
+public class ChapterWithAccessSpec : Specification<ChapterEntity>
 {
-    internal class Class1
+    public ChapterWithAccessSpec(int chapterId, int userId)
     {
-
+        Query.Where(ch => ch.id == chapterId && 
+                    ch.course.creatorid == userId)
+             .Include(ch => ch.course); 
     }
 }

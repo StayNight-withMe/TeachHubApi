@@ -2,7 +2,6 @@
 using Application.Abstractions.Repository.Custom;
 using Application.Abstractions.Service;
 using Application.Abstractions.UoW;
-using Application.Mapping.MapperDTO;
 using Application.Utils.PageService;
 using AutoMapper;
 using Core.Common.Exeptions;
@@ -12,8 +11,8 @@ using Core.Models.TargetDTO.Chapter.input;
 using Core.Models.TargetDTO.Chapter.output;
 using Core.Models.TargetDTO.Common.input;
 using Core.Models.TargetDTO.Common.output;
+using Core.Specification.ChapterSpec;
 using Core.Specification.CourseSpec;
-using Core.Specifications.Chapters;
 using Logger;
 using Microsoft.Extensions.Logging;
 
@@ -193,9 +192,9 @@ namespace Application.Services.ChapterService
         }
 
         public async Task<TResult> DeleteChapter(
-     int chapterid,
-     int userid = default,
-     CancellationToken ct = default)
+             int chapterid,
+             int userid = default,
+             CancellationToken ct = default)
         {
      
             var spec = new ChapterDeleteSpec(chapterid, userid == default ? null : userid);

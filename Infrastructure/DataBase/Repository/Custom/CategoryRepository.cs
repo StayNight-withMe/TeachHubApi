@@ -16,7 +16,7 @@ namespace infrastructure.DataBase.Repository.Custom
 
         public CategoryRepository(
             CourceDbContext courceDbContext,
-            BaseRepository<CategoryEntity> categoryRepo
+            IBaseRepository<CategoryEntity> categoryRepo
             ) 
             : base(courceDbContext) 
         {

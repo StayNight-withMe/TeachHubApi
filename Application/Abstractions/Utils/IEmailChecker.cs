@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace infrastructure.Utils.BloomFilter.interfaces
+namespace Application.Abstractions.Utils
 {
  
         public interface IEmailChecker 

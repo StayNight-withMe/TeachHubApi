@@ -1,8 +1,8 @@
 ﻿using Application.Abstractions.Repository.Base;
 using Application.Abstractions.Service;
 using Application.Abstractions.UoW;
+using Application.Abstractions.Utils;
 using Application.Mapping.MapperDTO;
-using Application.Utils.PasswodHashService;
 using AutoMapper;
 using Core.Common.EnumS;
 using Core.Common.Exeptions;
@@ -12,7 +12,6 @@ using Core.Models.ReturnEntity;
 using Core.Models.TargetDTO.Users.input;
 using Core.Models.TargetDTO.Users.output;
 using Core.Specification.AuthSpec;
-using infrastructure.Utils.BloomFilter.interfaces;
 using Logger;
 using Microsoft.Extensions.Logging;
 
@@ -34,6 +33,8 @@ namespace Application.Services.UserService
 
         private readonly IMapper _mapper;
 
+        private readonly IPasswordHashService _passwordHashService;
+
         private readonly IEmailChecker _emailChecker;
 
         public UserService(
@@ -41,6 +42,7 @@ namespace Application.Services.UserService
             //IBaseRepository<RoleEntity> RoleRepository,
             IBaseRepository<UserRoleEntity> userRoleRepository,
             IBaseRepository<ProfileEntity> profileRepository,
+            IPasswordHashService passwordHashService,
             IEmailChecker emailChecker,
             IUnitOfWork transaction, 
             IMapper mapper, 
@@ -49,7 +51,7 @@ namespace Application.Services.UserService
         {
             _unitOfWork = transaction;
             _userRepository = repository;
-            //_roleRepository = RoleRepository;
+            _passwordHashService = passwordHashService;
             _userRoleRepository = userRoleRepository;
             _profileRepository = profileRepository;
             _emailChecker = emailChecker;
@@ -75,7 +77,7 @@ namespace Application.Services.UserService
                 return TResult<UserAuthDto>.FailedOperation(errorCode.UserAlreadyExists);
             }
 
-            registrationUserDto.password = PasswordHashService.PasswordHashing(registrationUserDto.password);
+            registrationUserDto.password = _passwordHashService.PasswordHashing(registrationUserDto.password);
             UserEntity userEntities = _mapper.Map<UserEntity>(registrationUserDto);
 
            

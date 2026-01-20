@@ -146,11 +146,12 @@ namespace testApi.EndPoints
         [HttpDelete("{id}")]
         [Authorize]
         public async Task<IActionResult> Remove(
-            [FromRoute] Hashid id,
+            [FromRoute] Hashid CourseId,
             CancellationToken ct
             )
         {
-            var result = await _courseService.RemoveCourse(id, User, ct);
+            var role = _claims.Role == "admin" ? AllRole.admin : AllRole.user ;
+            var result = await _courseService.RemoveCourse(CourseId, _claims.UserId, role, ct);
             return await EntityResultExtensions.ToActionResult(result, this);
         }
 

@@ -1,6 +1,7 @@
 using Amazon.Runtime;
 using Amazon.S3;
 using Application.Abstractions.Repository.Base;
+using Application.Abstractions.Repository.Custom;
 using Application.Abstractions.Service;
 using Application.Abstractions.UoW;
 using Application.Abstractions.Utils;
@@ -21,11 +22,10 @@ using Core.Models.Options;
 using infrastructure.BackgroundService;
 using infrastructure.DataBase.Context;
 using infrastructure.DataBase.Repository.Base;
+using infrastructure.DataBase.Repository.Custom;
 using infrastructure.Storage.Implementation;
 using infrastructure.UoW.implementation;
 using infrastructure.Utils.BloomFilter.implementation;
-using infrastructure.Utils.BloomFilter.interfaces;
-using infrastructure.Utils.HeadersService;
 using infrastructure.Utils.JwtService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -38,9 +38,10 @@ using testApi.Middleware.Exeption;
 using testApi.Middleware.IpValidate;
 using testApi.Middleware.RateLimit;
 using testApi.WebUtils.HashIdConverter;
+using testApi.WebUtils.HeadersService.implementation;
 using testApi.WebUtils.JwtClaimUtil;
-
-
+using testApi.WebUtils.HeadersService.interfaces;
+using infrastructure.Utils.PasswodHashService;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpContextAccessor();
@@ -100,6 +101,13 @@ builder.Services.AddScoped<JwtClaimUtil>();
 //репозитории
 
 builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IChapterRepository, ChapterRepository>();
+builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+builder.Services.AddScoped<ILessonRepository, LessonRepository>();
+builder.Services.AddScoped<ILessonFileRepository, LessonFileRepository>();
+builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+builder.Services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
 //сервисы
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IUsersService ,UserService>();
@@ -128,8 +136,10 @@ builder.Services.AddAutoMapper(cfg => cfg.AddProfile<ChaptermMapperProfile>());
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<LessonMapperProfile>());
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<ReviewMapperProfile>());
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<ReviewReactionMapperProfile>());
+builder.Services.AddScoped<IHeaderService, HeaderService>();
+builder.Services.AddScoped<IPasswordHashService, PasswordHashService>();
 
-builder.Services.AddScoped<ILessonFileService, LessonFileStorageService>();
+builder.Services.AddScoped<ILessonStorageService, LessonsStorageService>();
 builder.Services.AddScoped<ICourseImageService, CourseImageService>();
 
 
@@ -151,7 +161,7 @@ builder.Services.Configure<BloomRebuildOptions>(
 builder.Services.AddSingleton<IEmailChecker, EmailChecker>();
 
 builder.Services.AddScoped<IFileStorageService, LessonFileStorageService>();
-
+builder.Services.AddScoped<ILessonFileService, LessonFileStorageService>();
 
 builder.Services.Configure<BackblazeOptions>(
     builder.Configuration.GetSection("B2"));

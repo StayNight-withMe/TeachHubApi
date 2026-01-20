@@ -1,16 +1,10 @@
-﻿using Amazon.Runtime;
-using Amazon.S3;
-using Amazon.S3.Model;
-using Core.Interfaces.Utils;
+﻿using Amazon.S3;
+using Application.Abstractions.Utils;
 using Core.Models.Options;
 using infrastructure.Storage.Base;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace infrastructure.Storage.Implementation
 {

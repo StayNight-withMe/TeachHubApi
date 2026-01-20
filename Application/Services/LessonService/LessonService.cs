@@ -163,7 +163,7 @@ namespace Application.Services.LessonService
             SortingAndPaginationDTO userSortingRequest,
             CancellationToken ct = default)
         {
-            var Outlist = await _lessonRepository.GetLessonUserByChapterid<LessonUserOutputDTO>(
+            var Outlist = await _lessonRepository.GetLessonUserByChapterid(
                  chapterid,
                  userSortingRequest,
                  new GetLessonByChapter(chapterid, false, userid),

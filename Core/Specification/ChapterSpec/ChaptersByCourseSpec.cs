@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Ardalis.Specification;
+using Core.Models.Entitiеs;
 
-namespace Core.Specification.ChapterSpec
+namespace Core.Specification.ChapterSpec;
+
+public class ChaptersByCourseSpec : Specification<ChapterEntity>
 {
-    internal class ChaptersByCourseSpec
+    public ChaptersByCourseSpec(int courseId, int userId)
     {
+        Query.Where(ch => ch.courseid == courseId && ch.course.creatorid == userId)
+             .AsNoTracking();
     }
 }

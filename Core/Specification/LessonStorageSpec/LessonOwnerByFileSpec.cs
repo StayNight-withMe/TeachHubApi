@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Core.Specification.LessonStorageSpec
 {
-    public class LessonOwnerByFileSpec : Specification<LessonEntity>, ISingleResultSpecification
+    public class LessonOwnerByFileSpec : Specification<LessonEntity>
     {
         public LessonOwnerByFileSpec(int lessonId, int userId)
         {

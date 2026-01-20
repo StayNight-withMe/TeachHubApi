@@ -1,12 +1,6 @@
-﻿using Core.Interfaces.Utils;
-using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using testApi.WebUtils.HeadersService.interfaces;
 
-namespace infrastructure.Utils.HeadersService
+namespace testApi.WebUtils.HeadersService.implementation
 {
     public class HeaderService : IHeaderService
     {

@@ -1,9 +1,5 @@
-﻿using infrastructure.Utils.Mapping.MapperDTO;
+﻿
 using AutoMapper;
-using Core.Model.BaseModel.User;
-using Core.Model.TargetDTO.Auth.input;
-using Core.Model.BaseModel.Auth;
-using infrastructure.Utils.HashIdConverter;
 using Core.Models.TargetDTO.Users.output;
 using Core.Models.TargetDTO.Users.input;
 using Core.Models.Entitiеs;

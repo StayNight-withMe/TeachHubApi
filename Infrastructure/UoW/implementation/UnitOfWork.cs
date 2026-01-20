@@ -1,5 +1,5 @@
 ﻿
-using Core.Interfaces.UoW;
+using Application.Abstractions.UoW;
 using infrastructure.DataBase.Context;
 using System;
 using System.Collections.Generic;

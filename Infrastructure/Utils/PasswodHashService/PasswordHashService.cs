@@ -1,4 +1,5 @@
-﻿using Konscious.Security.Cryptography;
+﻿using Application.Abstractions.Utils;
+using Konscious.Security.Cryptography;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -9,13 +10,13 @@ using System.Text;
 using System.Text.Unicode;
 using System.Threading.Tasks;
 
-namespace Application.Utils.PasswodHashService
+namespace infrastructure.Utils.PasswodHashService
 {
-    public static class PasswordHashService
+    public class PasswordHashService : IPasswordHashService
     {
 
 
-        public static string PasswordHashing(string password)
+        public string PasswordHashing(string password)
         {
             var stopwatch = Stopwatch.StartNew();
 
@@ -41,7 +42,7 @@ namespace Application.Utils.PasswodHashService
 
         }
 
-        public static bool VerifyPassword(string password, string storedFullHash)
+        public bool VerifyPassword(string password, string storedFullHash)
         {
 
             try

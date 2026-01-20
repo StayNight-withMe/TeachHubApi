@@ -1,12 +1,7 @@
-﻿using Core.Model.TargetDTO.Common.output;
-using Core.Models.ReturnEntity;
+﻿using Core.Models.ReturnEntity;
 using Core.Models.TargetDTO.Common.input;
 using Core.Models.TargetDTO.Common.output;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Application.Utils.PageService
 {

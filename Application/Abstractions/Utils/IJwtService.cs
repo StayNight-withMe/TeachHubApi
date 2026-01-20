@@ -6,7 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Abstractions.Service
+namespace Application.Abstractions.Utils
 {
     public interface IJwtService
     {

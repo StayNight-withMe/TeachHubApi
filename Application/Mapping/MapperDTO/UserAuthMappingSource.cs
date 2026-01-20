@@ -1,5 +1,5 @@
-﻿using Core.Models.Projections.AuthService;
-;
+﻿using Core.Specification.AuthSpec;
+
 
 namespace Application.Mapping.MapperDTO
 {

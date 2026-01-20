@@ -5,11 +5,12 @@ using Core.Common.EnumS;
 using Application.Abstractions.Repository.Base;
 using Application.Abstractions.Service;
 using Core.Specification.AuthSpec;
-using Application.Utils.PasswodHashService;
+using Application.Abstractions.Utils;
 using Core.Models.ReturnEntity;
 using Core.Models.TargetDTO.Auth.input;
 using Core.Models.TargetDTO.Users.input;
 using Core.Models.Entitiеs;
+
 
 namespace Application.Services.AuthService
 {
@@ -22,7 +23,9 @@ namespace Application.Services.AuthService
         private readonly IBaseRepository<RoleEntity> _roleRepository;
 
         private readonly IBaseRepository<UserRoleEntity> _userRolesRepository;
-        
+
+        private readonly IPasswordHashService _passwordHashService;
+
         private readonly ILogger<AuthService> _logger;
 
         private readonly IMapper _mapper;
@@ -30,6 +33,7 @@ namespace Application.Services.AuthService
             IBaseRepository<UserEntity> userRepository,  
             IBaseRepository<RoleEntity> roleRepository,
             IBaseRepository<UserRoleEntity> userRoleRepository,
+            IPasswordHashService passwordHashService,
             ILogger<AuthService> logger,
             IMapper mapper
             )
@@ -38,6 +42,7 @@ namespace Application.Services.AuthService
             _userRepository = userRepository;
             _logger = logger;
             _userRolesRepository = userRoleRepository;
+            _passwordHashService = passwordHashService;
             _mapper = mapper;
         }
 
@@ -58,7 +63,7 @@ namespace Application.Services.AuthService
 
             if(user != null)
             {
-                if(!PasswordHashService.VerifyPassword(loginUserDTO.password, user.password))
+                if(!_passwordHashService.VerifyPassword(loginUserDTO.password, user.password))
                 {
                     return TResult<UserAuthDto>.FailedOperation(errorCode.PasswordDontMatch);
                 }

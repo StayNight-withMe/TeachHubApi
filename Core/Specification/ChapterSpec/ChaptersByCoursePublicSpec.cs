@@ -1,7 +1,7 @@
 ﻿using Ardalis.Specification;
 using Core.Models.Entitiеs;
 
-namespace Core.Specifications.Chapters;
+namespace Core.Specification.ChapterSpec;
 
 public class ChaptersByCoursePublicSpec : Specification<ChapterEntity>
 {
