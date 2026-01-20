@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using NpgsqlTypes;
 
 namespace Core.Models.Entitiеs
 {
+    public class PostgresTsVector { }
     public class CourseEntity
     {
         public int id { get; set; }
@@ -13,7 +13,7 @@ namespace Core.Models.Entitiеs
         public int? creatorid { get; set; }
         public decimal? rating { get; set; } 
         public string field {  get; set; }
-        public NpgsqlTsVector searchvector { get; set; }
+        public PostgresTsVector searchvector { get; set; }
 
         [ForeignKey(nameof(creatorid))]
         public UserEntity user { get; set; }

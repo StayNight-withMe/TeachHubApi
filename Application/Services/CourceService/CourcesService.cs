@@ -122,7 +122,7 @@ namespace Application.Services.CourceService
                 userSortingRequest,
                 ct);
 
-            var count = await _courceRepository.CountofSearchCourse(
+            var count = await _courceRepository.CountOfSearchCourse(
                 search,
                 new AnySpecification<CourseEntity>(),
                 ct);
@@ -253,7 +253,7 @@ namespace Application.Services.CourceService
         {
 
 
-            var courseEntites = await _courceRepository.GetUserCourseId(
+            var courseEntites = await _courceRepository.GetUserCourses(
                 userId,
                 userSortingRequest,
                 new AnySpecification<CourseEntity>(),

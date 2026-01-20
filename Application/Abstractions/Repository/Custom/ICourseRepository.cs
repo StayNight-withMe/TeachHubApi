@@ -24,7 +24,7 @@ namespace Application.Abstractions.Repository.Custom
             CancellationToken ct = default
             );
         
-        public Task<int> CountofSearchCourse(
+        public Task<int> CountOfSearchCourse(
             string searchText,
             ISpecification<CourseEntity> spec,
             CancellationToken ct = default
@@ -46,12 +46,12 @@ namespace Application.Abstractions.Repository.Custom
             CancellationToken ct = default);
 
 
-        public Task<List<CourseEntity>> GetUserCourseId(
-        int userId,
-        SortingAndPaginationDTO? dto,
-        Specification<CourseEntity> spec,
-        string[]? noToSort,
-        CancellationToken ct = default);
+        //public Task<List<CourseEntity>> GetUserCourseId(
+        //int userId,
+        //SortingAndPaginationDTO? dto,
+        //Specification<CourseEntity> spec,
+        //string[]? noToSort,
+        //CancellationToken ct = default);
 
 
     }

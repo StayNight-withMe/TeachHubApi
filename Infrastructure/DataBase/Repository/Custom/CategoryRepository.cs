@@ -6,6 +6,7 @@ using infrastructure.DataBase.Context;
 using infrastructure.DataBase.Extensions;
 using infrastructure.DataBase.Repository.Base;
 using Microsoft.EntityFrameworkCore;
+using Core.Common.Types.HashId;
 
 namespace infrastructure.DataBase.Repository.Custom
 {
@@ -32,10 +33,24 @@ namespace infrastructure.DataBase.Repository.Custom
 
         public async Task<Dictionary<int, Dictionary<int, string>>> GetCategoryNamesForCourses(
             List<int> courseIds,
-            PaginationDTO pagination,
             CancellationToken ct = default)
         {
-            
+            Dictionary<int, Dictionary<int, string>> result = new();
+
+            foreach (var id in courseIds)
+            {
+                result = await GetAllWithoutTracking()
+               .Where(c => c.courseid == id)
+               .Include(c => c.categories)
+               .GroupBy(c => c.courseid)
+               .ToDictionaryAsync(
+                   g => g.Key,
+                   g => g.Select(c => c.categories)
+                         .ToDictionary(cat => cat.id, cat => cat.name), ct);
+
+            }
+
+            return result;
 
         }
 

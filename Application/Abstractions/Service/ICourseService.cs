@@ -1,4 +1,4 @@
-﻿using Core.Model.TargetDTO.LessonFile.input;
+﻿using Core.Common.EnumS;
 using Core.Models.ReturnEntity;
 using Core.Models.TargetDTO.Common.input;
 using Core.Models.TargetDTO.Common.output;
@@ -19,7 +19,7 @@ namespace Application.Abstractions.Service
             CancellationToken ct = default);
         public Task<TResult<PagedResponseDTO<CourseOutputDTO>>> GetUserCourses(
             int id, 
-            string name, 
+            //string name, 
             SortingAndPaginationDTO userSortingRequest,
             CancellationToken ct = default
             );
@@ -35,11 +35,12 @@ namespace Application.Abstractions.Service
             );
 
         public Task<TResult> RemoveCourse(
-            int id, 
-            ClaimsPrincipal user, 
+            int courseid,
+            int userId,
+            AllRole role,
             CancellationToken ct = default);
 
-        Task<TResult> SetImgFile(
+        Task<TResult<SetImageOutPutDTO>> SetImgFile(
             Stream stream,
             int userid,
             CourseSetImageDTO courseSetImageDTO,  

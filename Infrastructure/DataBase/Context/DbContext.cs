@@ -3,6 +3,7 @@ using Core.Models.Entitiеs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
+using NpgsqlTypes;
 
 namespace infrastructure.DataBase.Context
 {
@@ -28,7 +29,12 @@ namespace infrastructure.DataBase.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            
+            modelBuilder.Entity<CourseEntity>(entity =>
+            {
+                entity.Property<NpgsqlTsVector>("searchvector")
+                      .HasColumnName("searchvector"); 
+            });
+
 
             modelBuilder.HasPostgresEnum<reaction_type>();
 
