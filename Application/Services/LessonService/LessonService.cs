@@ -143,7 +143,7 @@ namespace Application.Services.LessonService
             CancellationToken ct = default
             )
         {
-             var Outlist =  await _lessonRepository.GetLessonByChapterid<lessonOutputDTO>(
+             var Outlist =  await _lessonRepository.GetLessonByChapterid(
                  chapterid, 
                  userSortingRequest, 
                  new GetLessonByChapter(chapterid), 
@@ -163,7 +163,7 @@ namespace Application.Services.LessonService
             SortingAndPaginationDTO userSortingRequest,
             CancellationToken ct = default)
         {
-            var Outlist = await _lessonRepository.GetLessonByChapterid<LessonUserOutputDTO>(
+            var Outlist = await _lessonRepository.GetLessonUserByChapterid<LessonUserOutputDTO>(
                  chapterid,
                  userSortingRequest,
                  new GetLessonByChapter(chapterid, false, userid),

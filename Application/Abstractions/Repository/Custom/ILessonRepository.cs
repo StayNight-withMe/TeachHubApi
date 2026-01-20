@@ -10,12 +10,19 @@ namespace Application.Abstractions.Repository.Custom
 {
     public interface ILessonRepository : IBaseRepository<LessonEntity>
     {
-        public  Task<List<T>> GetLessonByChapterid<T>(
+        public Task<List<lessonOutputDTO>> GetLessonByChapterid(
             int chapterid,
             SortingAndPaginationDTO userSortingRequest,
             ISpecification<LessonEntity> spec,
             CancellationToken ct = default
-            ) where T : lessonOutputDTO;
+            );
+
+        public Task<List<LessonUserOutputDTO>> GetLessonUserByChapterid(
+            int chapterid,
+            SortingAndPaginationDTO userSortingRequest,
+            ISpecification<LessonEntity> spec,
+            CancellationToken ct = default
+            );
         //     var qwery = _lessonRepository.GetAllWithoutTracking()
         //.Where(c => c.chapterid == chapterid &&
         //       c.isvisible == true);

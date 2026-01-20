@@ -1,25 +1,28 @@
 ﻿using Application.Abstractions.Repository.Base;
+using Application.Abstractions.Repository.Custom;
 using Application.Abstractions.Service;
 using Application.Abstractions.UoW;
+using Application.Mapping.MapperDTO;
 using Application.Utils.PageService;
 using AutoMapper;
-using Application.Mapping.MapperDTO;
-using Logger;
-using Microsoft.Extensions.Logging;
+using Core.Common.Exeptions;
+using Core.Models.Entitiеs;
+using Core.Models.ReturnEntity;
 using Core.Models.TargetDTO.Chapter.input;
 using Core.Models.TargetDTO.Chapter.output;
-using Core.Models.ReturnEntity;
 using Core.Models.TargetDTO.Common.input;
 using Core.Models.TargetDTO.Common.output;
-using Core.Models.Entitiеs;
-
+using Core.Specification.CourseSpec;
+using Core.Specifications.Chapters;
+using Logger;
+using Microsoft.Extensions.Logging;
 
 namespace Application.Services.ChapterService
 {
     public class ChapterService : IChapterService
     {
 
-        private readonly IBaseRepository<ChapterEntity> _chapterRepository;
+        private readonly IChapterRepository _chapterRepository;
 
         private readonly IBaseRepository<CourseEntity> _coursesRepository;
 
@@ -31,7 +34,7 @@ namespace Application.Services.ChapterService
 
         public ChapterService(ILogger<ChapterService> logger,
             IUnitOfWork unitOfWork,
-            IBaseRepository<ChapterEntity> chapterRepository,
+            IChapterRepository chapterRepository,
             IBaseRepository<CourseEntity> coursesRepository,
             IMapper mapper
             )
@@ -49,10 +52,8 @@ namespace Application.Services.ChapterService
             int userid,
             CancellationToken ct = default)
         {
-            CourseEntity? course = await _coursesRepository.GetAll().
-                Where(c => c.creatorid == userid 
-                && c.id == chapter.courseid).
-                FirstOrDefaultAsync();
+            CourseEntity? course = await _coursesRepository.
+                FirstOrDefaultAsync(new CourseCreatorSpec(chapter.courseid, userid));
 
             if(course == null)
             {
@@ -91,78 +92,63 @@ namespace Application.Services.ChapterService
         //}
 
         public async Task<TResult<ChapterOutDTO>> UpdateChapter(
-            ChapterUpdateDTO newchapter,
-            int userid,
-            CancellationToken ct = default
-            )
+     ChapterUpdateDTO newchapter,
+     int userid,
+     CancellationToken ct = default)
         {
 
-            var courses = _coursesRepository.GetAllWithoutTracking().Where(c => c.creatorid == userid);
+            var spec = new ChapterWithAccessSpec(newchapter.id, userid);
 
-            var chapters = _chapterRepository.GetAllWithoutTracking().Where(c => c.id == newchapter.id); //пустой может быть при неккоректном фронте
-   
-            var joined = courses
-               .Join(chapters,
-               c => c.id,
-               c => c.courseid,
-               (courses, chapter) => new 
-               {
-                   courseid = courses.id,
+            var chapterEntity = await _chapterRepository.FirstOrDefaultAsync(spec, ct);
 
-                   chapter
-               }
-               );
-
-            var chapterInfo = await joined.FirstOrDefaultAsync(ct);
-
-            if (chapterInfo == null || chapterInfo.chapter == null)
-                return TResult<ChapterOutDTO>.FailedOperation(errorCode.ChapterNotFound);
-
-            var source = new ChapterMappingSource()
+            if (chapterEntity == null)
             {
-                courseid = chapterInfo.courseid,
-                Chapter = chapterInfo.chapter, 
-            };
+                return TResult<ChapterOutDTO>.FailedOperation(errorCode.ChapterNotFound);
+            }
 
+            await _chapterRepository.PartialUpdateAsync(chapterEntity, newchapter);
 
-            var partUpdate = _mapper.Map<ChapterEntity>(source);
-
-            await _chapterRepository.PartialUpdateAsync(chapterInfo.chapter, newchapter);
-          
             try
             {
-
                 await _unitOfWork.CommitAsync(ct);
-                return TResult<ChapterOutDTO>.CompletedOperation(_mapper.Map<ChapterOutDTO>(chapterInfo.chapter));
+
+                var resultDto = _mapper.Map<ChapterOutDTO>(chapterEntity);
+                return TResult<ChapterOutDTO>.CompletedOperation(resultDto);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogDBError(ex);
                 return TResult<ChapterOutDTO>.FailedOperation(errorCode.DatabaseError);
-                
             }
-           
         }
 
 
         public async Task<TResult<PagedResponseDTO<ChapterOutDTO>>> GetChaptersByCourseIdAndUserId(
-            int courseid, 
-            int userid, 
-            SortingAndPaginationDTO userSortingRequest,
-            CancellationToken ct = default
-            )
+     int courseid,
+     int userid,
+     SortingAndPaginationDTO userSortingRequest,
+     CancellationToken ct = default)
         {
-            var chapter = await _chapterRepository.GetAllWithoutTracking().GetWithPaginationAndSorting(userSortingRequest, "id", "courseid")
-                .Include(c => c.course)
-                .Where(c => c.course.creatorid == userid && c.course.id == courseid)
-                .ToListAsync(ct);
+            var spec = new ChaptersByCourseSpec(courseid, userid);
 
-            if(chapter == null || chapter.Count() == 0)
+            var chapterEntities = await _chapterRepository.GetPagedChaptersAsync(spec, userSortingRequest, ct);
+
+            if (chapterEntities == null || !chapterEntities.Any())
             {
-                return TResult<PagedResponseDTO<ChapterOutDTO>>.FailedOperation(errorCode.CoursesNotFoud, "у вас отсутствует данный курс");
+                return TResult<PagedResponseDTO<ChapterOutDTO>>.FailedOperation(
+                    errorCode.CoursesNotFoud, "у вас отсутствует данный курс или разделы в нем");
             }
 
-                return GetChapter(chapter, userSortingRequest, await _chapterRepository.GetAllWithoutTracking().Include(c => c.course).Where(c => c.course.id == courseid).CountAsync());
+            var totalCount = await _chapterRepository.CountAsync(spec, ct);
+
+            var dtoList = chapterEntities.Select(c => new ChapterOutDTO
+            {
+                id = c.id,
+                name = c.name,
+                order = (int)c.order,
+            }).ToList();
+
+            return PageService.CreatePage(dtoList, userSortingRequest, totalCount);
         }
 
 
@@ -186,53 +172,55 @@ namespace Application.Services.ChapterService
 
 
         public async Task<TResult<PagedResponseDTO<ChapterOutDTO>>> GetChaptersByCourseId(
-            int courseid, 
+            int courseid,
             SortingAndPaginationDTO userSortingRequest,
             CancellationToken ct = default)
         {
-            var chapter = await _chapterRepository
-                .GetAllWithoutTracking()
-                .GetWithPaginationAndSorting(userSortingRequest, "id", "courseid")
-                .Include(c => c.course)
-                .Where(c => c.course.id == courseid)
-                .ToListAsync(ct);
+            var spec = new ChaptersByCoursePublicSpec(courseid);
 
-            return GetChapter(chapter, userSortingRequest, await _chapterRepository.GetAllWithoutTracking().Include(c => c.course).Where(c => c.course.id == courseid).CountAsync());
+            var chapterEntities = await _chapterRepository.GetPagedChaptersAsync(spec, userSortingRequest, ct);
 
+            var totalCount = await _chapterRepository.CountAsync(spec, ct);
+
+            var dtoList = chapterEntities.Select(c => new ChapterOutDTO
+            {
+                id = c.id,
+                name = c.name,
+                order = (int)c.order
+            }).ToList();
+
+            return PageService.CreatePage(dtoList, userSortingRequest, totalCount);
         }
 
         public async Task<TResult> DeleteChapter(
-            int chapterid,
-            int userid = default,
-            CancellationToken ct = default)
+     int chapterid,
+     int userid = default,
+     CancellationToken ct = default)
         {
+     
+            var spec = new ChapterDeleteSpec(chapterid, userid == default ? null : userid);
 
             try
             {
-                if(userid == default)
+                int deletedRows = await _chapterRepository.ExecuteDeleteBySpecAsync(spec, ct);
+
+                if (deletedRows == 0)
                 {
-                   await _chapterRepository
-                        .GetAll()
-                        .Where(c => c.id == chapterid)
-                        .ExecuteDeleteAsync();
+                    return TResult.FailedOperation(errorCode.ChapterNotFound);
                 }
-                else
-                {
-                    await _chapterRepository
-                             .GetAll()
-                             .Include(c => c.course)
-                             .Where(c => c.id == chapterid &&
-                                    c.course.creatorid == userid)
-                             .ExecuteDeleteAsync();
-                }
-         
+
                 return TResult.CompletedOperation();
             }
             catch (DbUpdateException ex)
             {
                 _logger.LogDBError(ex);
-                return TResult.FailedOperation(errorCode.ChapterNotFound);
-            }      
+                return TResult.FailedOperation(errorCode.DatabaseError, "Не удалось удалить раздел");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCriticalError(ex);
+                return TResult.FailedOperation(errorCode.UnknownError);
+            }
         }
 
 
