@@ -5,51 +5,39 @@ namespace infrastructure.DataBase.Extensions
 {
     public static class QueryableExtensions
     {
-        public static IQueryable<T> GetWithPaginationAndSorting<T>(this IQueryable<T> qwery, SortingAndPaginationDTO userSortingRequest, params string[] banvalue)
+        public static IQueryable<T> GetWithPaginationAndSorting<T>(this IQueryable<T> query, SortingAndPaginationDTO userSortingRequest, params string[] banvalue)
         {
-
             if (string.IsNullOrWhiteSpace(userSortingRequest.OrderBy))
-                return qwery;
-
-            if (userSortingRequest.ThenBy != null && userSortingRequest
-                .ThenBy
-                .Any(c => banvalue.Contains(c)))
             {
-                return qwery;
+                query = query.OrderBy("id");
             }
-
-            string? der = userSortingRequest.desc ? "descending" : "";
-            
-            
-            
-            try
+            else
             {
-                var query = qwery.
-            OrderBy($"{userSortingRequest.OrderBy} {der}".Trim());
-
-                if (userSortingRequest.ThenBy != null)
+                try
                 {
-                    foreach (var item in userSortingRequest.ThenBy)
+                    string direction = userSortingRequest.desc ? "descending" : "";
+                    query = query.OrderBy($"{userSortingRequest.OrderBy} {direction}".Trim());
+
+                    if (userSortingRequest.ThenBy != null)
                     {
-                        query = query.ThenBy($"{item} {der}".Trim());
+                        foreach (var item in userSortingRequest.ThenBy)
+                        {
+                            query = ((IOrderedQueryable<T>)query).ThenBy($"{item} {direction}".Trim());
+                        }
                     }
                 }
-                var finnaly = query.Skip(userSortingRequest.PageSize * (userSortingRequest.PageNumber - 1))
-             .Take(userSortingRequest.PageSize);
-
-
-                return finnaly;
-
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"ошибка сортировки : {ex.Message}");
-                return qwery.Order();
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"ошибка сортировки : {ex.Message}");
+                    query = query.OrderBy("id");
+                }
             }
 
-           
-            }
+
+            return query
+                .Skip(userSortingRequest.PageSize * (userSortingRequest.PageNumber - 1))
+                .Take(userSortingRequest.PageSize);
+        }
 
 
         public static IQueryable<T> GetWithSorting<T>(this IQueryable<T> qwery, SortingDTO userSortingRequest, params string[] banvalue)

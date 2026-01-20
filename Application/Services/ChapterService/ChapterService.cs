@@ -54,6 +54,12 @@ namespace Application.Services.ChapterService
             CourseEntity? course = await _coursesRepository.
                 FirstOrDefaultAsync(new CourseCreatorSpec(chapter.courseid, userid));
 
+            if(await _chapterRepository.AnyAsync(new ChapterCreateSpec(chapter.order, chapter.courseid, chapter.name)))
+            {
+                return TResult.FailedOperation(errorCode.InvalidDataFormat);
+            }
+
+
             if(course == null)
             {
                 return TResult.FailedOperation(errorCode.CoursesNotFoud);
@@ -63,6 +69,8 @@ namespace Application.Services.ChapterService
             {
                 return TResult<PagedResponseDTO<ChapterOutDTO>>.FailedOperation(errorCode.CoursesNotFoud, "нет прав");
             }
+
+
 
             await _chapterRepository.Create(_mapper.Map<ChapterEntity>(chapter));
             
@@ -91,9 +99,9 @@ namespace Application.Services.ChapterService
         //}
 
         public async Task<TResult<ChapterOutDTO>> UpdateChapter(
-     ChapterUpdateDTO newchapter,
-     int userid,
-     CancellationToken ct = default)
+        ChapterUpdateDTO newchapter,
+        int userid,
+        CancellationToken ct = default)
         {
 
             var spec = new ChapterWithAccessSpec(newchapter.id, userid);
@@ -123,10 +131,10 @@ namespace Application.Services.ChapterService
 
 
         public async Task<TResult<PagedResponseDTO<ChapterOutDTO>>> GetChaptersByCourseIdAndUserId(
-     int courseid,
-     int userid,
-     SortingAndPaginationDTO userSortingRequest,
-     CancellationToken ct = default)
+        int courseid,
+        int userid,
+        SortingAndPaginationDTO userSortingRequest,
+        CancellationToken ct = default)
         {
             var spec = new ChaptersByCourseSpec(courseid, userid);
 

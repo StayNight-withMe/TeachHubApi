@@ -18,8 +18,11 @@ namespace infrastructure.Utils.JwtService
     public class JwtService : IJwtService
     {
         private readonly IConfiguration _conf;
+
         private readonly SymmetricSecurityKey _key;
+
         private readonly ILogger<IJwtService> _logger;
+
         public JwtService(IConfiguration conf, ILogger<IJwtService> logger)
         {
             _conf = conf;
@@ -72,7 +75,6 @@ namespace infrastructure.Utils.JwtService
 
                 if (jwttoken == null)
                 {
-                    Console.WriteLine("");
                     return null;
                 }
 
@@ -80,7 +82,6 @@ namespace infrastructure.Utils.JwtService
 
                 if (ClaimsPprincipal == null)
                 {
-                    Console.WriteLine("косяк по валидации");
                     return null;
                 }
 
@@ -89,7 +90,7 @@ namespace infrastructure.Utils.JwtService
 
                 if (tokenTime < DateTime.UtcNow.AddMinutes(-15) || tokenTime > DateTime.UtcNow)
                 {
-                    Console.WriteLine("косяк по времени");
+                    _logger.LogDebug("ошибка во времени в jwt-токене");
                     return null;
                 }
 
@@ -107,6 +108,7 @@ namespace infrastructure.Utils.JwtService
             }
             catch (Exception ex)
             {
+                _logger.LogDebug(ex.Message);
                 return null;
             }
 

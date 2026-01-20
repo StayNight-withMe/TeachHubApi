@@ -77,7 +77,6 @@ namespace testApi.EndPoints
             //    userid = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             //}
 
-            Console.WriteLine(UserId);
 
             var result1 = await _courseService.SearchCourse(searchText, userSortingRequest, UserId, ct);
             return await EntityResultExtensions.ToActionResult(result1, this);
