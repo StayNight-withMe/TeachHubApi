@@ -1,5 +1,7 @@
 # TeachHub API
 
+[English](readme.md) | [Русский](readme.RU.md)
+
 RESTful API for managing courses, lessons, and user interactions on a learning platform. Built with C# using ASP.NET 9 following Clean Architecture principles.
 
 ## Project Overview
