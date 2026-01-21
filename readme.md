@@ -210,6 +210,28 @@ Uses **Ardalis Specification Pattern** for reusable, typed queries.
 - **Swagger / OpenAPI** documentation
 - **PostgreSQL** admin tools
 
+### English Version
+
+```markdown
+## Project Setup (Docker)
+
+Docker Compose is used for quick deployment of the local development environment. This will automatically spin up the PostgreSQL database and apply the initial data schema from `init.sql`.
+
+### Prerequisites
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (for Windows/Mac) or Docker Engine with the Compose plugin (for Linux).
+
+### Quick Start
+
+1. Clone the repository.
+2. Open a terminal in the project root folder and run the command depending on your OS:
+
+**Linux / macOS (Bash):**
+bash docker-compose up -d
+
+**Windows (Command Prompt / PowerShell):**
+docker compose up -d
+
+
 ## Notes
 
 - DB-first approach: database created first, then EF models generated

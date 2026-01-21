@@ -214,6 +214,24 @@ Course
 - **Swagger/OpenAPI** — автоматическая документация API
 - **PostgreSQL Tools** — для администрирования БД
 
+## Запуск проекта (Docker)
+
+Для быстрого развертывания локальной среды разработки используется Docker Compose. Это автоматически поднимет базу данных PostgreSQL и применит начальную схему данных из `init.sql`.
+
+### Предварительные требования
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (для Windows/Mac) или Docker Engine с плагином Compose (для Linux).
+
+### Быстрый старт
+
+1. Клонируйте репозиторий.
+2. Откройте терминал в корневой папке проекта и выполните команду в зависимости от вашей ОС:
+
+**Linux / macOS (Bash):**
+bash docker-compose up -d
+
+**Windows (Command Prompt / PowerShell):**
+docker compose up -d
+
 ## Примечания
 
 - API использует DB-first подход: структура БД создается отдельно, затем на основе этого генерируются Entity Framework модели
