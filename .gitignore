@@ -21,7 +21,8 @@ bin/
 obj/
 BloomFilterData/
 .vs/
-*.json
+appsettings.json
+appsettings.Development.json
 TestResults/
 ###################
 # Web publish log #
