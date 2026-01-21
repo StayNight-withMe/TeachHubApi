@@ -2,6 +2,7 @@
 using Asp.Versioning;
 using Core.Models.TargetDTO.Common.input;
 using Microsoft.AspNetCore.Mvc;
+using testApi.WebUtils.EntityResultExtensions;
 
 namespace testApi.EndPoints
 {

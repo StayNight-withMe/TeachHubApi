@@ -9,6 +9,7 @@ using Application.Abstractions.Service;
 using Core.Models.TargetDTO.Users.input;
 using testApi.WebUtils.HeadersService.interfaces;
 using Application.Abstractions.Utils;
+using testApi.WebUtils.EntityResultExtensions;
 
 namespace testApi.EndPoints
 {

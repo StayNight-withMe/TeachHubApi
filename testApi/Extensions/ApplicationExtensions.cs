@@ -22,7 +22,7 @@ using Microsoft.Extensions.Options;
 using testApi.WebUtils.HeadersService.implementation;
 using testApi.WebUtils.HeadersService.interfaces;
 
-namespace Microsoft.Extensions.DependencyInjection;
+namespace testApi.Extensions;
 
 public static class ApplicationServicesExtensions
 {

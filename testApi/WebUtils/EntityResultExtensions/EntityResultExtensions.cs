@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Core.Models.ReturnEntity;
 
-namespace testApi
+namespace testApi.WebUtils.EntityResultExtensions
 {
     public static class EntityResultExtensions
     {
@@ -17,8 +17,6 @@ namespace testApi
             };
 
         }
-
-
 
         private static IActionResult MapToAction(EntityOfTResult result, ControllerBase controllerBase)
         {

@@ -8,7 +8,7 @@ using infrastructure.UoW.implementation;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 
-namespace Microsoft.Extensions.DependencyInjection;
+namespace testApi.Extensions;
 
 public static class DatabaseExtensions
 {

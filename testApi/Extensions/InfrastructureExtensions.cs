@@ -6,7 +6,7 @@ using infrastructure.BackgroundService;
 using infrastructure.Utils.BloomFilter.implementation;
 using Microsoft.Extensions.Options;
 
-namespace testApi.Main
+namespace testApi.Extensions
 {
     public static class InfrastructureExtensions
     {

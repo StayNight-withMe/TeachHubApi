@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.OutputCaching;
 using Core.Common.Types.HashId;
 using Application.Abstractions.Service;
 using Core.Models.TargetDTO.Common.input;
+using testApi.WebUtils.EntityResultExtensions;
 
 namespace testApi.EndPoints
 {

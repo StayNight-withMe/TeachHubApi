@@ -1,3 +1,4 @@
+using testApi.Extensions;
 using testApi.Middleware.Exeption;
 using testApi.Middleware.IpValidate;
 using testApi.Middleware.RateLimit;

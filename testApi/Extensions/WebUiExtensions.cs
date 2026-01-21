@@ -4,7 +4,7 @@ using Microsoft.OpenApi.Any;
 using System.Text.Json.Serialization;
 using testApi.WebUtils.HashIdConverter;
 
-namespace Microsoft.Extensions.DependencyInjection;
+namespace testApi.Extensions;
 
 public static class WebUiExtensions
 {

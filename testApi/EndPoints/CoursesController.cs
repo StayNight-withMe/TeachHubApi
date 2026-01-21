@@ -7,6 +7,7 @@ using Core.Models.TargetDTO.Courses.input;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
+using testApi.WebUtils.EntityResultExtensions;
 using testApi.WebUtils.JwtClaimUtil;
 
 namespace testApi.EndPoints

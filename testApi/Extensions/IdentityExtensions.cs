@@ -6,7 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using testApi.WebUtils.JwtClaimUtil;
 
-namespace Microsoft.Extensions.DependencyInjection;
+namespace testApi.Extensions;
 
 public static class IdentityExtensions
 {
