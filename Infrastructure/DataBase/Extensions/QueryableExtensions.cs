@@ -9,7 +9,7 @@ namespace infrastructure.DataBase.Extensions
         {
             if (string.IsNullOrWhiteSpace(userSortingRequest.OrderBy))
             {
-                query = query.OrderBy("id");
+                query = query.Order();
             }
             else
             {

@@ -59,12 +59,12 @@ namespace Application.Services.LessonService
 
             if (course == false)
             {
-                return TResult.FailedOperation(errorCode.CoursesNotFoud);
+                return TResult.FailedOperation(errorCode.CoursesNotFound);
             }
 
 
-            bool valid = await _chapterRepository
-                .AnyAsync(new ValidLessonForCreate(lesson.order, lesson.name));
+            bool valid = await _lessonRepository
+                .AnyAsync(new LessonCreateSpec(lesson.order, lesson.name, lesson.chapterid));
 
 
             if(valid)
@@ -115,7 +115,7 @@ namespace Application.Services.LessonService
 
              if(exists ==  false)
             {
-                return TResult.FailedOperation(errorCode.CoursesNotFoud);
+                return TResult.FailedOperation(errorCode.CoursesNotFound);
             }
 
              await _lessonRepository.DeleteById(ct, lessonid);

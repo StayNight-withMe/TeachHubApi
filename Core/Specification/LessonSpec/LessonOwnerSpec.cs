@@ -17,8 +17,9 @@ namespace Core.Specification.LessonSpec
         public LessonOwnerSpec(int lessonId, int userId)
         {
             Query.AsNoTracking()
+                 .Include(c => c.course)
                  .Where(l => l.id == lessonId && 
-                 l.course.creatorid == userId)
+                        l.course.creatorid == userId)
                  .Select(l => l.id); 
         }
     }

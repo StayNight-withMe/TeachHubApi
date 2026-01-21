@@ -54,7 +54,7 @@ namespace testApi.EndPoints
         [FromRoute] Hashid userid,
         [FromQuery] SortingAndPaginationDTO userSortingRequest)
         {
-            var result = await _followService.GetUserFollowers(userid, userSortingRequest);
+            var result = await _followService.GetUserFollowers(userid.Value, userSortingRequest);
             return await EntityResultExtensions.ToActionResult(result, this);
         }
 

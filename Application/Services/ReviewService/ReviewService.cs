@@ -195,7 +195,7 @@ namespace Application.Services.ReviewService
             {
                 if (ex.ErrorCode == "23503")
                 {
-                    return TResult.FailedOperation(errorCode.CoursesNotFoud);
+                    return TResult.FailedOperation(errorCode.CoursesNotFound);
                 }
 
                 _logger.LogError(ex, "Ошибка бд при создании отзыва");

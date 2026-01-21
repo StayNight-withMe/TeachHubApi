@@ -39,7 +39,7 @@ namespace testApi.EndPoints
             )
         {
             var result = await _lessonService.GetLessonByChapterid(
-                chapterid, 
+                chapterid.Value, 
                 userSortingRequest, 
                 ct);
             return  await EntityResultExtensions.ToActionResult(result, this);
@@ -76,7 +76,8 @@ namespace testApi.EndPoints
 
         [HttpPatch]
         [Authorize]
-        public async Task<IActionResult> UpdateLesson([FromBody] LessonUpdateDTO lesson)
+        public async Task<IActionResult> UpdateLesson(
+            [FromBody] LessonUpdateDTO lesson)
         {
             var result = await _lessonService.UpdateLesson(
                 lesson,

@@ -38,7 +38,7 @@ namespace testApi.EndPoints
         [FromRoute] Hashid courseId
         )
         {
-            var result = await _chapterService.GetChaptersByCourseId(courseId, request);
+            var result = await _chapterService.GetChaptersByCourseId(courseId.Value, request);
             return await EntityResultExtensions.ToActionResult(result, this);
             
         }

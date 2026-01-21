@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 
 namespace Core.Common.Types.HashId
 {
-    [TypeConverter(typeof(Hashid))]
+    //[TypeConverter(typeof(Hashid))]
+    [TypeConverter(typeof(HashidTypeConverter))]
     public struct Hashid
     {
         public int Value { get; }

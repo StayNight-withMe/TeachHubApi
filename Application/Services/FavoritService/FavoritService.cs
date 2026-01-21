@@ -72,14 +72,13 @@ namespace Application.Services.FavoritService
                 return TResult.FailedOperation(errorCode.NotFound);
             }
 
-            await _favoritrepo.DeleteById(
-            ct,
-            userid,
-            courseid);
-
             try
             {
-                await _unitOfWork.CommitAsync();
+                await _favoritrepo.DeleteById(
+                                                ct,    
+                                                courseid,
+                                                userid);
+                await _unitOfWork.CommitAsync(ct);
                 return TResult.CompletedOperation();
             }
             catch (DbUpdateException ex)

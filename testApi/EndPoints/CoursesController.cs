@@ -156,13 +156,13 @@ namespace testApi.EndPoints
 
 
         [Authorize]
-        [HttpGet("${courseid}")]
+        [HttpGet("{courseid}")]
         [OutputCache(PolicyName = "10min")]
         public async Task<IActionResult> GetUserCourses(
         [FromQuery] SortingAndPaginationDTO userSortingRequest,
         CancellationToken ct,
         [FromRoute] Hashid courseid
-    )
+        )
         {
             var result = await _courseService.GetUserCourses(courseid, userSortingRequest, ct);
             return await EntityResultExtensions.ToActionResult(result, this);

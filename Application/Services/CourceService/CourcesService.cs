@@ -225,7 +225,7 @@ namespace Application.Services.CourceService
 
             if(cousrse == null)
             {
-                return TResult<CourseOutputDTO>.FailedOperation(errorCode.CoursesNotFoud);
+                return TResult<CourseOutputDTO>.FailedOperation(errorCode.CoursesNotFound);
             }
 
             await _courceRepository.PartialUpdateAsync(cousrse, updateCourseDTO);
@@ -264,7 +264,7 @@ namespace Application.Services.CourceService
             if(courseEntites == null)
             {
                 return TResult<PagedResponseDTO <CourseOutputDTO>>
-                    .FailedOperation(errorCode.CoursesNotFoud);
+                    .FailedOperation(errorCode.CoursesNotFound);
             }
 
             List<CourseOutputDTO> courseDTOs = await MapList(courseEntites);
@@ -294,7 +294,7 @@ namespace Application.Services.CourceService
                     courceid == 0 
                     )
                 {
-                    return TResult.FailedOperation(errorCode.CoursesNotFoud);
+                    return TResult.FailedOperation(errorCode.CoursesNotFound);
                 }
 
                 await _courceRepository.DeleteById(ct, courceid);
@@ -346,7 +346,7 @@ namespace Application.Services.CourceService
                         _logger.LogInformation("Upload");
                         if (course == null)
                         {
-                            return TResult<SetImageOutPutDTO>.FailedOperation(errorCode.CoursesNotFoud);
+                            return TResult<SetImageOutPutDTO>.FailedOperation(errorCode.CoursesNotFound);
                         }
 
                         if (!string.IsNullOrEmpty(course.imgfilekey))

@@ -12,9 +12,10 @@ namespace Core.Specification.ChapterSpec
     {
         public ChapterCreateSpec(int order, int courseid, string name)
         {
-            Query.Where(c => c.courseid == courseid &&
-                        c.order == order &&
-                        c.name == name
+            Query.AsNoTracking()
+                 .Where(c => c.courseid == courseid &&
+                        (c.order == order ||
+                        c.name == name)
             );
         }
     }

@@ -43,7 +43,7 @@ namespace testApi
                 errorCode.ChapterNotFound
                   => controllerBase.NotFound(),
 
-                errorCode.CoursesNotFoud
+                errorCode.CoursesNotFound
                   => controllerBase.NotFound(),
 
                 _ => controllerBase.StatusCode(ErrorMap(result.ErrorCode), new { code = result.ErrorCode.ToString() })

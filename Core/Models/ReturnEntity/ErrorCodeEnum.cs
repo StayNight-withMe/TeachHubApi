@@ -10,7 +10,7 @@
         EmailInvalid = 3,
         PasswordTooLong = 4,
         UserNotFound = 5,
-        CoursesNotFoud = 6,
+        CoursesNotFound = 6,
         ChapterNotFound = 7,
         IpNotFound = 8,
         lessonNotFound = 9,
@@ -29,6 +29,8 @@
         CommentYourSelfCourseError = 109,
         LessonAlreadyExists = 110,
         MoreThanOne = 111,
+        ChapterAlreadyExists = 112,
+        LessonFileAlreadyExists = 113,
 
         // Системные ошибки (500 Internal Server Error)
         DatabaseError = 201,

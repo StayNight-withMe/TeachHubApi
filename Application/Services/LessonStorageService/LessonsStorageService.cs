@@ -133,21 +133,39 @@ namespace Application.Services.LessonStorageService
 
 
         // не уверен в своем решении, но мне кажется что при ошибке в бд стоит удалять файл из облака
+        //еще и токен есть
         public async Task<TResult> UploadFile(
-    Stream stream,
-    int userid,
-    MetaDataLessonDTO metaData,
-    string contentType,
-    CancellationToken ct = default
+        Stream stream,
+        int userid,
+        MetaDataLessonDTO metaData,
+        string contentType,
+        CancellationToken ct = default
     )
         {
+
+
+            var valid = await _lessonFileRepository.AnyAsync(new LessonFileCreateSpec(
+                metaData.lessonid.Value, 
+                metaData.name, 
+                metaData.order), ct);
+
+            if(valid)
+            {
+                return TResult.FailedOperation(errorCode.LessonFileAlreadyExists);
+            }
+
+
+
             var lessonId = await _lessonRepository
-                .FirstOrDefaultAsync(new LessonOwnerSpec(metaData.lessonid, userid), ct);
+                .FirstOrDefaultAsync(new LessonOwnerSpec(metaData.lessonid.Value, userid), ct);
+
+            //_logger.LogDebug($"userid: {userid}, lessonid: {metaData.lessonid.Value}");
 
             if (lessonId == 0)
             {
                 return TResult.FailedOperation(errorCode.NoRights);
             }
+
 
             try
             {

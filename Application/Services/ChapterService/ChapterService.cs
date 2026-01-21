@@ -54,20 +54,23 @@ namespace Application.Services.ChapterService
             CourseEntity? course = await _coursesRepository.
                 FirstOrDefaultAsync(new CourseCreatorSpec(chapter.courseid, userid));
 
-            if(await _chapterRepository.AnyAsync(new ChapterCreateSpec(chapter.order, chapter.courseid, chapter.name)))
-            {
-                return TResult.FailedOperation(errorCode.InvalidDataFormat);
-            }
 
 
-            if(course == null)
+            if (course == null)
             {
-                return TResult.FailedOperation(errorCode.CoursesNotFoud);
+                return TResult.FailedOperation(errorCode.CoursesNotFound);
             }
+
+            if (await _chapterRepository.AnyAsync(new ChapterCreateSpec(chapter.order, chapter.courseid, chapter.name)))
+            {
+                return TResult.FailedOperation(errorCode.LessonAlreadyExists);
+            }
+
+  
 
             if (course.creatorid != userid)
             {
-                return TResult<PagedResponseDTO<ChapterOutDTO>>.FailedOperation(errorCode.CoursesNotFoud, "нет прав");
+                return TResult<PagedResponseDTO<ChapterOutDTO>>.FailedOperation(errorCode.CoursesNotFound);
             }
 
 
@@ -82,7 +85,7 @@ namespace Application.Services.ChapterService
             catch (DbUpdateException ex)
             {
                 _logger.LogError(ex);
-                return TResult.FailedOperation(errorCode.DatabaseError, "ошибка создания раздела");
+                return TResult.FailedOperation(errorCode.DatabaseError);
 
             }
         }
@@ -138,12 +141,15 @@ namespace Application.Services.ChapterService
         {
             var spec = new ChaptersByCourseSpec(courseid, userid);
 
-            var chapterEntities = await _chapterRepository.GetPagedChaptersAsync(spec, userSortingRequest, ct);
+            var chapterEntities = await _chapterRepository.GetPagedChaptersAsync(
+                spec, 
+                userSortingRequest, 
+                ct);
 
             if (chapterEntities == null || !chapterEntities.Any())
             {
                 return TResult<PagedResponseDTO<ChapterOutDTO>>.FailedOperation(
-                    errorCode.CoursesNotFoud, "у вас отсутствует данный курс или разделы в нем");
+                    errorCode.CoursesNotFound, "у вас отсутствует данный курс или разделы в нем");
             }
 
             var totalCount = await _chapterRepository.CountAsync(spec, ct);

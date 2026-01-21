@@ -7,7 +7,10 @@ public class ChaptersByCourseSpec : Specification<ChapterEntity>
 {
     public ChaptersByCourseSpec(int courseId, int userId)
     {
-        Query.Where(ch => ch.courseid == courseId && ch.course.creatorid == userId)
+        
+        Query.Include(c => c.course)
+            .Where(ch => ch.courseid == courseId &&
+                    ch.course.creatorid == userId)
              .AsNoTracking();
     }
 }

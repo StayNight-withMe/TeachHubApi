@@ -66,11 +66,11 @@ builder.Services.AddControllers(options =>
     options.SuppressInferBindingSourcesForParameters = false;
 });
 
-builder.Services.AddMvc(options =>
-{
+//builder.Services.AddMvc(options =>
+//{
     
-    options.ModelMetadataDetailsProviders.Add(new Microsoft.AspNetCore.Mvc.ModelBinding.Metadata.ExcludeBindingMetadataProvider(typeof(Hashid)));
-});
+//    options.ModelMetadataDetailsProviders.Add(new Microsoft.AspNetCore.Mvc.ModelBinding.Metadata.ExcludeBindingMetadataProvider(typeof(Hashid)));
+//});
 
 
 

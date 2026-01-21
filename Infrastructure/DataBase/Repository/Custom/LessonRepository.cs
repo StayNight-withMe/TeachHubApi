@@ -23,7 +23,7 @@ public class LessonRepository : BaseRepository<LessonEntity>, ILessonRepository
         var query = ApplySpecification(spec);
 
         return await query
-            .Where(c => c.chapterid == chapterid)
+            //.Where(c => c.chapterid == chapterid)
             .GetWithPaginationAndSorting(userSortingRequest, "isvisible", "chapterid", "id")
             .Select(c => new lessonOutputDTO
             {

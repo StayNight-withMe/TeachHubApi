@@ -32,22 +32,23 @@ namespace testApi.EndPoints
             _headerService = headerService;
         }
 
-        [HttpGet("test")]
-        public IActionResult Test()
-        {
-            var id = new Hashid(123);
-            // Это заставит сериализатор работать прямо здесь, в коде
-            var json = System.Text.Json.JsonSerializer.Serialize(id, new JsonSerializerOptions
-            {
-                Converters = { new HashidJsonConverter() }
-            });
 
-            return Ok(new
-            {
-                DirectJson = json,
-                RawObject = id
-            }); 
-        }
+        //[HttpGet("test")]
+        //public IActionResult Test()
+        //{
+        //    var id = new Hashid(123);
+        //    // Это заставит сериализатор работать прямо здесь, в коде
+        //    var json = System.Text.Json.JsonSerializer.Serialize(id, new JsonSerializerOptions
+        //    {
+        //        Converters = { new HashidJsonConverter() }
+        //    });
+
+        //    return Ok(new
+        //    {
+        //        DirectJson = json,
+        //        RawObject = id
+        //    });
+        //}
 
 
 

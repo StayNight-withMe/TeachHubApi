@@ -61,7 +61,7 @@ namespace infrastructure.DataBase.Repository.Base
                 _dbSet.Remove(value);
                 return;
             }
-            throw new DbUpdateException("Not Found");
+            throw new Core.Common.Exeptions.DbUpdateException("Not Found", "23503");
             
         }
 
