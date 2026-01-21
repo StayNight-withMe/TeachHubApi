@@ -6,7 +6,6 @@ using infrastructure.DataBase.Context;
 using infrastructure.DataBase.Extensions;
 using infrastructure.DataBase.Repository.Base;
 using Microsoft.EntityFrameworkCore;
-using Core.Common.Types.HashId;
 
 namespace infrastructure.DataBase.Repository.Custom
 {

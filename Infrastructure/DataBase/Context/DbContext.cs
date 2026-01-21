@@ -1,8 +1,6 @@
 ﻿using Core.Common.EnumS;
 using Core.Models.Entitiеs;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.ValueGeneration;
 using NpgsqlTypes;
 
 namespace infrastructure.DataBase.Context

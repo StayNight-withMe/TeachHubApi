@@ -1,7 +1,5 @@
 ﻿using Core.Common.Types.HashId;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using System;
-
 
 namespace testApi.WebUtils.HashIdConverter
 {

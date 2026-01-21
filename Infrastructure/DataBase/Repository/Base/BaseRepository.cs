@@ -5,7 +5,6 @@ using Core.Models.TargetDTO.Common.input;
 using infrastructure.DataBase.Context;
 using infrastructure.DataBase.Extensions;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace infrastructure.DataBase.Repository.Base
 {

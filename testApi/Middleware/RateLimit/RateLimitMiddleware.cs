@@ -1,11 +1,5 @@
 ﻿using testApi.WebUtils.HeadersService.interfaces;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.Mapping;
 using System.Collections.Concurrent;
-using System.Security.Cryptography.X509Certificates;
-using System.Security.Principal;
-using System.Threading.RateLimiting;
 
 namespace testApi.Middleware.RateLimit
 {
