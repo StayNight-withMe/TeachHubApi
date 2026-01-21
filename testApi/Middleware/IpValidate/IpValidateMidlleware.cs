@@ -19,6 +19,13 @@ namespace testApi.Middleware.IpValidate
         {
             try
             {
+                //var path = httpContext.Request.Path.Value;
+                //if (path != null && path.Contains("/swagger"))
+                //{
+                //    await _next(httpContext);
+                //    return;
+                //}
+
                 var ip = headerService.GetIp();
           
                 if(string.IsNullOrWhiteSpace(ip) || !IsValidIp(ip, out _))
@@ -102,7 +109,7 @@ namespace testApi.Middleware.IpValidate
         {
             if (string.IsNullOrEmpty(userAgent1) || string.IsNullOrEmpty(userAgent2)) return false;
 
-            // Заменяем ВСЕ цифры и точки на звёздочки
+       
             var cleanUA1  = Regex.Replace(userAgent1, @"[\d\.]+", "*");
 
             var cleanUA2 = Regex.Replace(userAgent2, @"[\d\.]+", "*");

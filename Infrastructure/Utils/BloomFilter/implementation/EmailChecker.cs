@@ -82,7 +82,7 @@ namespace infrastructure.Utils.BloomFilter.implementation
             
             byte[] serializedData = SerializeToBytes(newMemoryFilter);
 
-            string finalPath = Path.Combine(bloomDirectory, _filePath);
+            string finalPath = _filePath;
 
             SaveAtomically(serializedData, bloomDirectory, finalPath);
 

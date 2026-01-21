@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  # Настройка базы данных
+  db:
+    image: postgres:16-alpine
+    container_name: teachhub-db
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=kasa2002  
+      - POSTGRES_DB=testForApi           
+    ports:
+      - "5432:5432"
+    volumes:
+      # Магия: пробрасываем твой бэкап в папку автозапуска Postgres
+      - ./db-init:/docker-entrypoint-initdb.d
+      # Сохраняем данные базы на твоем диске, чтобы они не удалялись
+      - postgres_data:/var/lib/postgresql/data
+
+  # Настройка твоего API
+  api:
+    build: .
+    container_name: teachhub-api
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    entrypoint: ["sh", "-c", "sleep 15 && dotnet testApi.dll"]
+    environment:
+      # ПЕРЕОПРЕДЕЛЯЕМ строку подключения для Docker
+      # Важно: вместо localhost пишем имя сервиса "db"
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=testForApi;Username=postgres;Password=kasa2002
+
+volumes:
+  postgres_data:

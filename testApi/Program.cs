@@ -19,11 +19,11 @@ var app = builder.Build();
 
 app.UseMiddleware<RateLimitMiddleware>(60, 20);
 
-if (app.Environment.IsDevelopment())
-{
+//if (app.Environment.IsDevelopment())
+//{
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+//}
 
 app.UseMiddleware<ExeptionMiddleware>();
 app.UseHttpsRedirection();
@@ -31,7 +31,12 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseMiddleware<IpValidateMidlleware>();
+//app.UseMiddleware<IpValidateMidlleware>();
+
+app.UseWhen(context => !context.Request.Path.StartsWithSegments ("/swagger"), appBuilder =>
+{
+    appBuilder.UseMiddleware<IpValidateMidlleware>();
+});
 
 app.MapControllers();
 
