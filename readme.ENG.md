@@ -208,11 +208,6 @@ Uses **Ardalis Specification Pattern** for reusable, typed queries.
 - **Swagger / OpenAPI** documentation
 - **PostgreSQL** admin tools
 
-## GitHub
-
-Full source code:  
-https://github.com/StayNight-withMe/TeachHubApi
-
 ## Notes
 
 - DB-first approach: database created first, then EF models generated

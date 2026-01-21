@@ -212,11 +212,6 @@ Course
 - **Swagger/OpenAPI** — автоматическая документация API
 - **PostgreSQL Tools** — для администрирования БД
 
-## GitHub
-
-Полный исходный код проекта доступен на GitHub:
-[https://github.com/StayNight-withMe/TeachHubApi](https://github.com/StayNight-withMe/TeachHubApi)
-
 ## Примечания
 
 - API использует DB-first подход: структура БД создается отдельно, затем на основе этого генерируются Entity Framework модели
