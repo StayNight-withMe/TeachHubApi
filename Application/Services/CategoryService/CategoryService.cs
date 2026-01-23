@@ -15,7 +15,6 @@ namespace Application.Services.CategoryService
 
         private readonly ILogger<CategoryService> _logger;
 
-
         public CategoryService(
             ICategoryRepository categoryRepository, 
             ILogger<CategoryService> logger
@@ -24,7 +23,6 @@ namespace Application.Services.CategoryService
         _categoryRepository = categoryRepository;
         _logger = logger;
         }
-
 
         public async Task<TResult<PagedResponseDTO<CategoryResponseDTO>>> SearchCategory(
             string searchText, 
