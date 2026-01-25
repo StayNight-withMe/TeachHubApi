@@ -9,12 +9,12 @@ using infrastructure.DataBase.Extensions;
 using infrastructure.DataBase.Repository.Base;
 using Microsoft.EntityFrameworkCore;
 
-public class SubscriptionRepository : BaseRepository<SubscriptionEntites>, ISubscriptionRepository
+public class SubscriptionRepository : BaseRepository<SubscriptionEntity>, ISubscriptionRepository
 {
     public SubscriptionRepository(CourceDbContext dbContext) : base(dbContext) { }
 
     public async Task<List<SubscribeOutput>> GetPagedSubscriptionsDtoAsync(
-        ISpecification<SubscriptionEntites> spec,
+        ISpecification<SubscriptionEntity> spec,
         SortingAndPaginationDTO sorting,
         CancellationToken ct)
     {
@@ -31,7 +31,7 @@ public class SubscriptionRepository : BaseRepository<SubscriptionEntites>, ISubs
     }
 
     public async Task<List<SubscribeOutput>> GetPagedFollowersDtoAsync(
-        ISpecification<SubscriptionEntites> spec,
+        ISpecification<SubscriptionEntity> spec,
         SortingAndPaginationDTO sorting,
         CancellationToken ct)
     {

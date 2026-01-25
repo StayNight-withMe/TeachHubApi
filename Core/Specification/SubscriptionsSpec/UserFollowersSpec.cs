@@ -4,7 +4,7 @@ using Core.Models.Entitiеs;
 
 namespace Core.Specification.SubscriptionsSpec
 {
-    public class UserFollowersSpec : Specification<SubscriptionEntites>
+    public class UserFollowersSpec : Specification<SubscriptionEntity>
     {
         public UserFollowersSpec(int userId)
         {
