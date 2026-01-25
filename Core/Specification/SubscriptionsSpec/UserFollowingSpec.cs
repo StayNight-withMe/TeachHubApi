@@ -3,7 +3,7 @@ using Core.Models.Entitiеs;
 
 namespace Core.Specification.SubscriptionsSpec
 {
-    public class UserFollowingSpec : Specification<SubscriptionEntites>
+    public class UserFollowingSpec : Specification<SubscriptionEntity>
     {
         public UserFollowingSpec(int userId)
         {

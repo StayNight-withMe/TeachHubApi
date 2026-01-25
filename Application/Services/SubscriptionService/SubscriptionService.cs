@@ -41,7 +41,7 @@ namespace Application.Services.SubscriptionService
             )
         {
 
-            await _suubscriptionRepository.Create(new SubscriptionEntites { followerid = followerid, followingid = followingid });
+            await _suubscriptionRepository.Create(new SubscriptionEntity { followerid = followerid, followingid = followingid });
         
             try
             {
