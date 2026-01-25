@@ -1,7 +1,9 @@
 ﻿using Core.Common.EnumS;
 using Core.Models.Entitiеs;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NpgsqlTypes;
+using System.Text.Json;
 
 namespace infrastructure.DataBase.Context
 {
@@ -16,36 +18,71 @@ namespace infrastructure.DataBase.Context
         public DbSet<CourseEntity> courses { get; set; } 
         public DbSet<ChapterEntity> chapter { get; set; }
         public DbSet<LessonfileEntity> lessonfiles { get; set; }
-        public DbSet<SubscriptionEntites> subscription { get; set; }
+        public DbSet<SubscriptionEntity> subscription { get; set; }
         public DbSet<CategoryEntity> categories { get; set; }
         public DbSet<Course_CategoriesEntity> course_categories { get; set; }
         public DbSet<ReviewreactionEntity> reviewreaction { get; set; }
         public DbSet<ProfileEntity> profiles { get; set; }
 
+
+        private readonly bool _usePostgreSqlSpecifics;
+
+
         public CourceDbContext(DbContextOptions<CourceDbContext> options)
-        : base(options){ }
+    : this(options, usePostgreSqlSpecifics: true) { }
+
+        public CourceDbContext(DbContextOptions<CourceDbContext> options, bool usePostgreSqlSpecifics)
+            : base(options)
+        {
+            _usePostgreSqlSpecifics = usePostgreSqlSpecifics;
+        }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<CourseEntity>(entity =>
+            if (_usePostgreSqlSpecifics)
             {
-                entity.Property<NpgsqlTsVector>("searchvector")
-                      .HasColumnName("searchvector"); 
-            });
+                modelBuilder.Entity<CourseEntity>(entity =>
+                {
+                    entity.Property<NpgsqlTsVector>("searchvector")
+                          .HasColumnName("searchvector");
+                });
 
+                modelBuilder.HasPostgresEnum<reaction_type>();
+            }
+            else
+            {
+                modelBuilder.Entity<CourseEntity>().Ignore("searchvector");
+            }
 
-            modelBuilder.HasPostgresEnum<reaction_type>();
-
-
+            // Настройка для ProfileEntity с ValueConverter для sociallinks
             modelBuilder.Entity<ProfileEntity>(entity =>
             {
                 entity.ToTable("profiles");
                 entity.HasKey(e => e.userid);
 
-                entity.Property(e => e.sociallinks).HasColumnType("jsonb");
+                // Добавляем ValueConverter для преобразования Dictionary<string, string> в JSON и обратно
+                var converter = new ValueConverter<Dictionary<string, string>, string>(
+                    v => JsonSerializer.Serialize(v, new JsonSerializerOptions { WriteIndented = false }),
+                    v => string.IsNullOrEmpty(v)
+                        ? new Dictionary<string, string>()
+                        : JsonSerializer.Deserialize<Dictionary<string, string>>(v, new JsonSerializerOptions { WriteIndented = false }) ?? new Dictionary<string, string>());
+
+                if (_usePostgreSqlSpecifics)
+                {
+                    entity.Property(e => e.sociallinks)
+                        .HasColumnType("jsonb")
+                        .HasConversion(converter);
+                }
+                else
+                {
+                    entity.Property(e => e.sociallinks)
+                        .HasColumnType("text")
+                        .HasConversion(converter);
+                }
 
                 entity.HasOne(p => p.user)
-                    .WithOne() 
+                    .WithOne()
                     .HasForeignKey<ProfileEntity>(p => p.userid);
             });
 
@@ -56,7 +93,7 @@ namespace infrastructure.DataBase.Context
             modelBuilder.Entity<UserRoleEntity>()
                 .HasKey(ur => new { ur.userid, ur.roleid });
 
-            modelBuilder.Entity<SubscriptionEntites>()
+            modelBuilder.Entity<SubscriptionEntity>()
                 .HasKey(s => new { s.followingid, s.followerid });
 
             modelBuilder.Entity<FavoritEntity>()

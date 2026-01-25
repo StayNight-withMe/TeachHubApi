@@ -60,8 +60,7 @@ namespace infrastructure.DataBase.Repository.Base
                 _dbSet.Remove(value);
                 return;
             }
-            throw new Core.Common.Exeptions.DbUpdateException("Not Found", "23503");
-            
+            throw new Core.Common.Exeptions.DbUpdateException("Not Found", "23503");    
         }
 
         /// <summary>
@@ -73,7 +72,6 @@ namespace infrastructure.DataBase.Repository.Base
             return _dbSet.AsQueryable();
         }
 
-
         /// <summary>
         /// получения целого set используя IQueryable, сущности по умолчанию НЕ остаются прикреплены к EF 
         /// </summary>
@@ -82,7 +80,6 @@ namespace infrastructure.DataBase.Repository.Base
         {
             return _dbSet.AsQueryable().AsNoTracking();
         }
-
 
         protected IQueryable<T> GetWithPaginationAndSorting(IQueryable<T> qwery, SortingAndPaginationDTO dto)
         {

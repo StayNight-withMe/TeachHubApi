@@ -7,15 +7,15 @@ using Core.Models.TargetDTO.Subscription.output;
 
 namespace Application.Abstractions.Repository.Custom
 {
-    public interface ISubscriptionRepository : IBaseRepository<SubscriptionEntites>
+    public interface ISubscriptionRepository : IBaseRepository<SubscriptionEntity>
     {
         Task<List<SubscribeOutput>> GetPagedSubscriptionsDtoAsync(
-            ISpecification<SubscriptionEntites> spec,
+            ISpecification<SubscriptionEntity> spec,
             SortingAndPaginationDTO sorting,
             CancellationToken ct);
 
         Task<List<SubscribeOutput>> GetPagedFollowersDtoAsync(
-            ISpecification<SubscriptionEntites> spec,
+            ISpecification<SubscriptionEntity> spec,
             SortingAndPaginationDTO sorting,
             CancellationToken ct);
     }

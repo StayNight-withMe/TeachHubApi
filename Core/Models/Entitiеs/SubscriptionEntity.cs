@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Core.Models.Entitiеs
 {
-    public class SubscriptionEntites
+    public class SubscriptionEntity
     {
         public int followerid {  get; set; }
         public int followingid { get; set; }

@@ -16,11 +16,11 @@ namespace Application.Services.AuthService
 {
     public class AuthService : IAuthService
     {
-        private readonly IJwtService _jwtService;
+        //private readonly IJwtService _jwtService;
 
         private readonly IBaseRepository<UserEntity> _userRepository;
 
-        private readonly IBaseRepository<RoleEntity> _roleRepository;
+        //private readonly IBaseRepository<RoleEntity> _roleRepository;
 
         private readonly IBaseRepository<UserRoleEntity> _userRolesRepository;
 
@@ -31,14 +31,14 @@ namespace Application.Services.AuthService
         private readonly IMapper _mapper;
         public AuthService(IJwtService jwtService, 
             IBaseRepository<UserEntity> userRepository,  
-            IBaseRepository<RoleEntity> roleRepository,
+            //IBaseRepository<RoleEntity> roleRepository,
             IBaseRepository<UserRoleEntity> userRoleRepository,
             IPasswordHashService passwordHashService,
             ILogger<AuthService> logger,
             IMapper mapper
             )
         {
-            _jwtService = jwtService;
+            //_jwtService = jwtService;
             _userRepository = userRepository;
             _logger = logger;
             _userRolesRepository = userRoleRepository;

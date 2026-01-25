@@ -39,7 +39,7 @@ namespace infrastructure.Utils.PasswodHashService
 
         public bool VerifyPassword(string password, string storedFullHash)
         {
-
+            Debug.WriteLine("VerifyPassword called!");
             try
             {
                 var parts = storedFullHash.Split(':');
