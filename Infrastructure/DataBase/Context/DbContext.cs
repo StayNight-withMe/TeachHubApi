@@ -55,13 +55,13 @@ namespace infrastructure.DataBase.Context
                 modelBuilder.Entity<CourseEntity>().Ignore("searchvector");
             }
 
-            // Настройка для ProfileEntity с ValueConverter для sociallinks
+   
             modelBuilder.Entity<ProfileEntity>(entity =>
             {
                 entity.ToTable("profiles");
                 entity.HasKey(e => e.userid);
 
-                // Добавляем ValueConverter для преобразования Dictionary<string, string> в JSON и обратно
+         
                 var converter = new ValueConverter<Dictionary<string, string>, string>(
                     v => JsonSerializer.Serialize(v, new JsonSerializerOptions { WriteIndented = false }),
                     v => string.IsNullOrEmpty(v)
