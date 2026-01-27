@@ -169,6 +169,7 @@ ASP.NET In-Memory Cache used for:
 Course icons and lesson materials stored in Backblaze B2 using AWS S3-compatible SDK. Supports local/cloud switching via `cloudstore` flag.
 
 ### Hierarchical Structure
+```
 Course
 ├── Chapter 1
 │   ├── Lesson 1
@@ -176,7 +177,7 @@ Course
 │   └── Lesson 2
 └── Chapter 2
 └── Lesson 3
-
+```
 
 Categories also support hierarchy via `parentid`.
 
