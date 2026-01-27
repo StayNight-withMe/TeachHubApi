@@ -210,9 +210,6 @@ Uses **Ardalis Specification Pattern** for reusable, typed queries.
 - **Swagger / OpenAPI** documentation
 - **PostgreSQL** admin tools
 
-### English Version
-
-```markdown
 ## Project Setup (Docker)
 
 Docker Compose is used for quick deployment of the local development environment. This will automatically spin up the PostgreSQL database and apply the initial data schema from `init.sql`.
