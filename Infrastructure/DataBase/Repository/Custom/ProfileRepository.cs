@@ -29,7 +29,7 @@ namespace infrastructure.DataBase.Repository.Custom
                     profile.sociallinks[link.Key] = link.Value;
             }
 
-            _db.Attach(profile);
+            _db.Attach(profile); 
             _db.Entry(profile).State = EntityState.Modified;
         }
     }
