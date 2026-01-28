@@ -8,6 +8,6 @@ namespace Core.Models.TargetDTO.Courses.output
 {
     public class SetImageOutPutDTO
     {
-        public string? iconusrl { get; set; }
+        public string? iconurl { get; set; }
     }
 }
