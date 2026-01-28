@@ -379,7 +379,7 @@ namespace Application.Services.CourceService
                         {
                             await _unitOfWork.CommitAsync(ct);
                             return TResult<SetImageOutPutDTO>.CompletedOperation(
-                                 new SetImageOutPutDTO{ iconusrl = _courseFileUtil.GetPresignedUrl(fileKey, 60*24) }
+                                 new SetImageOutPutDTO{ iconurl = _courseFileUtil.GetPresignedUrl(fileKey, 60*24) }
                                 );
                         }
                         catch (DbUpdateException ex)
