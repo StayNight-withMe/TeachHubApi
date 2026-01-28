@@ -18,10 +18,11 @@ namespace Application.Abstractions.Service
             CancellationToken ct = default);
 
         Task<TResult<string>> ChangeProfileIcon(
-            Stream stream, 
-            int userid,
-            ProfileSetImageDTO dto,
-            CancellationToken ct = default);
+                    Stream stream,
+                    int userid,
+                    ProfileSetImageDTO dto,
+                    string contentType,
+                    CancellationToken ct = default);
 
         Task<TResult<ProfileOutputDTO>> GetUserProfile(
             int userid,
