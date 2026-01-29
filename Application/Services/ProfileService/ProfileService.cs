@@ -1,14 +1,11 @@
-﻿using Application.Abstractions.Repository.Base;
-using Application.Abstractions.Repository.Custom;
+﻿using Application.Abstractions.Repository.Custom;
 using Application.Abstractions.Service;
 using Application.Abstractions.UoW;
 using Application.Abstractions.Utils;
-using AutoMapper;
 using Core.Common.EnumS;
 using Core.Common.Exeptions;
 using Core.Models.Entitiеs;
 using Core.Models.ReturnEntity;
-using Core.Models.TargetDTO.Courses.output;
 using Core.Models.TargetDTO.Profile.common;
 using Core.Models.TargetDTO.Profile.input;
 using Core.Models.TargetDTO.Profile.output;
