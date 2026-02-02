@@ -1,5 +1,12 @@
-﻿using Asp.Versioning;
+﻿using Application.Abstractions.Service;
+using Asp.Versioning;
+using Core.Common.Types.HashId;
+using Core.Models.TargetDTO.Profile.common;
+using Core.Models.TargetDTO.Profile.input;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
+using testApi.WebUtils.EntityResultExtensions;
+using testApi.WebUtils.JwtClaimUtil;
 
 namespace testApi.EndPoints
 {
@@ -10,24 +17,76 @@ namespace testApi.EndPoints
     [ApiVersion("1.0")]
     public class ProfileController : ControllerBase
     {
-        public Task<IActionResult> UpdateProfile()
+        private readonly IProfileService _profileService;
+
+        private readonly JwtClaimUtil _jwtClaimUtil;
+
+        public ProfileController(
+            IProfileService profileService,
+            JwtClaimUtil jwtClaimUtil
+            ) 
         {
-            throw new NotImplementedException();
+            _profileService = profileService;
+            _jwtClaimUtil = jwtClaimUtil;
         }
 
-        public Task<IActionResult> ChangeProfileIcon()
+        [HttpPatch]
+        public async Task<IActionResult> UpdateProfile(
+            [FromBody]ChangeProfileDTO dto,
+            CancellationToken ct
+            )
         {
-            throw new NotImplementedException();
+            var result = await _profileService.ChangeProfile(
+                dto, 
+                _jwtClaimUtil.UserId, 
+                ct);
+
+            return await EntityResultExtensions.ToActionResult(result, this);
         }
 
-        public Task<IActionResult> GetUserProfile()
+        [RequestSizeLimit(11 * 1024 * 1024)]
+        [HttpPut("icon")]
+        public async Task<IActionResult> ChangeProfileIcon(
+            IFormFile? file,
+            [FromForm]ProfileSetImageDTO dto,
+            CancellationToken ct
+            )
         {
-            throw new NotImplementedException();
+            var fileStrem = file.OpenReadStream();
+                
+             if(fileStrem == null)
+            {
+                return BadRequest();
+            }
+
+            var result = await _profileService.ChangeProfileIcon(
+                fileStrem,
+                _jwtClaimUtil.UserId, 
+                dto, 
+                file.ContentType, 
+                ct);
+
+            return await EntityResultExtensions.ToActionResult(result, this);
         }
 
-        public Task<IActionResult> GetMyProfile()
+        [OutputCache(PolicyName = "10min")]
+        [HttpGet("{userid}")]
+        public async Task<IActionResult> GetUserProfile(
+            [FromRoute]Hashid userid, 
+            CancellationToken ct)
         {
-            throw new NotImplementedException();
+            var resukt = await _profileService.GetUserProfile(userid.Value, ct);
+
+            return await EntityResultExtensions.ToActionResult(resukt, this);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetUserProfile(
+            CancellationToken ct)
+        {
+            var resukt = await _profileService.GetUserProfile(_jwtClaimUtil.UserId, ct);
+
+            return await EntityResultExtensions.ToActionResult(resukt, this);
         }
     }
 }
