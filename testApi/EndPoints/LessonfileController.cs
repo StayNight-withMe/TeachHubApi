@@ -1,10 +1,12 @@
 ﻿using Application.Abstractions.Service;
+using Application.Services.ProfileService;
 using Asp.Versioning;
 using Core.Common.Types.HashId;
 using Core.Models.TargetDTO.Common.input;
 using Core.Models.TargetDTO.LessonFile.input;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 using testApi.WebUtils.EntityResultExtensions;
 using testApi.WebUtils.JwtClaimUtil;
 
@@ -50,9 +52,8 @@ namespace testApi.EndPoints
 
         }
 
-
-        
-         [HttpGet("{lessonid}")]
+        [OutputCache(PolicyName = "10min")]
+        [HttpGet("{lessonid}")]
          public async Task<IActionResult> GetLessonFile(
          [FromQuery] PaginationDTO pagination,
          [FromRoute] Hashid lessonid,

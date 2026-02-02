@@ -4,7 +4,7 @@ using Application.Abstractions.UoW;
 using infrastructure.DataBase.Context;
 using infrastructure.DataBase.Repository.Base;
 using infrastructure.DataBase.Repository.Custom;
-using infrastructure.UoW.implementation;
+using infrastructure.DataBase.UoW.implementation;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 

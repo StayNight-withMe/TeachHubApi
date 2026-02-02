@@ -2,7 +2,7 @@
 using Application.Abstractions.UoW;
 using infrastructure.DataBase.Context;
 
-namespace infrastructure.UoW.implementation
+namespace infrastructure.DataBase.UoW.implementation
 {
     public class UnitOfWork : IUnitOfWork
     {
