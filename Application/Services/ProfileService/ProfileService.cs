@@ -40,7 +40,12 @@ namespace Application.Services.ProfileService
         {
             try
             {
-                await _profileRepository.PartialUpdateAsync(await _profileRepository.GetByIdAsync(ct, userid), dto);
+                var profileEntity = await _profileRepository.GetByIdAsync(ct, userid);
+                if(profileEntity == null)
+                {
+                    return TResult<ChangeProfileDTO>.FailedOperation(errorCode.NotFound);
+                }
+                await _profileRepository.PartialUpdateAsync(profileEntity, dto);
                 await _unitOfWork.CommitAsync(ct);
                 return TResult<ChangeProfileDTO>.CompletedOperation(dto);
             }
