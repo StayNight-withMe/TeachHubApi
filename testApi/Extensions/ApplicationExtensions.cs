@@ -10,6 +10,7 @@ using Application.Services.CourceService;
 using Application.Services.FavoritService;
 using Application.Services.LessonService;
 using Application.Services.LessonStorageService;
+using Application.Services.ProfileService;
 using Application.Services.ReviewReactionService;
 using Application.Services.ReviewService;
 using Application.Services.SubscriptionService;
@@ -42,6 +43,7 @@ public static class ApplicationServicesExtensions
         services.AddScoped<IReviewReactionService, ReviewReactionService>();
         services.AddScoped<ICourseImageService, CourseImageService>();
         services.AddScoped<IHeaderService, HeaderService>();
+        services.AddScoped<IProfileService, ProfileService>();
 
         // Хранилище
         services.AddScoped<IFileStorageService, LessonFileStorageService>();
