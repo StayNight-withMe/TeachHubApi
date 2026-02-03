@@ -35,7 +35,7 @@
         // Системные ошибки (500 Internal Server Error)
         DatabaseError = 201,
         UnknownError = 202,
-        TimeOutError = 203,
+        TimeoutError = 203,
         CloudError = 204,
         ClientError = 205,
         NotFound = 206,
