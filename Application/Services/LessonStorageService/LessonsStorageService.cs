@@ -81,7 +81,7 @@ namespace Application.Services.LessonStorageService
             catch (TaskCanceledException ex)
             {
                 _logger.LogError(ex);
-                return TResult.FailedOperation(errorCode.TimeOutError);
+                return TResult.FailedOperation(errorCode.TimeoutError);
             }
             catch (DbUpdateException ex)
             {
@@ -193,7 +193,7 @@ namespace Application.Services.LessonStorageService
             catch (TaskCanceledException ex)
             {
                 _logger.LogError(ex);
-                return TResult.FailedOperation(errorCode.TimeOutError);
+                return TResult.FailedOperation(errorCode.TimeoutError);
             }
             catch (DbUpdateException ex)
             {
