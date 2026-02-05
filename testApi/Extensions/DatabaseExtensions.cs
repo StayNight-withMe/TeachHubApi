@@ -29,6 +29,7 @@ public static class DatabaseExtensions
         services.AddScoped<ILessonFileRepository, LessonFileRepository>();
         services.AddScoped<IReviewRepository, ReviewRepository>();
         services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
+        services.AddScoped<IProfileRepository, ProfileRepository>();
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 

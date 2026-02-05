@@ -48,6 +48,7 @@ public static class ApplicationServicesExtensions
         // Хранилище
         services.AddScoped<IFileStorageService, LessonFileStorageService>();
         services.AddScoped<ILessonFileService, LessonFileStorageService>();
+        services.AddScoped<IProfileImageService, ProfileImageService>();
 
         // AutoMapper 
         services.AddAutoMapper(typeof(UsersMapperProfile).Assembly);
