@@ -1,9 +1,7 @@
 ﻿using Application.Abstractions.Repository.Base;
 using Ardalis.Specification;
 using Core.Models.Entitiеs;
-using Core.Models.ReturnEntity;
 using Core.Models.TargetDTO.Common.input;
-using Core.Models.TargetDTO.Common.output;
 using Core.Models.TargetDTO.Lesson.output;
 
 namespace Application.Abstractions.Repository.Custom
