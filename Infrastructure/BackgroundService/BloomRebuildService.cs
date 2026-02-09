@@ -6,8 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-
-
 namespace infrastructure.BackgroundService
 {
     public class BloomRebuildService : Microsoft.Extensions.Hosting.BackgroundService
