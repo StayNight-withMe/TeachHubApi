@@ -7,7 +7,7 @@ services:
     restart: always
     environment:
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=kasa2002  
+      - POSTGRES_PASSWORD=Ypor_Password  
       - POSTGRES_DB=testForApi           
     ports:
       - "5432:5432"
@@ -24,7 +24,7 @@ services:
       - db
     entrypoint: ["sh", "-c", "sleep 15 && dotnet testApi.dll"]
     environment:
-      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=testForApi;Username=postgres;Password=kasa2002
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=testForApi;Username=postgres;Password=YourPassword
 
 volumes:
   postgres_data:
