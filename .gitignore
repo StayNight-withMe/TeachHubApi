@@ -19,6 +19,7 @@
 ###############
 bin/
 obj/
+docker-compose.yml
 BloomFilterData/
 .vs/
 appsettings.json
