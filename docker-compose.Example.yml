@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: teachhub-db
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=kasa2002  
+      - POSTGRES_DB=testForApi           
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db-init:/docker-entrypoint-initdb.d
+      - postgres_data:/var/lib/postgresql/data
+
+  api:
+    build: .
+    container_name: teachhub-api
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    entrypoint: ["sh", "-c", "sleep 15 && dotnet testApi.dll"]
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=testForApi;Username=postgres;Password=kasa2002
+
+volumes:
+  postgres_data:
